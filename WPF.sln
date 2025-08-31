@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Client", "src\Nameles.WPF.Client\Nameless.WPF.Client.csproj", "{9DC20E5A-9991-493A-81BD-8A651A9EE049}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Core", "src\Nameless.WPF.Core\Nameless.WPF.Core.csproj", "{6C25F1D4-C479-43F9-98AD-C1D32FCCEA6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.UI", "src\Nameless.WPF.UI\Nameless.WPF.UI.csproj", "{FD92E9B1-3E53-43F8-9B9E-1F32F6C21E6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".solution", ".solution", "{2AC9F258-E6C7-4E79-80A2-DF4DC299747C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.runsettings = .runsettings
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C1BA8FFB-04D8-4497-8FF4-126E24D2D1EE}"
+	ProjectSection(SolutionItems) = preProject
+		build\build.cake = build\build.cake
+		build\tools.sh = build\tools.sh
+		build\version.json = build\version.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DC20E5A-9991-493A-81BD-8A651A9EE049}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DC20E5A-9991-493A-81BD-8A651A9EE049}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DC20E5A-9991-493A-81BD-8A651A9EE049}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DC20E5A-9991-493A-81BD-8A651A9EE049}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C25F1D4-C479-43F9-98AD-C1D32FCCEA6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C25F1D4-C479-43F9-98AD-C1D32FCCEA6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C25F1D4-C479-43F9-98AD-C1D32FCCEA6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C25F1D4-C479-43F9-98AD-C1D32FCCEA6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD92E9B1-3E53-43F8-9B9E-1F32F6C21E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD92E9B1-3E53-43F8-9B9E-1F32F6C21E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD92E9B1-3E53-43F8-9B9E-1F32F6C21E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD92E9B1-3E53-43F8-9B9E-1F32F6C21E6B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9DC20E5A-9991-493A-81BD-8A651A9EE049} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6C25F1D4-C479-43F9-98AD-C1D32FCCEA6E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{FD92E9B1-3E53-43F8-9B9E-1F32F6C21E6B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C1BA8FFB-04D8-4497-8FF4-126E24D2D1EE} = {2AC9F258-E6C7-4E79-80A2-DF4DC299747C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {433D110F-07A8-4681-9532-DEDCCA4D35FE}
+	EndGlobalSection
+EndGlobal

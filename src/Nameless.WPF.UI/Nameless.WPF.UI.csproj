@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<ItemGroup>
+		<PackageReference Include="Nameless.Mediator.Abstractions" />
+		<PackageReference Include="Ookii.Dialogs.Wpf" />
+		<PackageReference Include="WPF-UI" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Nameless.WPF.Core\Nameless.WPF.Core.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Update="Resources\ControlAppearanceResource.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>ControlAppearanceResource.resx</DependentUpon>
+	  </Compile>
+	  <Compile Update="Resources\InformationDisplayResource.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>InformationDisplayResource.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\ControlAppearanceResource.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>ControlAppearanceResource.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\InformationDisplayResource.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>InformationDisplayResource.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+</Project>
