@@ -2,17 +2,17 @@
 
 public static class Constants {
     public static class Application {
-        public const string Name = "ClientApp";
-        public const string LogFileName = "application.log";
+        public const string NAME = "ClientApp";
+        public const string LOG_FILE_NAME = "application.log";
     }
 
     public static class Database {
-        public const string DatabaseFileName = "application.db";
-        public const string ConnStrPattern = "Data Source={0};Pooling=false;";
+        public const string DATABASE_FILE_NAME = "application.db";
+        public const string CONN_STR_PATTERN = "Data Source={0};Pooling=false;";
 
         public static class Backup {
-            public const string FileNamePattern = "{0:yyyyMMddHHmmss}.bkp";
-            public const string DirectoryName = "application_db_bkp";
+            public const string FILE_NAME_PATTERN = "{0:yyyyMMddHHmmss}.bkp";
+            public const string DIRECTORY_NAME = "application_db_bkp";
         }
     }
 }

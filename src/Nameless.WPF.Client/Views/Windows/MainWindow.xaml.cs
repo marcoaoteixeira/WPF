@@ -7,16 +7,19 @@ using Nameless.WPF.Client.ViewModels.Windows;
 using Nameless.WPF.Configuration;
 using Nameless.WPF.DependencyInjection;
 using Nameless.WPF.Notifications;
+using Nameless.WPF.Resources;
 using Nameless.WPF.UI;
-using Nameless.WPF.UI.Dialogs.UserDialog;
+using Nameless.WPF.UI.Dialogs.MessageBox;
 using Nameless.WPF.UI.Mvvm;
 using Nameless.WPF.UI.Notifications;
 using Nameless.WPF.UI.Snackbar;
-using Nameless.WPF.UseCases.SystemUpdate.VerifyNewVersion;
+using Nameless.WPF.UseCases.SystemUpdate.Check;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
+
+using MessageBoxResult = Nameless.WPF.UI.Dialogs.MessageBox.MessageBoxResult;
 
 namespace Nameless.WPF.Client.Views.Windows;
 
@@ -24,11 +27,11 @@ namespace Nameless.WPF.Client.Views.Windows;
 public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowViewModel> {
     private readonly IAppConfigurationManager _appConfigurationManager;
     private readonly IContentDialogService _contentDialogService;
+    private readonly IMessageBox _messageBox;
     private readonly INavigationService _navigationService;
     private readonly INavigationViewPageProvider _navigationViewPageProvider;
     private readonly INotificationService _notificationService;
     private readonly ISnackbarService _snackbarService;
-    private readonly IUserDialog _userDialog;
     private readonly ILogger<MainWindow> _logger;
 
     private bool _initialized;
@@ -39,11 +42,11 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
         MainWindowViewModel viewModel,
         IAppConfigurationManager appConfigurationManager,
         IContentDialogService contentDialogService,
+        IMessageBox messageBox,
         INavigationService navigationService,
         INavigationViewPageProvider navigationViewPageProvider,
         INotificationService notificationService,
         ISnackbarService snackbarService,
-        IUserDialog userDialog,
         ILogger<MainWindow> logger) {
 
         ViewModel = Guard.Against.Null(viewModel);
@@ -51,11 +54,11 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
 
         _appConfigurationManager = Guard.Against.Null(appConfigurationManager);
         _contentDialogService = Guard.Against.Null(contentDialogService);
+        _messageBox = Guard.Against.Null(messageBox);
         _navigationService = Guard.Against.Null(navigationService);
         _navigationViewPageProvider = Guard.Against.Null(navigationViewPageProvider);
         _notificationService = Guard.Against.Null(notificationService);
         _snackbarService = Guard.Against.Null(snackbarService);
-        _userDialog = Guard.Against.Null(userDialog);
         _logger = Guard.Against.Null(logger);
 
         InitializeComponent();
@@ -91,16 +94,16 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
             return;
         }
 
-        var result = _userDialog.ShowQuestion(
-            title: "Sair",
-            message: "Sempre perguntar ao sair do aplicativo?",
-            buttons: UserDialogButtons.YesNoCancel);
+        var result = _messageBox.ShowQuestion(
+            title: Strings.MainWindow_CloseHandler_MessageBox_Title,
+            message: Strings.MainWindow_CloseHandler_MessageBox_Message,
+            buttons: MessageBoxButtons.YesNoCancel);
 
-        if (result == UserDialogResult.No) {
+        if (result == MessageBoxResult.No) {
             _appConfigurationManager.SetConfirmBeforeExit(false);
         }
 
-        args.Cancel = result == UserDialogResult.Cancel;
+        args.Cancel = result == MessageBoxResult.Cancel;
     }
 
     private void InitializeWindow() {
@@ -141,7 +144,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
     }
 
     private void SubscribeForNotifications() {
-        _notificationService.Subscribe<VerifyNewVersionNotification>(this, ShowSnackbarNotification);
+        _notificationService.Subscribe<CheckSystemUpdateNotification>(this, ShowSnackbarNotification);
     }
 
     private void ShowSnackbarNotification(object sender, INotification notification) {

@@ -31,8 +31,8 @@ public static class ServiceCollectionExtensions {
 
         self.AddDbContext<AppDbContext>((provider, builder) => {
             var applicationContext = provider.GetRequiredService<IApplicationContext>();
-            var databasePath = Path.Combine(applicationContext.DataDirectoryPath, Constants.Database.DatabaseFileName);
-            var connectionString = string.Format(Constants.Database.ConnStrPattern, databasePath);
+            var databaseFilePath = Path.Combine(applicationContext.DataDirectoryPath, Constants.Database.DATABASE_FILE_NAME);
+            var connectionString = string.Format(Constants.Database.CONN_STR_PATTERN, databaseFilePath);
 
             builder.UseSqlite(connectionString);
 

@@ -4,46 +4,27 @@
     <NoWarn>NU1507</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Bogus" Version="35.6.3" />
-    <PackageVersion Include="Castle.Core" Version="5.2.1" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="FluentValidation" Version="12.0.0" />
-    <PackageVersion Include="Lucene.Net.Analysis.Common" Version="4.8.1" />
-    <PackageVersion Include="Lucene.Net.Queries" Version="4.8.1" />
-    <PackageVersion Include="Lucene.Net.QueryParser" Version="4.8.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.8" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.8" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.FileProviders.Physical" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.8" />
     <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.8" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.8" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageVersion Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.4948" />
-    <PackageVersion Include="Microsoft.WindowsAppSDK" Version="1.7.250606001" />
     <PackageVersion Include="Moq" Version="4.20.72" />
-    <PackageVersion Include="Nameless.Core" Version="3.4.4" />
-    <PackageVersion Include="Nameless.Mediator" Version="3.4.4" />
-    <PackageVersion Include="Nameless.Mediator.Abstractions" Version="3.4.4" />
-    <PackageVersion Include="Nameless.Search.Lucene" Version="3.4.2" />
-    <PackageVersion Include="Nameless.Testing.Tools" Version="3.4.2" />
-    <PackageVersion Include="Nameless.Validation.FluentValidation" Version="3.4.4" />
+    <PackageVersion Include="Nameless.Core" Version="3.4.5" />
+    <PackageVersion Include="Nameless.Mediator" Version="3.4.5" />
+    <PackageVersion Include="Nameless.Mediator.Abstractions" Version="3.4.5" />
+    <PackageVersion Include="Nameless.Testing.Tools" Version="3.4.5" />
+    <PackageVersion Include="Nameless.Validation.Abstractions" Version="3.4.5" />
+    <PackageVersion Include="Nameless.Validation.FluentValidation" Version="3.4.5" />
     <PackageVersion Include="NLog.Extensions.Logging" Version="6.0.3" />
-    <PackageVersion Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
-    <PackageVersion Include="System.Data.SQLite.Core" Version="1.0.119" />
-    <PackageVersion Include="System.Text.Json" Version="9.0.5" />
-    <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
     <PackageVersion Include="WPF-UI" Version="4.0.3" />
     <PackageVersion Include="xunit.analyzers" Version="1.24.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
     <PackageVersion Include="Xunit.StaFact" Version="3.0.13" />
     <PackageVersion Include="xunit.v3" Version="3.0.1" />
-    <PackageVersion Include="xunit.v3.extensibility.core" Version="3.0.0" />
   </ItemGroup>
 </Project>

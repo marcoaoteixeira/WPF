@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Nameless.WPF.DependencyInjection;
@@ -25,6 +26,8 @@ public sealed class UpdateAuditableEntitySaveChangesInterceptor : SaveChangesInt
     }
 
     /// <inheritdoc />
+    [SuppressMessage("ReSharper", "InvertIf", Justification = "Duplicate the return statement.")]
+    [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault", Justification = "We don't care for the other branches.")]
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default) {
         var dbContext = eventData.Context;
         if (dbContext is not null) {

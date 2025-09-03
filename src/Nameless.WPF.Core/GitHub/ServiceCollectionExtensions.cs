@@ -21,11 +21,7 @@ public static class ServiceCollectionExtensions {
     ///     The current <see cref="IServiceCollection"/> so other actions
     ///     can be chained.
     /// </returns>
-    public static IServiceCollection RegisterGitHubHttpClient(this IServiceCollection self, IConfiguration? configuration = null) {
-        if (configuration is null) {
-            return self.InnerRegisterGitHubHttpClient();
-        }
-
+    public static IServiceCollection RegisterGitHubHttpClient(this IServiceCollection self, IConfiguration configuration) {
         var section = configuration.GetSection(nameof(GitHubOptions));
 
         self.Configure<GitHubOptions>(section);
@@ -53,14 +49,9 @@ public static class ServiceCollectionExtensions {
     }
 
     public static IServiceCollection InnerRegisterGitHubHttpClient(this IServiceCollection self) {
-        self.AddHttpClient<IGitHubHttpClient, GitHubHttpClient>((provider, httpClient) => {
+        self.AddHttpClient<IGitHubHttpClient, GitHubHttpClient>(httpClient => {
             httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
             httpClient.DefaultRequestHeaders.Add("X-GitHub-Api-Version", ["2022-11-28"]);
-
-            //var applicationContext = provider.GetRequiredService<IApplicationContext>();
-            //var productHeaderValue = new ProductHeaderValue(applicationContext.ApplicationName, applicationContext.Version);
-            //var userAgent = new ProductInfoHeaderValue(productHeaderValue);
-            //httpClient.DefaultRequestHeaders.UserAgent.Add(userAgent);
 
             httpClient.BaseAddress = new Uri("https://api.github.com");
         });

@@ -1,25 +1,22 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nameless.Infrastructure;
 using Nameless.Mediator;
-using Nameless.WPF.Client.UseCases.Database.Backup;
 using Nameless.WPF.Configuration;
+using Nameless.WPF.Resources;
 using Nameless.WPF.UI;
-using Nameless.WPF.UI.Dialogs.TaskRunnerDialog;
-using Nameless.WPF.UI.Dialogs.UserDialog;
+using Nameless.WPF.UI.Dialogs.MessageBox;
 using Nameless.WPF.UI.Helpers;
 using Nameless.WPF.UI.Mvvm;
-using Nameless.WPF.UI.Windows;
-using Nameless.WPF.UseCases.SystemUpdate.DownloadLatestVersion;
-using Nameless.WPF.UseCases.SystemUpdate.VerifyNewVersion;
+using Nameless.WPF.UI.TaskRunner;
+using Nameless.WPF.UseCases.Database.Backup;
+using Nameless.WPF.UseCases.SystemUpdate.Check;
+using Nameless.WPF.UseCases.SystemUpdate.Download;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
-using SysDialogResult = System.Windows.Forms.DialogResult;
-using SysMessageBox = System.Windows.Forms.MessageBox;
-using SysMessageBoxButtons = System.Windows.Forms.MessageBoxButtons;
-using SysMessageBoxIcon = System.Windows.Forms.MessageBoxIcon;
+
+using MessageBoxResult = Nameless.WPF.UI.Dialogs.MessageBox.MessageBoxResult;
 
 namespace Nameless.WPF.Client.ViewModels.Pages;
 
@@ -27,8 +24,8 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     private readonly IAppConfigurationManager _appConfigurationManager;
     private readonly IApplicationContext _applicationContext;
     private readonly IMediator _mediator;
-    private readonly IUserDialog _userDialog;
-    private readonly IWindowFactory _windowFactory;
+    private readonly IMessageBox _messageBox;
+    private readonly ITaskRunner _taskRunner;
 
     private bool _initialized;
 
@@ -50,13 +47,13 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         IAppConfigurationManager appConfigurationManager,
         IApplicationContext applicationContext,
         IMediator mediator,
-        IUserDialog userDialog,
-        IWindowFactory windowFactory) {
+        IMessageBox messageBox,
+        ITaskRunner taskRunner) {
         _appConfigurationManager = Guard.Against.Null(appConfigurationManager);
         _applicationContext = Guard.Against.Null(applicationContext);
         _mediator = Guard.Against.Null(mediator);
-        _userDialog = Guard.Against.Null(userDialog);
-        _windowFactory = Guard.Against.Null(windowFactory);
+        _messageBox = Guard.Against.Null(messageBox);
+        _taskRunner = Guard.Against.Null(taskRunner);
     }
 
     public Task OnNavigatedToAsync() {
@@ -66,7 +63,7 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     }
 
     public Task OnNavigatedFromAsync() {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     private void Initialize() {
@@ -84,16 +81,12 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
     [RelayCommand]
     private Task PerformSystemUpdateAsync() {
-        if (_windowFactory.TryCreate<ITaskRunnerDialogWindow>(out var window)) {
-            window.SetTitle("Atualização do Sistema")
-                  .SubscribeFor<VerifyNewVersionNotification>()
-                  .SubscribeFor<DownloadLatestVersionNotification>()
-                  .SetOwner(null)
-                  .SetHandler(ExecuteSystemUpdateAsync)
-                  .Show(WindowStartupLocation.CenterScreen);
-        }
-
-        return Task.CompletedTask;
+        return _taskRunner.CreateBuilder()
+                          .SetName(Strings.PerformSystemUpdate_TaskRunnerWindow_Title)
+                          .SubscribeFor<CheckSystemUpdateNotification>()
+                          .SubscribeFor<DownloadSystemUpdateNotification>()
+                          .SetDelegate(ExecuteSystemUpdateAsync)
+                          .RunAsync();
     }
 
     [RelayCommand]
@@ -105,22 +98,18 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
     [RelayCommand]
     private Task OpenApplicationLogFileAsync() {
-        ProcessHelper.OpenTextFile(Constants.Application.LogFileName);
+        ProcessHelper.OpenTextFile(Constants.Application.LOG_FILE_NAME);
 
         return Task.CompletedTask;
     }
 
     [RelayCommand]
     private Task PerformApplicationDatabaseBackupAsync() {
-        if (_windowFactory.TryCreate<ITaskRunnerDialogWindow>(out var window)) {
-            window.SetTitle("Realizando backup da base de dados...")
-                  .SubscribeFor<PerformDatabaseBackupNotification>()
-                  .SetOwner(null)
-                  .SetHandler(PerformDatabaseBackupAsync)
-                  .Show(WindowStartupLocation.CenterScreen);
-        }
-
-        return Task.CompletedTask;
+        return _taskRunner.CreateBuilder()
+                          .SetName(Strings.PerformDatabaseBackup_TaskRunnerWindow_Title)
+                          .SubscribeFor<PerformDatabaseBackupNotification>()
+                          .SetDelegate(PerformDatabaseBackupAsync)
+                          .RunAsync();
     }
 
     partial void OnCurrentThemeChanged(ComboBoxItem? oldValue, ComboBoxItem newValue) {
@@ -140,35 +129,37 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     }
 
     private async Task PerformDatabaseBackupAsync(CancellationToken cancellationToken) {
-        var request = new PerformDatabaseBackupRequest();
-
-        _ = await _mediator.ExecuteAsync(request, cancellationToken)
+        _ = await _mediator.ExecuteAsync(new PerformDatabaseBackupRequest(), cancellationToken)
                            .SuppressContext();
     }
 
     private async Task ExecuteSystemUpdateAsync(CancellationToken cancellationToken) {
-        var newVersionResponse = await ExecuteSystemUpdateVerificationAsync(cancellationToken).SuppressContext();
+        var newVersionResponse = await ExecuteCheckSystemUpdateAsync(cancellationToken).SuppressContext();
 
         if (!newVersionResponse.Succeeded) { return; }
         if (string.IsNullOrWhiteSpace(newVersionResponse.Version) || string.IsNullOrWhiteSpace(newVersionResponse.DownloadUrl)) { return; }
 
-        const string Question = "Uma nova versão está disponível para download. Deseja fazer download para a pasta de dados da aplicação?";
-        var result = SysMessageBox.Show(Question, "Nova Versão", SysMessageBoxButtons.YesNo, SysMessageBoxIcon.Question);
+        var result = _messageBox.ShowQuestion(
+            message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_MessageBox_Message,
+            title: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_MessageBox_Title
+        );
 
-        if (result == SysDialogResult.No) { return; }
+        if (result == MessageBoxResult.No) { return; }
 
-        await ExecuteSystemUpdateDownloadAsync(newVersionResponse.Version, newVersionResponse.DownloadUrl, cancellationToken);
+        await ExecuteDownloadSystemUpdateAsync(newVersionResponse.Version, newVersionResponse.DownloadUrl, cancellationToken);
     }
 
-    private Task<VerifyNewVersionResponse> ExecuteSystemUpdateVerificationAsync(CancellationToken cancellationToken) {
-        var request = new VerifyNewVersionRequest();
-
-        return _mediator.ExecuteAsync(request, cancellationToken);
+    private Task<CheckSystemUpdateResponse> ExecuteCheckSystemUpdateAsync(CancellationToken cancellationToken) {
+        return _mediator.ExecuteAsync(
+            new CheckSystemUpdateRequest(),
+            cancellationToken
+        );
     }
 
-    private Task<DownloadLatestVersionResponse> ExecuteSystemUpdateDownloadAsync(string version, string downloadUrl, CancellationToken cancellationToken) {
-        var request = new DownloadLatestVersionRequest(version, downloadUrl);
-
-        return _mediator.ExecuteAsync(request, cancellationToken);
+    private Task<DownloadSystemUpdateResponse> ExecuteDownloadSystemUpdateAsync(string version, string downloadUrl, CancellationToken cancellationToken) {
+        return _mediator.ExecuteAsync(
+            new DownloadSystemUpdateRequest(version, downloadUrl),
+            cancellationToken
+        );
     }
 }

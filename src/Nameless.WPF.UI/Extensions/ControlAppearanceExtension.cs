@@ -1,4 +1,4 @@
-﻿using Nameless.WPF.UI.Resources;
+﻿using Nameless.WPF.Resources;
 using Wpf.Ui.Controls;
 
 namespace Nameless.WPF.UI;
@@ -14,10 +14,10 @@ public static class ControlAppearanceExtension {
     /// <returns></returns>
     public static string GetTitle(this ControlAppearance self) {
         return self switch {
-            ControlAppearance.Caution => ControlAppearanceResource.Caution,
-            ControlAppearance.Danger => ControlAppearanceResource.Danger,
-            ControlAppearance.Success => ControlAppearanceResource.Success,
-            _ => ControlAppearanceResource.Info
+            ControlAppearance.Caution => Strings.ControlAppearance_Caution,
+            ControlAppearance.Danger => Strings.ControlAppearance_Danger,
+            ControlAppearance.Success => Strings.ControlAppearance_Success,
+            _ => Strings.ControlAppearance_Info
         };
     }
 

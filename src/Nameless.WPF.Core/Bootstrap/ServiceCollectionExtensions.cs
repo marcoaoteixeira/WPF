@@ -25,8 +25,7 @@ public static class ServiceCollectionExtensions {
         var service = typeof(BootstrapStep);
         var implementations = assemblies.GetImplementations(service)
                                         .Where(type => !type.IsGenericTypeDefinition)
-                                        .Select(type => new ServiceDescriptor(service, type, ServiceLifetime.Singleton))
-                                        .ToArray();
+                                        .Select(type => ServiceDescriptor.Singleton(service, type));
 
         self.TryAddEnumerable(implementations);
         self.TryAddSingleton<IBootstrapper, Bootstrapper>();

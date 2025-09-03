@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
+using Nameless.WPF.Resources;
 using Wpf.Ui.Abstractions;
 
 namespace Nameless.WPF.UI.Navigation;
@@ -27,6 +28,6 @@ public sealed class NavigationViewPageProvider : INavigationViewPageProvider {
             return (FrameworkElement)_provider.GetRequiredService(pageType);
         }
 
-        throw new InvalidOperationException("Page must be a WPF control.");
+        throw new InvalidOperationException(Exceptions.NavigationViewPageProvider_PageMustBeFrameworkElement);
     }
 }

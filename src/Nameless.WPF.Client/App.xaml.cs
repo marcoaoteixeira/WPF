@@ -14,10 +14,12 @@ using Nameless.WPF.Data;
 using Nameless.WPF.GitHub;
 using Nameless.WPF.Notifications;
 using Nameless.WPF.UI;
-using Nameless.WPF.UI.Dialogs.UserDialog;
+using Nameless.WPF.UI.Dialogs.DirectorySelectionBox;
+using Nameless.WPF.UI.Dialogs.MessageBox;
 using Nameless.WPF.UI.Mvvm;
 using Nameless.WPF.UI.Navigation;
 using Nameless.WPF.UI.Snackbar;
+using Nameless.WPF.UI.TaskRunner;
 using Nameless.WPF.UI.Windows;
 using Wpf.Ui;
 
@@ -34,7 +36,7 @@ public partial class App {
     ];
 
     private static readonly string[] Args = [
-        $"--applicationName={Constants.Application.Name}"
+        $"--applicationName={Constants.Application.NAME}"
     ];
 
     private static readonly IHost CurrentHost = HostFactory.Create(Args)
@@ -80,7 +82,7 @@ public partial class App {
 
         // From Third-party
         services.RegisterApplicationContext(opts => {
-            opts.ApplicationName = Constants.Application.Name;
+            opts.ApplicationName = Constants.Application.NAME;
             opts.Version = typeof(App).Assembly.GetName().Version ?? new Version(1, 0, 0);
         });
         services.RegisterMediator(opts => {
@@ -92,7 +94,6 @@ public partial class App {
 
         // From Client
         services.RegisterContentDialogService();
-        services.RegisterFileProvider();
         services.RegisterLogging();
         services.RegisterTimeProvider();
 
@@ -105,12 +106,14 @@ public partial class App {
         services.RegisterGitHubHttpClient(configuration);
 
         // From UI
-        services.RegisterNavigationService();
-        services.RegisterSnackbarService();
-        services.RegisterUserDialog();
-        services.RegisterViewModels(SupportAssemblies);
-        services.RegisterNavigationWindow(SupportAssemblies);
+        services.RegisterDirectorySelectionBox();
+        services.RegisterMessageBox();
         services.RegisterNavigableViews(SupportAssemblies);
+        services.RegisterNavigationService();
+        services.RegisterNavigationWindow(SupportAssemblies);
+        services.RegisterSnackbarService();
+        services.RegisterTaskRunner();
+        services.RegisterViewModels(SupportAssemblies);
         services.RegisterWindowFactory(SupportAssemblies);
     }
 }
