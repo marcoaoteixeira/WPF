@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using Nameless.WPF.GitHub.ObjectModel;
 using Nameless.WPF.GitHub.Requests;
 using Nameless.WPF.GitHub.Responses;
+using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.GitHub;
 
@@ -25,11 +26,15 @@ public class GitHubHttpClient : IGitHubHttpClient {
         Guard.Against.NullOrWhiteSpace(request.Owner);
         Guard.Against.NullOrWhiteSpace(request.Repository);
 
+        var statusCode = 200;
+
         try {
             var url = $"/repos/{request.Owner}/{request.Repository}/releases/latest";
 
             var response = await _httpClient.GetAsync(url, cancellationToken)
                                             .SuppressContext();
+
+            statusCode = (int)response.StatusCode;
 
             response.EnsureSuccessStatusCode();
 
@@ -39,10 +44,10 @@ public class GitHubHttpClient : IGitHubHttpClient {
 
             return release is not null
                 ? GetLastestReleaseResponse.Success(release)
-                : GetLastestReleaseResponse.Failure("Couldn't retrieve latest release information.");
+                : GetLastestReleaseResponse.Failure(statusCode, Strings.GetLastestReleaseResponse_Failure_ReleaseSerialization);
         }
         catch (Exception ex) {
-            return GetLastestReleaseResponse.Failure($"An error occurred while trying to retrieve latest release information: {ex.Message}");
+            return GetLastestReleaseResponse.Failure(statusCode, string.Format(Strings.GetLastestReleaseResponse_Failure_Exception, ex.Message));
         }
     }
 }
