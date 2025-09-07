@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions {
     ///     The current <see cref="IServiceCollection"/> so other actions
     ///     can be chained.
     /// </returns>
-    public static IServiceCollection RegisterBootstrapService(this IServiceCollection self, Assembly[] assemblies) {
+    public static IServiceCollection RegisterBootstrapper(this IServiceCollection self, Assembly[] assemblies) {
         var service = typeof(BootstrapStep);
         var implementations = assemblies.GetImplementations(service)
                                         .Where(type => !type.IsGenericTypeDefinition)

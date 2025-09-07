@@ -2,4 +2,4 @@
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Check;
 
-public record CheckSystemUpdateRequest : IRequest<CheckSystemUpdateResponse>;
+public record CheckForUpdateRequest : IRequest<CheckForUpdateResponse>;

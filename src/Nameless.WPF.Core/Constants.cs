@@ -2,8 +2,12 @@
 
 public static class Constants {
     public static class Application {
-        public const string NAME = "ClientApp";
+        public const string NAME = "ApplicationClient";
         public const string LOG_FILE_NAME = "application.log";
+    }
+
+    public static class SystemUpdate {
+        public const string DIRECTORY_NAME = "updates";
     }
 
     public static class Database {

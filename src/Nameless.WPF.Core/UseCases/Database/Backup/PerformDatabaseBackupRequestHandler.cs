@@ -28,7 +28,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
         var databaseBackupResult = await ExecuteDatabaseBackupAsync(cancellationToken);
 
         if (databaseBackupResult.IsError) {
-            return PerformDatabaseBackupResponse.Failure(databaseBackupResult.AsError[0].Description);
+            return PerformDatabaseBackupResponse.Failure(databaseBackupResult.AsError.Description);
         }
 
         var backupRelativeFilePath = databaseBackupResult.AsResult ??
@@ -118,7 +118,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
 
             var compressRelativeFilePath = $"{backupRelativeFilePath}.gz";
             await using var compressFileStream = _fileSystem.GetFile(compressRelativeFilePath)
-                                                            .Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                                                            .Open();
 
             await using var gzipStream = new GZipStream(compressFileStream, CompressionLevel.Optimal);
 
@@ -156,7 +156,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
         return PerformDatabaseBackupResponse.Success(backupFilePath);
     }
 
-    private static Task<PerformDatabaseBackupResponse> OnFailure(Error[] errors) {
-        return Task.FromResult(PerformDatabaseBackupResponse.Failure(errors[0].Description));
+    private static Task<PerformDatabaseBackupResponse> OnFailure(Error error) {
+        return Task.FromResult(PerformDatabaseBackupResponse.Failure(error.Description));
     }
 }

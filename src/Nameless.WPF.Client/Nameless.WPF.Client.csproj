@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<AssemblyName>ClientApp</AssemblyName>
+		<AssemblyName>ApplicationClient</AssemblyName>
 		<ApplicationIcon>application.ico</ApplicationIcon>
 		<OutputType>WinExe</OutputType>
 		<StartupObject>Nameless.WPF.Client.App</StartupObject>

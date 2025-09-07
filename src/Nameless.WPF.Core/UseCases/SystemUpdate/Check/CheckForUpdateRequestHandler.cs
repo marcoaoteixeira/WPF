@@ -8,21 +8,22 @@ using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Check;
 
-public class CheckSystemUpdateRequestHandler : IRequestHandler<CheckSystemUpdateRequest, CheckSystemUpdateResponse> {
+public class CheckForUpdateRequestHandler : IRequestHandler<CheckForUpdateRequest, CheckForUpdateResponse> {
     private readonly IApplicationContext _applicationContext;
     private readonly IGitHubHttpClient _gitHubHttpClient;
     private readonly INotificationService _notificationService;
     private readonly IOptions<GitHubOptions> _options;
 
-    public CheckSystemUpdateRequestHandler(IApplicationContext applicationContext, IGitHubHttpClient gitHubHttpClient, INotificationService notificationService, IOptions<GitHubOptions> options) {
+    public CheckForUpdateRequestHandler(IApplicationContext applicationContext, IGitHubHttpClient gitHubHttpClient, INotificationService notificationService, IOptions<GitHubOptions> options) {
         _applicationContext = Guard.Against.Null(applicationContext);
         _gitHubHttpClient = Guard.Against.Null(gitHubHttpClient);
         _notificationService = Guard.Against.Null(notificationService);
         _options = Guard.Against.Null(options);
     }
 
-    public async Task<CheckSystemUpdateResponse> HandleAsync(CheckSystemUpdateRequest request, CancellationToken cancellationToken) {
-        await _notificationService.PublishAsync(CheckSystemUpdateNotification.Information(Strings.CheckSystemUpdateRequestHandler_NotificationCheckingNewVersion))
+    public async Task<CheckForUpdateResponse> HandleAsync(CheckForUpdateRequest request, CancellationToken cancellationToken) {
+        var notification = CheckForUpdateNotification.Information(Strings.CheckForUpdateRequestHandler_NotificationCheckingNewVersion);
+        await _notificationService.PublishAsync(notification)
                                   .SuppressContext();
 
         var options = _options.Value;
@@ -31,27 +32,28 @@ public class CheckSystemUpdateRequestHandler : IRequestHandler<CheckSystemUpdate
                                                                .SuppressContext();
 
         if (!getLastestReleaseResponse.Succeeded) {
-            await _notificationService.PublishAsync(CheckSystemUpdateNotification.Failure(getLastestReleaseResponse.Error))
+            notification = CheckForUpdateNotification.Failure(getLastestReleaseResponse.Error);
+            await _notificationService.PublishAsync(notification)
                                       .SuppressContext();
 
-            return CheckSystemUpdateResponse.Failure(getLastestReleaseResponse.Error);
+            return CheckForUpdateResponse.Failure(getLastestReleaseResponse.Error);
         }
 
         var latestVersion = getLastestReleaseResponse.Release.Name[1..];
 
         if (_applicationContext.Version.Equals(latestVersion)) {
-            await _notificationService.PublishAsync(CheckSystemUpdateNotification.Success())
+            await _notificationService.PublishAsync(CheckForUpdateNotification.Success())
                                       .SuppressContext();
 
-            return CheckSystemUpdateResponse.Success(string.Empty, string.Empty);
+            return CheckForUpdateResponse.Success(string.Empty, string.Empty);
         }
 
         var downloadUrl = getLastestReleaseResponse.Release.ZipballUrl;
 
-        var notification = CheckSystemUpdateNotification.Success(latestVersion, downloadUrl);
+        notification = CheckForUpdateNotification.Success(latestVersion, downloadUrl);
         await _notificationService.PublishAsync(notification)
                                   .SuppressContext();
 
-        return CheckSystemUpdateResponse.Success(latestVersion, downloadUrl);
+        return CheckForUpdateResponse.Success(latestVersion, downloadUrl);
     }
 }

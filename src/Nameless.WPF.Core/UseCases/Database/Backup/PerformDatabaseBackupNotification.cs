@@ -5,7 +5,9 @@ namespace Nameless.WPF.UseCases.Database.Backup;
 
 public sealed record PerformDatabaseBackupNotification : INotification {
     public string Title => Strings.PerformDatabaseBackupNotification_Title;
+
     public string Message { get; }
+
     public NotificationType Type { get; }
 
     private PerformDatabaseBackupNotification(string message, NotificationType type = NotificationType.Information) {

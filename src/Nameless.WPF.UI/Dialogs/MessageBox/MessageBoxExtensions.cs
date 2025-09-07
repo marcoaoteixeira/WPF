@@ -1,4 +1,6 @@
-﻿namespace Nameless.WPF.UI.Dialogs.MessageBox;
+﻿using System.Windows;
+
+namespace Nameless.WPF.UI.Dialogs.MessageBox;
 
 public static class MessageBoxExtensions {
     public static MessageBoxResult ShowInformation(this IMessageBox self, string message, string? title = null) {
@@ -9,8 +11,8 @@ public static class MessageBoxExtensions {
         return self.Show(message, title, icon: MessageBoxIcon.Error);
     }
 
-    public static MessageBoxResult ShowWarning(this IMessageBox self, string message, string? title = null) {
-        return self.Show(message, title, icon: MessageBoxIcon.Warning);
+    public static MessageBoxResult ShowWarning(this IMessageBox self, string message, string? title = null, MessageBoxButtons buttons = MessageBoxButtons.Ok) {
+        return self.Show(message, title, icon: MessageBoxIcon.Warning, buttons: buttons);
     }
 
     public static MessageBoxResult ShowAttention(this IMessageBox self, string message, string? title = null) {
@@ -25,11 +27,11 @@ public static class MessageBoxExtensions {
         Guard.Against.Null(self);
         Guard.Against.NullOrWhiteSpace(message);
 
-        return self.Show(new MessageBoxOptions {
-            Title = title,
-            Message = message,
-            Buttons = buttons,
-            Icon = icon
+        return self.Show(message, opts => {
+            opts.Title = title;
+            opts.Buttons = buttons;
+            opts.Icon = icon;
+            opts.Owner = Application.Current.MainWindow;
         });
     }
 }

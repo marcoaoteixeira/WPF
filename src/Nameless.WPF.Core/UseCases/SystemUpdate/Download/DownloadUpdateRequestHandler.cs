@@ -6,27 +6,25 @@ using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Download;
 
-public class DownloadSystemUpdateRequestHandler : IRequestHandler<DownloadSystemUpdateRequest, DownloadSystemUpdateResponse> {
+public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateRequest, DownloadUpdateResponse> {
     private readonly IFileSystem _fileSystem;
     private readonly HttpClient _httpClient;
     private readonly INotificationService _notificationService;
     private readonly TimeProvider _timeProvider;
 
-    public DownloadSystemUpdateRequestHandler(IFileSystem fileSystem, HttpClient httpClient, INotificationService notificationService, TimeProvider timeProvider) {
+    public DownloadUpdateRequestHandler(IFileSystem fileSystem, HttpClient httpClient, INotificationService notificationService, TimeProvider timeProvider) {
         _fileSystem = Guard.Against.Null(fileSystem);
         _httpClient = Guard.Against.Null(httpClient);
         _notificationService = Guard.Against.Null(notificationService);
         _timeProvider = Guard.Against.Null(timeProvider);
     }
 
-    public async Task<DownloadSystemUpdateResponse> HandleAsync(DownloadSystemUpdateRequest request, CancellationToken cancellationToken) {
+    public async Task<DownloadUpdateResponse> HandleAsync(DownloadUpdateRequest request, CancellationToken cancellationToken) {
         Guard.Against.Null(request);
         Guard.Against.NullOrWhiteSpace(request.DownloadUrl);
 
-        const string UpdateDirectoryPath = "updates";
-
         try {
-            await _notificationService.PublishAsync(DownloadSystemUpdateNotification.Starting())
+            await _notificationService.PublishAsync(DownloadUpdateNotification.Starting())
                                       .SuppressContext();
 
             var response = await _httpClient.GetAsync(request.DownloadUrl, cancellationToken)
@@ -35,16 +33,16 @@ public class DownloadSystemUpdateRequestHandler : IRequestHandler<DownloadSystem
             response.EnsureSuccessStatusCode();
 
             // Ensure "updates" directory exists
-            _fileSystem.GetDirectory(UpdateDirectoryPath).Create();
+            _fileSystem.GetDirectory(Constants.SystemUpdate.DIRECTORY_NAME).Create();
 
             var fileName = $"{_timeProvider.GetUtcNow():yyyyMMddHHmmss}_v{request.Version}.zip";
-            var filePath = Path.Combine(UpdateDirectoryPath, fileName);
+            var filePath = Path.Combine(Constants.SystemUpdate.DIRECTORY_NAME, fileName);
             var file = _fileSystem.GetFile(filePath);
 
-            await _notificationService.PublishAsync(DownloadSystemUpdateNotification.WritingFile())
+            await _notificationService.PublishAsync(DownloadUpdateNotification.WritingFile())
                                       .SuppressContext();
 
-            await using var fileStream = file.Open(FileMode.OpenOrCreate, FileAccess.Write);
+            await using var fileStream = file.Open();
             await using var httpStream = await response.Content
                                                        .ReadAsStreamAsync(cancellationToken)
                                                        .SuppressContext();
@@ -52,16 +50,19 @@ public class DownloadSystemUpdateRequestHandler : IRequestHandler<DownloadSystem
             await httpStream.CopyToAsync(fileStream, cancellationToken)
                             .SuppressContext();
 
-            await _notificationService.PublishAsync(DownloadSystemUpdateNotification.Success(file.Path))
+            httpStream.Close();
+            fileStream.Close();
+
+            await _notificationService.PublishAsync(DownloadUpdateNotification.Success(file.Path))
                                       .SuppressContext();
 
-            return DownloadSystemUpdateResponse.Success();
+            return DownloadUpdateResponse.Success(file.Path);
         }
         catch (Exception ex) {
-            await _notificationService.PublishAsync(DownloadSystemUpdateNotification.Failure(ex.Message))
+            await _notificationService.PublishAsync(DownloadUpdateNotification.Failure(ex.Message))
                                       .SuppressContext();
 
-            return DownloadSystemUpdateResponse.Failure(ex.Message);
+            return DownloadUpdateResponse.Failure(ex.Message);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace Nameless.WPF.Data;
 
@@ -15,15 +14,4 @@ public class AppDbContext : DbContext {
     /// </param>
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options) { }
-}
-
-// This is necessary to use the EF Core CLI tool
-public sealed class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext> {
-    public AppDbContext CreateDbContext(string[] args) {
-        var options = new DbContextOptionsBuilder<AppDbContext>()
-                      .UseSqlite("Data Source=database.db")
-                      .Options;
-
-        return new AppDbContext(options);
-    }
 }

@@ -100,7 +100,7 @@ public partial class App {
         // From Core
         services.RegisterAppConfigurationManager();
         services.RegisterAppDbContext(SupportAssemblies);
-        services.RegisterBootstrapService(SupportAssemblies);
+        services.RegisterBootstrapper(SupportAssemblies);
         services.RegisterFileSystem();
         services.RegisterNotificationService();
         services.RegisterGitHubHttpClient(configuration);

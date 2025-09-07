@@ -7,13 +7,6 @@ namespace Nameless.WPF.Internals;
 ///     <see cref="AppConfigurationManager"/> logger extensions.
 /// </summary>
 internal static class AppConfigurationManagerLoggerExtensions {
-    private static readonly Action<ILogger, Exception?> AppConfigurationPhysicalFileNotFoundDelegate
-        = LoggerMessage.Define(
-            logLevel: LogLevel.Warning,
-            eventId: default,
-            formatString: "Physical file for application configuration was not found."
-        );
-
     private static readonly Action<ILogger, Exception> SaveAppConfigurationFailureDelegate
         = LoggerMessage.Define(
             logLevel: LogLevel.Error,
@@ -27,10 +20,6 @@ internal static class AppConfigurationManagerLoggerExtensions {
             eventId: default,
             formatString: "An error occurred while trying to get the value for '{Key}' as '{Type}'."
         );
-
-    internal static void AppConfigurationPhysicalFileNotFound(this ILogger<AppConfigurationManager> self) {
-        AppConfigurationPhysicalFileNotFoundDelegate(self, null /* exception */);
-    }
 
     internal static void SaveAppConfigurationFailure(this ILogger<AppConfigurationManager> self, Exception exception) {
         SaveAppConfigurationFailureDelegate(self, exception);
