@@ -16,13 +16,13 @@
 
         Height="250"
         Width="600"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
 
         Loaded="StartupHandler"
         
         Background="{DynamicResource ApplicationBackgroundBrush}"
         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-        WindowStyle="None"
+        WindowStyle="SingleBorderWindow"
         WindowStartupLocation="CenterScreen">
     <Grid Margin="10">
         <Grid.ColumnDefinitions>

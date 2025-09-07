@@ -38,14 +38,12 @@ if (string.IsNullOrEmpty(solutionPath)) {
 
 var configuration = Argument("configuration", "Release");
 var verbosity = Argument("verbosity", DotNetVerbosity.Normal);
-var codeCoverageDir = Argument<DirectoryPath>("code-coverage-dir", "code_coverage");
-var nupkgOutputDir = Argument<DirectoryPath>("nupkg-output-dir", "nupkgs");
-
-var releaseVersion = Argument("release-version", "1.0.0");
-if (!SemVersion.TryParse(releaseVersion, out var _)) {
+var version = Argument("version", "1.0.0");
+if (!SemVersion.TryParse(version, out var _)) {
     Information("Release version is not a valid SemVersion. Using default version: 1.0.0");
-    releaseVersion = "1.0.0";
+    version = "1.0.0";
 }
+var codeCoverageDir = Argument<DirectoryPath>("code-coverage-dir", "code_coverage");
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -83,9 +81,9 @@ Task("Build")
             Configuration = configuration,
             MSBuildSettings = new DotNetMSBuildSettings
             {
-                AssemblyVersion = releaseVersion,
-                FileVersion = releaseVersion,
-                Version = releaseVersion,
+                AssemblyVersion = version,
+                FileVersion = version,
+                Version = version,
             },
             NoLogo = true,
             NoRestore = true,
@@ -98,7 +96,6 @@ Task("Test")
     .Does(() =>
     {
         var filter = Argument("test-filter", string.Empty);
-        //var logger = Argument("test-logger", $"Html;LogFileName={codeCoverageDir.Combine("code_coverage_log.html")}");
         var logger = Argument("test-logger", "console;verbosity=normal");
         var collector = Argument("test-collector", "XPlat Code Coverage");
 
@@ -121,7 +118,7 @@ Task("CodeCoverage")
     .Does(() =>
     {
         // the '**' in the path is a wildcard that matches any number of directories
-        FilePath coberturaFilePath = $"{codeCoverageDir}/**/coverage.cobertura.xml";
+        FilePath coberturaFilePath = codeCoverageDir.Combine("**").CombineWithFilePath("coverage.cobertura.xml");
         DirectoryPath reportDirectoryPath = codeCoverageDir.Combine("coverage_report");
 
         ReportGenerator(coberturaFilePath, reportDirectoryPath, new ReportGeneratorSettings
@@ -154,23 +151,38 @@ Task("CodeCoverage")
         }
     });
 
-Task("NuGetPack")
+Task("Publish")
+    .IsDependentOn("Clean")
     .IsDependentOn("Test")
     .Does(() =>
     {
-        DotNetPack(solutionPath, new DotNetPackSettings
+        // We do not want to publish the entiry solution,
+        // just one particular project that is the "Client".
+        // If the project is renamed, we need to rename here also.
+        var publishProjectPath = System.IO.Path.Combine(
+            "src",
+            "Nameless.WPF.Client",
+            "Nameless.WPF.Client.csproj"
+        );
+
+        var outputDir = Argument<DirectoryPath>("output-dir", "output");
+        var artifactsDir = Argument<DirectoryPath>("artifacts-dir", "artifacts");
+        
+        DotNetPublish(publishProjectPath, new DotNetPublishSettings
         {
             Configuration = configuration,
-            IncludeSymbols = true,
-            OutputDirectory = nupkgOutputDir,
-            MSBuildSettings = new DotNetMSBuildSettings
-            {
-                PackageVersion = releaseVersion,
-            },
+            OutputDirectory = outputDir,
+            SelfContained = true,
             Verbosity = verbosity,
             NoLogo = true,
             NoBuild = true,
             NoRestore = true,
+            MSBuildSettings = new DotNetMSBuildSettings
+            {
+                AssemblyVersion = version,
+                FileVersion = version,
+                Version = version
+            },
         });
     });
 

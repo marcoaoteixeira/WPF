@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nameless.Infrastructure;
 using Nameless.Mediator;
+using Nameless.WPF.Client.Views.Pages;
 using Nameless.WPF.Configuration;
 using Nameless.WPF.Resources;
 using Nameless.WPF.UI;
@@ -16,10 +17,11 @@ using Nameless.WPF.UseCases.SystemUpdate.Download;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
 
-using MessageBoxResult = Nameless.WPF.UI.Dialogs.MessageBox.MessageBoxResult;
-
 namespace Nameless.WPF.Client.ViewModels.Pages;
 
+/// <summary>
+///     View model for <see cref="AppConfigurationPage"/>.
+/// </summary>
 public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware {
     private readonly IAppConfigurationManager _appConfigurationManager;
     private readonly IApplicationContext _applicationContext;
@@ -83,8 +85,8 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     private Task PerformSystemUpdateAsync() {
         return _taskRunner.CreateBuilder()
                           .SetName(Strings.PerformSystemUpdate_TaskRunnerWindow_Title)
-                          .SubscribeFor<CheckSystemUpdateNotification>()
-                          .SubscribeFor<DownloadSystemUpdateNotification>()
+                          .SubscribeFor<CheckForUpdateNotification>()
+                          .SubscribeFor<DownloadUpdateNotification>()
                           .SetDelegate(ExecuteSystemUpdateAsync)
                           .RunAsync();
     }
@@ -104,11 +106,11 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     }
 
     [RelayCommand]
-    private Task PerformApplicationDatabaseBackupAsync() {
+    private Task PerformDatabaseBackupAsync() {
         return _taskRunner.CreateBuilder()
                           .SetName(Strings.PerformDatabaseBackup_TaskRunnerWindow_Title)
                           .SubscribeFor<PerformDatabaseBackupNotification>()
-                          .SetDelegate(PerformDatabaseBackupAsync)
+                          .SetDelegate(ExecuteDatabaseBackupAsync)
                           .RunAsync();
     }
 
@@ -128,16 +130,15 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         _appConfigurationManager.SetConfirmBeforeExit(newValue);
     }
 
-    private async Task PerformDatabaseBackupAsync(CancellationToken cancellationToken) {
+    private async Task ExecuteDatabaseBackupAsync(CancellationToken cancellationToken) {
         _ = await _mediator.ExecuteAsync(new PerformDatabaseBackupRequest(), cancellationToken)
                            .SuppressContext();
     }
 
     private async Task ExecuteSystemUpdateAsync(CancellationToken cancellationToken) {
-        var newVersionResponse = await ExecuteCheckSystemUpdateAsync(cancellationToken).SuppressContext();
+        var checkForUpdateResponse = await ExecuteCheckForUpdateAsync(cancellationToken).SuppressContext();
 
-        if (!newVersionResponse.Succeeded) { return; }
-        if (string.IsNullOrWhiteSpace(newVersionResponse.Version) || string.IsNullOrWhiteSpace(newVersionResponse.DownloadUrl)) { return; }
+        if (!checkForUpdateResponse.NewVersionAvailable) { return; }
 
         var result = _messageBox.ShowQuestion(
             message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_MessageBox_Message,
@@ -146,19 +147,19 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
         if (result == MessageBoxResult.No) { return; }
 
-        await ExecuteDownloadSystemUpdateAsync(newVersionResponse.Version, newVersionResponse.DownloadUrl, cancellationToken);
+        await ExecuteDownloadUpdateAsync(checkForUpdateResponse.Version, checkForUpdateResponse.DownloadUrl, cancellationToken);
     }
 
-    private Task<CheckSystemUpdateResponse> ExecuteCheckSystemUpdateAsync(CancellationToken cancellationToken) {
+    private Task<CheckForUpdateResponse> ExecuteCheckForUpdateAsync(CancellationToken cancellationToken) {
         return _mediator.ExecuteAsync(
-            new CheckSystemUpdateRequest(),
+            new CheckForUpdateRequest(),
             cancellationToken
         );
     }
 
-    private Task<DownloadSystemUpdateResponse> ExecuteDownloadSystemUpdateAsync(string version, string downloadUrl, CancellationToken cancellationToken) {
+    private Task<DownloadUpdateResponse> ExecuteDownloadUpdateAsync(string version, string downloadUrl, CancellationToken cancellationToken) {
         return _mediator.ExecuteAsync(
-            new DownloadSystemUpdateRequest(version, downloadUrl),
+            new DownloadUpdateRequest(version, downloadUrl),
             cancellationToken
         );
     }

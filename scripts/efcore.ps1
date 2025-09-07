@@ -1,13 +1,13 @@
 #Requires -Version 2.0
 <#
     .SYNOPSIS
-    EF Core Migration
+    Executes EF Core migration or update routines.
 
     .DESCRIPTION
-    Executes EF Core migration routine
+    Executes EF Core migration or update routines.
 
     .LINK
-	Project home: https://github.com/marcoaoteixeira/infophoenix
+	Project home: https://github.com/marcoaoteixeira/InfoPhoenix
 
 	.NOTES
 	Author:
@@ -17,21 +17,14 @@
 #>
 [CmdletBinding()]
 Param (
-	[Parameter(Mandatory = $true, HelpMessage = "The startup project.")]
-	[Alias("s")]
-    [String]$StartupProject = $null,
-	
-	[Parameter(Mandatory = $true, HelpMessage = "The project where DbContext resides.")]
-	[Alias("p")]
-    [String]$DbContextProject = $null,
-	
-	[Parameter(Mandatory = $true, HelpMessage = "The migration name.")]
-	[Alias("m")]
+    [Parameter(Mandatory = $false, ParameterSetName = "migration-set", HelpMessage = "Executes a migration action.")]
+    [Switch]$Migration,
+
+	[Parameter(Mandatory = $true, ParameterSetName = "migration-set", HelpMessage = "The name of the migration to execute.")]
     [String]$MigrationName = $null,
-	
-	[Parameter(Mandatory = $false, HelpMessage = "The output location.")]
-	[Alias("o")]
-    [String]$OutputPath = "./Data/Migrations",
+
+    [Parameter(Mandatory = $false, ParameterSetName = "udate-set", HelpMessage = "Executes an update action.")]
+    [Switch]$Update,
 	
     [Parameter(Mandatory = $false, HelpMessage = "Whether should show prompt for errors")]
     [Switch]$PromptOnError = $false
@@ -51,6 +44,10 @@ $SCRIPT_NAME = [System.IO.Path]::GetFileNameWithoutExtension($MyInvocation.MyCom
 
 # Get the directory that this script is in.
 $SCRIPT_DIRECTORY_PATH = Split-Path $script:MyInvocation.MyCommand.Path
+
+# Project Variables
+$DBCONTEXT_PROJECT_PATH = [System.IO.Path]::Combine("src", "Nameless.WPF.Core", "Nameless.WPF.Core.csproj")
+$MIGRATION_OUTPUT_PATH = [System.IO.Path]::Combine("Data", "Migrations")
 
 #==========================================================
 # Define functions used by the script.
@@ -74,6 +71,18 @@ Function Test-StringIsNullOrWhitespace([String]$value) {
     Return [String]::IsNullOrWhiteSpace($value)
 }
 
+Function Execute-Database-Migration([String]$migrationName) {
+    If (Test-StringIsNullOrWhitespace $migrationName) {
+        Throw [System.InvalidOperationException]::new("Missing migration name.")
+    }
+
+    dotnet ef migrations add $migrationName -s $DBCONTEXT_PROJECT_PATH -p $DBCONTEXT_PROJECT_PATH -o $MIGRATION_OUTPUT_PATH
+}
+
+Function Execute-Database-Update() {
+    dotnet ef database update -s $DBCONTEXT_PROJECT_PATH -p $DBCONTEXT_PROJECT_PATH
+}
+
 #==========================================================
 # Perform the script tasks.
 #==========================================================
@@ -85,8 +94,20 @@ Write-Verbose "[$($SCRIPT_NAME)] Starting at $($ScriptStartTime.TimeOfDay.ToStri
 # Display the version of PowerShell being used to run the script, as this can help solve some problems that are hard to reproduce on other machines.
 Write-Verbose "Using PowerShell Version: $($PSVersionTable.PSVersion.ToString())."
 
-Try { dotnet ef migrations add $MigrationName -s $StartupProject -p $DbContextProject -o $OutputPath }
-Finally { Write-Verbose "[$($SCRIPT_NAME)] Performing cleanup..." }
+Try {
+    Write-Host "Executing EntityFrameworkCore for project '$($DBCONTEXT_PROJECT_PATH)'"
+
+    If ($Migration) {
+        Execute-Database-Migration $MigrationName
+    }
+
+    If ($Update) {
+        Execute-Database-Update
+    }
+}
+Finally {
+    Write-Verbose "[$($SCRIPT_NAME)] Performing cleanup..."
+}
 
 # Display the time that this script finished running, and how long it took to run.
 $ScriptFinishTime = Get-Date

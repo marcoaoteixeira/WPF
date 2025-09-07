@@ -54,7 +54,7 @@
             </ui:CardControl.Header>
             <ui:Button Appearance="Success"
                        Cursor="Hand"
-                       Command="{Binding ElementName=AppConfigurationPageRoot, Path=ViewModel.PerformApplicationDatabaseBackupCommand, Mode=OneTime}"
+                       Command="{Binding ElementName=AppConfigurationPageRoot, Path=ViewModel.PerformDatabaseBackupCommand, Mode=OneTime}"
                        Content="{x:Static localization:Strings.AppConfigurationPage_DatabaseBackupCard_PerformDatabaseBackup_Button}"
                        Icon="{ui:SymbolIcon DatabaseMultiple20}"
                        Padding="30 8" />

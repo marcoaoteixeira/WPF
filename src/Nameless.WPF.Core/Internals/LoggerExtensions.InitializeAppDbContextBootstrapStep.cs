@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Nameless.WPF.Bootstrap.Steps;
 using Nameless.WPF.Data;
 
 namespace Nameless.WPF.Internals;
@@ -7,7 +8,7 @@ namespace Nameless.WPF.Internals;
 ///     Extension methods for <see cref="ILogger"/> that target
 ///     the <see cref="AppDbContext"/> implementations.
 /// </summary>
-internal static class AppDbContextLoggerExtensions {
+internal static class InitializeAppDbContextBootstrapStepLoggerExtensions {
     private static readonly Action<ILogger, Exception?> SkipMigrationForNonRelationalDatabaseDelegate
         = LoggerMessage.Define(
             logLevel: LogLevel.Information,
@@ -15,7 +16,7 @@ internal static class AppDbContextLoggerExtensions {
             formatString: "DbContext references a non-relational database, skipping migration action."
         );
 
-    internal static void SkipMigrationForNonRelationalDatabase(this ILogger<AppDbContext> self) {
+    internal static void SkipMigrationForNonRelationalDatabase(this ILogger<InitializeAppDbContextBootstrapStep> self) {
         SkipMigrationForNonRelationalDatabaseDelegate(self, null /* exception */);
     }
 }

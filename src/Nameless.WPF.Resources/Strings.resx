@@ -138,7 +138,7 @@
   <data name="DirectorySelectionBoxImpl_FallbackTitle_Plural" xml:space="preserve">
     <value>Select directories...</value>
   </data>
-  <data name="AppDbContextInitializationBootstrapStep_Name" xml:space="preserve">
+  <data name="InitializeAppDbContextBootstrapStep_Name" xml:space="preserve">
     <value>Database Context Initialization Step</value>
   </data>
   <data name="MessageBoxIcon_Attention" xml:space="preserve">
@@ -174,28 +174,28 @@
   <data name="Theme_HighContrast" xml:space="preserve">
     <value>High Contrast</value>
   </data>
-  <data name="CheckSystemUpdateNotification_Title" xml:space="preserve">
+  <data name="CheckForUpdateNotification_Title" xml:space="preserve">
     <value>Check System Update</value>
   </data>
-  <data name="CheckSystemUpdateNotification_Success_NewVersionAvailable" xml:space="preserve">
+  <data name="CheckForUpdateNotification_Success_NewVersionAvailable" xml:space="preserve">
     <value>A new version is available. Download the new version {0} at: {1}</value>
   </data>
-  <data name="CheckSystemUpdateNotification_Success_CurrentVersionUpToDate" xml:space="preserve">
+  <data name="CheckForUpdateNotification_Success_CurrentVersionUpToDate" xml:space="preserve">
     <value>Current version is the latest.</value>
   </data>
-  <data name="CheckSystemUpdateRequestHandler_NotificationCheckingNewVersion" xml:space="preserve">
+  <data name="CheckForUpdateRequestHandler_NotificationCheckingNewVersion" xml:space="preserve">
     <value>Please wait as we check for a new version...</value>
   </data>
-  <data name="DownloadSystemUpdateNotification_Title" xml:space="preserve">
+  <data name="DownloadUpdateNotification_Title" xml:space="preserve">
     <value>Download System Update</value>
   </data>
-  <data name="DownloadSystemUpdateNotification_Success" xml:space="preserve">
+  <data name="DownloadUpdateNotification_Success" xml:space="preserve">
     <value>System update download complete. The new file package can be found at: {0}</value>
   </data>
-  <data name="DownloadSystemUpdateNotification_Starting" xml:space="preserve">
+  <data name="DownloadUpdateNotification_Starting" xml:space="preserve">
     <value>Initializing system update download...</value>
   </data>
-  <data name="DownloadSystemUpdateNotification_WritingFile" xml:space="preserve">
+  <data name="DownloadUpdateNotification_WritingFile" xml:space="preserve">
     <value>Writing system update file to the disk...</value>
   </data>
   <data name="GetLastestReleaseResponse_Failure_ReleaseSerialization" xml:space="preserve">

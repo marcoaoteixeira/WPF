@@ -10,16 +10,16 @@ namespace Nameless.WPF.Configuration;
 /// <summary>
 ///     Default implementation of <see cref="IAppConfigurationManager"/>.
 /// </summary>
-public class AppConfigurationManager : IAppConfigurationManager, IDisposable {
+public class AppConfigurationManager : IAppConfigurationManager, IDisposable, IAsyncDisposable {
     private const string APP_CONFIGURATION_FILE = "app.config";
 
-    private readonly Lazy<Dictionary<string, JsonElement>> _configuration;
+    private readonly Lazy<Dictionary<string, JsonElement>> _appConfiguration;
     private readonly IFileSystem _fileSystem;
     private readonly ILogger<AppConfigurationManager> _logger;
 
     private bool _disposed;
 
-    private Dictionary<string, JsonElement> Configuration => _configuration.Value;
+    private Dictionary<string, JsonElement> AppConfiguration => _appConfiguration.Value;
 
     /// <summary>
     ///     Initializes a new instance of
@@ -34,7 +34,7 @@ public class AppConfigurationManager : IAppConfigurationManager, IDisposable {
     public AppConfigurationManager(IFileSystem fileSystem, ILogger<AppConfigurationManager> logger) {
         _fileSystem = Guard.Against.Null(fileSystem);
         _logger = Guard.Against.Null(logger);
-        _configuration = new Lazy<Dictionary<string, JsonElement>>(Initialize);
+        _appConfiguration = new Lazy<Dictionary<string, JsonElement>>(GetAppConfiguration);
     }
 
     /// <inheritdoc />
@@ -43,7 +43,7 @@ public class AppConfigurationManager : IAppConfigurationManager, IDisposable {
 
         output = default;
 
-        var element = Configuration.GetValueOrDefault(name);
+        var element = AppConfiguration.GetValueOrDefault(name);
         if (element.ValueKind == JsonValueKind.Undefined) {
             return false;
         }
@@ -65,31 +65,37 @@ public class AppConfigurationManager : IAppConfigurationManager, IDisposable {
     public void Set<TValue>(string name, TValue value) {
         Guard.Against.NullOrWhiteSpace(name);
 
-        Configuration[name] = JsonSerializer.SerializeToElement(value);
+        AppConfiguration[name] = JsonSerializer.SerializeToElement(value);
     }
 
     /// <inheritdoc />
-    public Task SaveChangesAsync(CancellationToken cancellationToken) {
-        var file = _fileSystem.GetFile(APP_CONFIGURATION_FILE);
-        if (string.IsNullOrWhiteSpace(file.Path)) {
-            _logger.AppConfigurationPhysicalFileNotFound();
-
-            return Task.CompletedTask;
-        }
-
+    public async Task SaveChangesAsync(CancellationToken cancellationToken) {
         try {
-            var json = JsonSerializer.Serialize(Configuration);
+            var file = _fileSystem.GetFile(APP_CONFIGURATION_FILE);
+            var json = JsonSerializer.Serialize(AppConfiguration);
 
-            return File.WriteAllTextAsync(file.Path, json, cancellationToken);
+            await using var stream = file.Open();
+            await using var writer = new StreamWriter(stream);
+
+            await writer.WriteLineAsync(json);
+            await writer.FlushAsync(cancellationToken);
+
+            writer.Close();
+            stream.Close();
         }
         catch (Exception ex) { _logger.SaveAppConfigurationFailure(ex); }
-
-        return Task.CompletedTask;
     }
 
     /// <inheritdoc />
     public void Dispose() {
         Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    public async ValueTask DisposeAsync() {
+        await DisposeAsyncCore().SuppressContext();
+
+        Dispose(disposing: false);
         GC.SuppressFinalize(this);
     }
 
@@ -103,18 +109,22 @@ public class AppConfigurationManager : IAppConfigurationManager, IDisposable {
         if (_disposed) { return; }
 
         if (disposing) {
-            SaveChangesAsync(CancellationToken.None).GetAwaiter().GetResult();
+            /* dispose managed resource */
         }
+
+        /* dispose unmanaged resource */
 
         _disposed = true;
     }
 
-    private Dictionary<string, JsonElement> Initialize() {
+    protected async ValueTask DisposeAsyncCore() {
+        await SaveChangesAsync(CancellationToken.None);
+    }
+
+    private Dictionary<string, JsonElement> GetAppConfiguration() {
         var file = _fileSystem.GetFile(APP_CONFIGURATION_FILE);
 
-        if (!file.Exists) {
-            return [];
-        }
+        if (!file.Exists) { return []; }
 
         using var stream = file.Open();
 

@@ -13,13 +13,13 @@ using Nameless.WPF.UI.Dialogs.MessageBox;
 using Nameless.WPF.UI.Mvvm;
 using Nameless.WPF.UI.Notifications;
 using Nameless.WPF.UI.Snackbar;
+using Nameless.WPF.UseCases.Database.Backup;
 using Nameless.WPF.UseCases.SystemUpdate.Check;
+using Nameless.WPF.UseCases.SystemUpdate.Download;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.Appearance;
 using Wpf.Ui.Controls;
-
-using MessageBoxResult = Nameless.WPF.UI.Dialogs.MessageBox.MessageBoxResult;
 
 namespace Nameless.WPF.Client.Views.Windows;
 
@@ -144,10 +144,13 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
     }
 
     private void SubscribeForNotifications() {
-        _notificationService.Subscribe<CheckSystemUpdateNotification>(this, ShowSnackbarNotification);
+        _notificationService.Subscribe<PerformDatabaseBackupNotification>(this, ShowNotificationInSnackbar);
+        _notificationService.Subscribe<CheckForUpdateNotification>(this, ShowNotificationInSnackbar);
+        _notificationService.Subscribe<DownloadUpdateNotification>(this, ShowNotificationInSnackbar);
+
     }
 
-    private void ShowSnackbarNotification(object sender, INotification notification) {
+    private void ShowNotificationInSnackbar(object sender, INotification notification) {
         Dispatcher.InvokeAsync(() => _snackbarService.Show(notification.ToSnackbarParameters()));
     }
 }

@@ -223,47 +223,38 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Database Context Initialization Step.
-        /// </summary>
-        public static string AppDbContextInitializationBootstrapStep_Name {
-            get {
-                return ResourceManager.GetString("AppDbContextInitializationBootstrapStep_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Current version is the latest..
         /// </summary>
-        public static string CheckSystemUpdateNotification_Success_CurrentVersionUpToDate {
+        public static string CheckForUpdateNotification_Success_CurrentVersionUpToDate {
             get {
-                return ResourceManager.GetString("CheckSystemUpdateNotification_Success_CurrentVersionUpToDate", resourceCulture);
+                return ResourceManager.GetString("CheckForUpdateNotification_Success_CurrentVersionUpToDate", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to A new version is available. Download the new version {0} at: {1}.
         /// </summary>
-        public static string CheckSystemUpdateNotification_Success_NewVersionAvailable {
+        public static string CheckForUpdateNotification_Success_NewVersionAvailable {
             get {
-                return ResourceManager.GetString("CheckSystemUpdateNotification_Success_NewVersionAvailable", resourceCulture);
+                return ResourceManager.GetString("CheckForUpdateNotification_Success_NewVersionAvailable", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Check System Update.
         /// </summary>
-        public static string CheckSystemUpdateNotification_Title {
+        public static string CheckForUpdateNotification_Title {
             get {
-                return ResourceManager.GetString("CheckSystemUpdateNotification_Title", resourceCulture);
+                return ResourceManager.GetString("CheckForUpdateNotification_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Please wait as we check for a new version....
         /// </summary>
-        public static string CheckSystemUpdateRequestHandler_NotificationCheckingNewVersion {
+        public static string CheckForUpdateRequestHandler_NotificationCheckingNewVersion {
             get {
-                return ResourceManager.GetString("CheckSystemUpdateRequestHandler_NotificationCheckingNewVersion", resourceCulture);
+                return ResourceManager.GetString("CheckForUpdateRequestHandler_NotificationCheckingNewVersion", resourceCulture);
             }
         }
         
@@ -333,36 +324,36 @@ namespace Nameless.WPF.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Initializing system update download....
         /// </summary>
-        public static string DownloadSystemUpdateNotification_Starting {
+        public static string DownloadUpdateNotification_Starting {
             get {
-                return ResourceManager.GetString("DownloadSystemUpdateNotification_Starting", resourceCulture);
+                return ResourceManager.GetString("DownloadUpdateNotification_Starting", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to System update download complete. The new file package can be found at: {0}.
         /// </summary>
-        public static string DownloadSystemUpdateNotification_Success {
+        public static string DownloadUpdateNotification_Success {
             get {
-                return ResourceManager.GetString("DownloadSystemUpdateNotification_Success", resourceCulture);
+                return ResourceManager.GetString("DownloadUpdateNotification_Success", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Download System Update.
         /// </summary>
-        public static string DownloadSystemUpdateNotification_Title {
+        public static string DownloadUpdateNotification_Title {
             get {
-                return ResourceManager.GetString("DownloadSystemUpdateNotification_Title", resourceCulture);
+                return ResourceManager.GetString("DownloadUpdateNotification_Title", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Writing system update file to the disk....
         /// </summary>
-        public static string DownloadSystemUpdateNotification_WritingFile {
+        public static string DownloadUpdateNotification_WritingFile {
             get {
-                return ResourceManager.GetString("DownloadSystemUpdateNotification_WritingFile", resourceCulture);
+                return ResourceManager.GetString("DownloadUpdateNotification_WritingFile", resourceCulture);
             }
         }
         
@@ -381,6 +372,15 @@ namespace Nameless.WPF.Resources {
         public static string GetLastestReleaseResponse_Failure_ReleaseSerialization {
             get {
                 return ResourceManager.GetString("GetLastestReleaseResponse_Failure_ReleaseSerialization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Context Initialization Step.
+        /// </summary>
+        public static string InitializeAppDbContextBootstrapStep_Name {
+            get {
+                return ResourceManager.GetString("InitializeAppDbContextBootstrapStep_Name", resourceCulture);
             }
         }
         

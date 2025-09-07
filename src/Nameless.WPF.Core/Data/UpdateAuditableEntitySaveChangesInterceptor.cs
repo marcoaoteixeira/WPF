@@ -26,7 +26,7 @@ public sealed class UpdateAuditableEntitySaveChangesInterceptor : SaveChangesInt
     }
 
     /// <inheritdoc />
-    [SuppressMessage("ReSharper", "InvertIf", Justification = "Duplicate the return statement.")]
+    [SuppressMessage("ReSharper", "InvertIf", Justification = "Avoid duplicate the return statement.")]
     [SuppressMessage("ReSharper", "SwitchStatementMissingSomeEnumCasesNoDefault", Justification = "We don't care for the other branches.")]
     public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken cancellationToken = default) {
         var dbContext = eventData.Context;
