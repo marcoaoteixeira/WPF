@@ -6,7 +6,8 @@ using Nameless.WPF.Internals;
 namespace Nameless.WPF.Behaviors;
 
 /// <summary>
-///     Validation pipeline behavior.
+///     A request pipeline behavior that validates the request object
+///     before it reaches the actual request handler.
 /// </summary>
 /// <typeparam name="TRequest">
 ///     Type of the request.
@@ -36,10 +37,11 @@ public class ValidateRequestPipelineBehavior<TRequest, TResponse> : IRequestPipe
 
     /// <inheritdoc />
     public async Task<TResponse> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken) {
-        var result = await _validationService.ValidateAsync(request, cancellationToken);
+        var result = await _validationService.ValidateAsync(request, cancellationToken)
+                                             .SuppressContext();
 
         if (result.Succeeded) {
-            return await next(cancellationToken);
+            return await next(cancellationToken).SuppressContext();
         }
 
         _logger.ValidateRequestObjectFailure(result);

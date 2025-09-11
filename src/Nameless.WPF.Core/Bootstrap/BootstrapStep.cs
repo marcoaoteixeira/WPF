@@ -56,10 +56,7 @@ public abstract class BootstrapStep {
 
         _logger.StartingExecution(this);
 
-        try {
-            await InnerExecuteAsync(cancellationToken)
-                .ConfigureAwait(continueOnCapturedContext: false);
-        }
+        try { await InnerExecuteAsync(cancellationToken).SuppressContext(); }
         catch (Exception ex) {
             _logger.ExecutionFailure(this, ex);
 

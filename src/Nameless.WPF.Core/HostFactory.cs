@@ -11,11 +11,15 @@ public sealed class HostFactory {
     private readonly string[] _args;
 
     private Action<IServiceCollection, IConfiguration> _configure;
+    private Action<IServiceProvider> _onStartup;
+    private Action<IServiceProvider> _onTearDown;
 
     // We want to force the usage of the static Create method
     private HostFactory(string[] args) {
         _args = args;
         _configure = (_, _) => { };
+        _onStartup = _ => { };
+        _onTearDown = _ => { };
     }
 
     /// <summary>
@@ -48,13 +52,47 @@ public sealed class HostFactory {
     }
 
     /// <summary>
+    ///     Executes the <paramref name="callback"/> after the application
+    ///     has started.
+    /// </summary>
+    /// <param name="callback">
+    ///     The startup callback.
+    /// </param>
+    /// <returns>
+    ///     The current instance of <see cref="HostFactory" /> so other
+    ///     actions can be chained.
+    /// </returns>
+    public HostFactory OnStartup(Action<IServiceProvider> callback) {
+        _onStartup = Guard.Against.Null(callback);
+
+        return this;
+    }
+
+    /// <summary>
+    ///     Executes the <paramref name="callback"/> before the application
+    ///     stops.
+    /// </summary>
+    /// <param name="callback">
+    ///     The startup callback.
+    /// </param>
+    /// <returns>
+    ///     The current instance of <see cref="HostFactory" /> so other
+    ///     actions can be chained.
+    /// </returns>
+    public HostFactory OnTearDown(Action<IServiceProvider> callback) {
+        _onTearDown = Guard.Against.Null(callback);
+
+        return this;
+    }
+
+    /// <summary>
     ///     Builds the <see cref="IHost" /> instance.
     /// </summary>
     /// <returns>
     ///     The built <see cref="IHost" /> instance.
     /// </returns>
     public IHost Build() {
-        return Host.CreateDefaultBuilder(_args)
+        var host = Host.CreateDefaultBuilder(_args)
                    .ConfigureHostConfiguration(builder =>
                        builder
                            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
@@ -63,5 +101,16 @@ public sealed class HostFactory {
                     )
                    .ConfigureServices((ctx, services) => _configure(services, ctx.Configuration))
                    .Build();
+
+        RegisterHostApplicationLifetimeEvents(host);
+
+        return host;
+    }
+
+    private void RegisterHostApplicationLifetimeEvents(IHost host) {
+        var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
+
+        lifetime.ApplicationStarted.Register(() => _onStartup(host.Services));
+        lifetime.ApplicationStopping.Register(() => _onTearDown(host.Services));
     }
 }

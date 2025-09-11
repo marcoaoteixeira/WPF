@@ -10,14 +10,12 @@ namespace Nameless.WPF.Configuration;
 /// <summary>
 ///     Default implementation of <see cref="IAppConfigurationManager"/>.
 /// </summary>
-public class AppConfigurationManager : IAppConfigurationManager, IDisposable, IAsyncDisposable {
+public class AppConfigurationManager : IAppConfigurationManager {
     private const string APP_CONFIGURATION_FILE = "app.config";
 
     private readonly Lazy<Dictionary<string, JsonElement>> _appConfiguration;
     private readonly IFileSystem _fileSystem;
     private readonly ILogger<AppConfigurationManager> _logger;
-
-    private bool _disposed;
 
     private Dictionary<string, JsonElement> AppConfiguration => _appConfiguration.Value;
 
@@ -72,53 +70,13 @@ public class AppConfigurationManager : IAppConfigurationManager, IDisposable, IA
     public async Task SaveChangesAsync(CancellationToken cancellationToken) {
         try {
             var file = _fileSystem.GetFile(APP_CONFIGURATION_FILE);
-            var json = JsonSerializer.Serialize(AppConfiguration);
+            var json = JsonSerializer.SerializeToUtf8Bytes(AppConfiguration);
 
-            await using var stream = file.Open();
-            await using var writer = new StreamWriter(stream);
-
-            await writer.WriteLineAsync(json);
-            await writer.FlushAsync(cancellationToken);
-
-            writer.Close();
-            stream.Close();
+            await using var stream = file.Open(FileMode.Truncate);
+            await stream.WriteAsync(json, cancellationToken)
+                        .SuppressContext();
         }
         catch (Exception ex) { _logger.SaveAppConfigurationFailure(ex); }
-    }
-
-    /// <inheritdoc />
-    public void Dispose() {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
-    }
-
-    public async ValueTask DisposeAsync() {
-        await DisposeAsyncCore().SuppressContext();
-
-        Dispose(disposing: false);
-        GC.SuppressFinalize(this);
-    }
-
-    /// <summary>
-    ///     Dispose the current instance.
-    /// </summary>
-    /// <param name="disposing">
-    ///     Whether it should dispose managed resources.
-    /// </param>
-    protected virtual void Dispose(bool disposing) {
-        if (_disposed) { return; }
-
-        if (disposing) {
-            /* dispose managed resource */
-        }
-
-        /* dispose unmanaged resource */
-
-        _disposed = true;
-    }
-
-    protected async ValueTask DisposeAsyncCore() {
-        await SaveChangesAsync(CancellationToken.None);
     }
 
     private Dictionary<string, JsonElement> GetAppConfiguration() {

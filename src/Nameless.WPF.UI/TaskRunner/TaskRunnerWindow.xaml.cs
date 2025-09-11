@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Nameless.WPF.DependencyInjection;
 using Nameless.WPF.Notifications;
@@ -10,6 +11,8 @@ namespace Nameless.WPF.UI.TaskRunner;
 /// </summary>
 [ServiceLifetime(Lifetime = ServiceLifetime.Transient)]
 public partial class TaskRunnerWindow : ITaskRunnerWindow {
+    private bool _canClose;
+
     /// <inheritdoc />
     public TaskRunnerWindowViewModel ViewModel { get; }
 
@@ -37,7 +40,7 @@ public partial class TaskRunnerWindow : ITaskRunnerWindow {
 
     /// <inheritdoc />
     public ITaskRunnerWindow SetOwner(Window? owner) {
-        CallOnDispatcher(() => Owner = owner ?? Application.Current.MainWindow);
+        Dispatcher.Invoke(() => Owner = owner ?? Application.Current.MainWindow);
 
         return this;
     }
@@ -61,17 +64,26 @@ public partial class TaskRunnerWindow : ITaskRunnerWindow {
     public void Show(WindowStartupLocation startupLocation) {
         WindowStartupLocation = startupLocation;
 
-        CallOnDispatcher(() => ShowDialog());
+        Dispatcher.Invoke(ShowDialog);
     }
 
     private void StartupHandler(object sender, RoutedEventArgs args) {
         Dispatcher.InvokeAsync(() => ViewModel.ExecuteCommand.ExecuteAsync(null));
     }
 
-    private void CallOnDispatcher(Action action) {
-        var dispatch = Dispatcher.CheckAccess();
+    private void CloseButtonHandler(object sender, RoutedEventArgs args) {
+        _canClose = true;
 
-        if (dispatch) { Dispatcher.Invoke(action); }
-        else { action(); }
+        Close();
+    }
+
+    private void ClosingHandler(object sender, CancelEventArgs args) {
+        if (_canClose) {
+            ViewModel.CleanUp();
+
+            return;
+        }
+
+        args.Cancel = true;
     }
 }

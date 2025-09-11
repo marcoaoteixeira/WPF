@@ -21,7 +21,8 @@ public sealed record LoggerRichTextBoxEntry {
     /// </summary>
     public Brush Foreground { get; init; } = Brushes.Black;
 
-    // Private constructor to enforce the use of static methods for creating instances.
+    // Private constructor to enforce the use of static methods for
+    // creating instances.
     private LoggerRichTextBoxEntry() { }
 
     /// <summary>

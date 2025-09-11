@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Nameless.WPF.Notifications;
@@ -62,39 +61,40 @@ public partial class TaskRunnerWindowViewModel : ViewModel {
         _delegate = Guard.Against.Null(@delegate);
     }
 
+    /// <summary>
+    ///     Cleans up all resources used by the task runner.
+    /// </summary>
+    public void CleanUp() {
+        if (Running) {
+            _cts?.Cancel(throwOnFirstException: false);
+        }
+
+        _cts?.Dispose();
+        _cts = null;
+        _subscribe = null;
+        _unsubscribe = null;
+        _delegate = null;
+    }
+
     [RelayCommand]
     private async Task ExecuteAsync() {
         if (_delegate is null) { return; }
 
-        ToggleStatus();
+        await ToggleRunningAsync();
 
-        try {
-            _subscribe?.Invoke();
+        _subscribe?.Invoke();
 
-            await _delegate(GetCancellationTokenSource().Token);
-        }
+        try { await _delegate(GetCancellationTokenSource().Token); }
         catch (Exception ex) { Entries.Add(LoggerRichTextBoxEntry.Error(ex.Message)); }
-        finally { _unsubscribe?.Invoke(); }
 
-        ToggleStatus();
+        _unsubscribe?.Invoke();
+
+        await ToggleRunningAsync();
     }
 
     [RelayCommand]
     private Task CancelAsync() {
         return GetCancellationTokenSource().CancelAsync();
-    }
-
-    [RelayCommand]
-    private Task CloseAsync(object? sender) {
-        if (sender is not Window window) {
-            throw new InvalidOperationException($"Parameter '{nameof(sender)}' must be a '{nameof(Window)}' type.");
-        }
-
-        Clean();
-
-        window.Close();
-
-        return Task.CompletedTask;
     }
 
     private CancellationTokenSource GetCancellationTokenSource() {
@@ -114,15 +114,12 @@ public partial class TaskRunnerWindowViewModel : ViewModel {
         Entries.Add(entry);
     }
 
-    private void ToggleStatus() {
+    private async Task ToggleRunningAsync() {
+        // Small delay so any UI control can be
+        // rendered properly.
+        await Task.Delay(200);
+
         Running = !Running;
         Idle = !Idle;
-    }
-
-    private void Clean() {
-        _cts?.Dispose();
-        _subscribe = null;
-        _unsubscribe = null;
-        _delegate = null;
     }
 }

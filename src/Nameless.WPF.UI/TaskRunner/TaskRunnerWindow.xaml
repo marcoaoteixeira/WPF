@@ -19,7 +19,8 @@
         ResizeMode="CanResize"
 
         Loaded="StartupHandler"
-        
+        Closing="ClosingHandler"
+
         Background="{DynamicResource ApplicationBackgroundBrush}"
         Foreground="{DynamicResource TextFillColorPrimaryBrush}"
         WindowStyle="SingleBorderWindow"
@@ -81,8 +82,7 @@
 
             <!-- Close Button -->
             <ui:Button Appearance="Success"
-                       Command="{Binding ElementName=TaskRunnerWindowRoot, Path=ViewModel.CloseCommand}"
-                       CommandParameter="{Binding ElementName=TaskRunnerWindowRoot, Path=.}"
+                       Click="CloseButtonHandler"
                        Content="{x:Static localization:Strings.TaskRunnerWindow_Close_Button}"
                        Cursor="Hand"
                        Icon="{ui:SymbolIcon ArrowExit20}"

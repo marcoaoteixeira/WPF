@@ -41,19 +41,13 @@ public partial class App {
 
     private static readonly IHost CurrentHost = HostFactory.Create(Args)
                                                            .ConfigureServices(ConfigureServices)
+                                                           .OnStartup(OnHostStartup)
+                                                           .OnTearDown(OnHostTearDown)
                                                            .Build();
 
     // ReSharper disable once AsyncVoidMethod
     protected override async void OnStartup(StartupEventArgs e) {
         await CurrentHost.StartAsync();
-
-        await CurrentHost.Services
-                         .GetRequiredService<IBootstrapper>()
-                         .ExecuteAsync(CancellationToken.None);
-
-        CurrentHost.Services
-                   .GetRequiredService<INavigationWindow>()
-                   .ShowWindow();
 
         base.OnStartup(e);
     }
@@ -115,5 +109,22 @@ public partial class App {
         services.RegisterTaskRunner();
         services.RegisterViewModels(SupportAssemblies);
         services.RegisterWindowFactory(SupportAssemblies);
+    }
+
+    private static void OnHostStartup(IServiceProvider provider) {
+        var bootstrapper = provider.GetRequiredService<IBootstrapper>()
+                                   .ExecuteAsync(CancellationToken.None);
+
+        Task.WaitAll(bootstrapper);
+
+        provider.GetRequiredService<INavigationWindow>()
+                .ShowWindow();
+    }
+
+    private static void OnHostTearDown(IServiceProvider provider) {
+        var appConfigurationManager = provider.GetRequiredService<IAppConfigurationManager>()
+                                              .SaveChangesAsync(CancellationToken.None);
+
+        Task.WaitAll(appConfigurationManager);
     }
 }
