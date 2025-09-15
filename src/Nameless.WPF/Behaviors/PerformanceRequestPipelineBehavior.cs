@@ -16,7 +16,8 @@ namespace Nameless.WPF.Behaviors;
 ///     Type of the response.
 /// </typeparam>
 public class PerformanceRequestPipelineBehavior<TRequest, TResponse> : IRequestPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse> {
+    where TRequest : class
+    where TResponse : class {
     private readonly ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> _logger;
 
     /// <summary>

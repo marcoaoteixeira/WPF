@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Nameless.WPF.DependencyInjection;
 
 namespace Nameless.WPF.Bootstrap;
 
@@ -27,11 +28,11 @@ public static class ServiceCollectionExtensions {
         innerConfigure(options);
 
         var service = typeof(BootstrapStep);
-        var implementations = options.Steps
-                                     .Where(type => !type.IsGenericTypeDefinition)
-                                     .Select(type => ServiceDescriptor.Transient(service, type));
+        var descriptors = options.Steps
+                                 .Where(type => !type.IsGenericTypeDefinition)
+                                 .Select(type => type.CreateServiceDescriptor(service));
 
-        self.TryAddEnumerable(implementations);
+        self.TryAddEnumerable(descriptors);
         self.TryAddTransient<IBootstrapper, Bootstrapper>();
 
         return self;

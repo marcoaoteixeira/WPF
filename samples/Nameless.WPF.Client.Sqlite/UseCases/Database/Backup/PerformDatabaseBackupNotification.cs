@@ -63,4 +63,11 @@ public sealed record PerformDatabaseBackupNotification : INotification {
             type: NotificationType.Information
         );
     }
+
+    public static PerformDatabaseBackupNotification Info() {
+        return new PerformDatabaseBackupNotification(
+            message: "Ok",
+            type: NotificationType.Information
+        );
+    }
 }

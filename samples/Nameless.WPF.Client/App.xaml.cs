@@ -8,6 +8,7 @@ using Nameless.Infrastructure;
 using Nameless.IO.FileSystem;
 using Nameless.Mediator;
 using Nameless.Validation.FluentValidation;
+using Nameless.WPF.Behaviors;
 using Nameless.WPF.Bootstrap;
 using Nameless.WPF.Client.Sqlite.Bootstrap.Steps;
 using Nameless.WPF.Client.Sqlite.Data;
@@ -32,6 +33,7 @@ public partial class App {
     private static readonly Assembly[] SupportAssemblies = [
         typeof(ClientAssemblyMarker).Assembly,
         typeof(CoreAssemblyMarker).Assembly,
+        typeof(SqliteAssemblyMarker).Assembly
     ];
 
     private static readonly string[] Args = [
@@ -84,6 +86,7 @@ public partial class App {
         });
         services.RegisterMediator(opts => {
             opts.Assemblies = SupportAssemblies;
+            opts.RegisterRequestPipelineBehavior(typeof(PerformanceRequestPipelineBehavior<,>));
         });
         services.RegisterValidation(opts => {
             opts.Assemblies = SupportAssemblies;
@@ -107,14 +110,17 @@ public partial class App {
         services.RegisterGitHubHttpClient(configuration);
         services.RegisterDirectorySelectionBox();
         services.RegisterMessageBox();
-        services.RegisterNavigableViews(SupportAssemblies);
-        services.RegisterNavigationViewItemProvider(SupportAssemblies);
-        services.RegisterNavigationService();
-        services.RegisterNavigationWindow(SupportAssemblies);
+        services.RegisterNavigation(opts => {
+            opts.Assemblies = SupportAssemblies;
+        });
         services.RegisterSnackbarService();
         services.RegisterTaskRunner();
-        services.RegisterViewModels(SupportAssemblies);
-        services.RegisterWindowFactory(SupportAssemblies);
+        services.RegisterViewModels(opts => {
+            opts.Assemblies = SupportAssemblies;
+        });
+        services.RegisterWindowFactory(opts => {
+            opts.Assemblies = SupportAssemblies;
+        });
     }
 
     // ReSharper disable once AsyncVoidMethod

@@ -4,11 +4,11 @@ using Wpf.Ui.Controls;
 namespace Nameless.WPF.Navigation;
 
 public class DiscoverableNavigationViewItemProvider : INavigationViewItemProvider {
-    private readonly Assembly[] _supportAssemblies;
+    private readonly Assembly[] _assemblies;
     private readonly Lazy<Entry[]> _entries;
 
-    public DiscoverableNavigationViewItemProvider(Assembly[] supportAssemblies) {
-        _supportAssemblies = Guard.Against.Null(supportAssemblies);
+    public DiscoverableNavigationViewItemProvider(Assembly[] assemblies) {
+        _assemblies = Guard.Against.Null(assemblies);
         _entries = new Lazy<Entry[]>(DiscoverNavigationViewItems);
     }
 
@@ -25,11 +25,11 @@ public class DiscoverableNavigationViewItemProvider : INavigationViewItemProvide
     }
 
     private Entry[] DiscoverNavigationViewItems() {
-        return _supportAssemblies.SelectMany(assembly => assembly.GetExportedTypes())
-                                 .Where(type => type.HasAttribute<NavigationViewItemAttribute>())
-                                 .Select(CreateTuple)
-                                 .Select(CreateEntry)
-                                 .ToArray();
+        return _assemblies.SelectMany(assembly => assembly.GetExportedTypes())
+                          .Where(type => type.HasAttribute<NavigationViewItemAttribute>())
+                          .Select(CreateTuple)
+                          .Select(CreateEntry)
+                          .ToArray();
 
         static Tuple<Type, NavigationViewItemAttribute> CreateTuple(Type type) {
             var attribute = type.GetCustomAttribute<NavigationViewItemAttribute>()

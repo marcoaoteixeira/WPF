@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Nameless.WPF.DependencyInjection;
-using Nameless.WPF.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.Abstractions.Controls;
@@ -13,66 +12,41 @@ namespace Nameless.WPF.Navigation;
 ///     <see cref="IServiceCollection"/> extension methods.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    /// <summary>
-    ///     Registers the <see cref="INavigationService"/> service.
-    /// </summary>
-    /// <param name="self">
-    ///     The current <see cref="IServiceCollection"/>.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="IServiceCollection"/> so other actions
-    ///     can be chained.
-    /// </returns>
-    public static IServiceCollection RegisterNavigationService(this IServiceCollection self) {
+    public static IServiceCollection RegisterNavigation(this IServiceCollection self, Action<NavigationOptions>? configure = null) {
+        var innerConfigure = configure ?? (_ => { });
+        var options = new NavigationOptions();
+
+        innerConfigure(options);
+
+        self.RegisterNavigationService();
+        self.RegisterNavigationWindow(options.Assemblies);
+        self.RegisterNavigableViews(options.Assemblies);
+        self.RegisterNavigationViewItemProvider(options.Assemblies);
+
+        return self;
+    }
+
+    private static void RegisterNavigationService(this IServiceCollection self) {
+        // Navigation services for WPF-UI
         self.TryAddSingleton<INavigationViewPageProvider, NavigationViewPageProvider>();
         self.TryAddSingleton<INavigationService, NavigationService>();
-
-        return self;
     }
 
-    /// <summary>
-    ///     Registers the windows services.
-    /// </summary>
-    /// <param name="self">
-    ///     The current <see cref="IServiceCollection"/>.
-    /// </param>
-    /// <param name="assemblies">
-    ///     A collection of assemblies to scan
-    ///     for <see cref="IWindow"/> implementations.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="IServiceCollection"/> so other actions
-    ///     can be chained.
-    /// </returns>
-    public static IServiceCollection RegisterNavigationWindow(this IServiceCollection self, Assembly[] assemblies) {
+    private static void RegisterNavigationWindow(this IServiceCollection self, Assembly[] assemblies) {
         var service = typeof(INavigationWindow);
-        var implementations = assemblies.GetImplementations(service)
-                                        .Where(type => !type.IsGenericTypeDefinition);
 
-        foreach (var implementation in implementations) {
-            var lifetime = ServiceLifetimeAttribute.GetLifetime(implementation);
+        // There should be just one navigation window.
+        var navigationWindow = assemblies.GetImplementations(service)
+                                         .SingleOrDefault(type => !type.IsGenericTypeDefinition);
 
-            self.TryAdd(new ServiceDescriptor(service, implementation, lifetime));
+        if (navigationWindow is null) {
+            throw new InvalidOperationException($"There is not implementation of '{nameof(INavigationWindow)}' available.");
         }
 
-        return self;
+        self.TryAdd(navigationWindow.CreateServiceDescriptor(service));
     }
 
-    /// <summary>
-    ///     Registers the windows services.
-    /// </summary>
-    /// <param name="self">
-    ///     The current <see cref="IServiceCollection"/>.
-    /// </param>
-    /// <param name="assemblies">
-    ///     A collection of assemblies to scan
-    ///     for <see cref="IWindow"/> implementations.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="IServiceCollection"/> so other actions
-    ///     can be chained.
-    /// </returns>
-    public static IServiceCollection RegisterNavigableViews(this IServiceCollection self, Assembly[] assemblies) {
+    private static void RegisterNavigableViews(this IServiceCollection self, Assembly[] assemblies) {
         var service = typeof(INavigableView<>);
         var implementations = assemblies.GetImplementations(service)
                                         .Where(type => !type.IsGenericTypeDefinition);
@@ -83,24 +57,20 @@ public static class ServiceCollectionExtensions {
                                            .Where(@interface => @interface.GenericTypeArguments.Length > 0 &&
                                                                 service.IsAssignableFromGenericType(@interface));
             foreach (var @interface in interfaces) {
-                // Register the service as interface
+                // Register the navigable view's interface.
                 self.TryAdd(new ServiceDescriptor(@interface, implementation, lifetime));
 
-                // Register the service view model
+                // Register the navigable view viewmodel.
                 var viewModelType = @interface.GetGenericArguments().First();
                 self.TryAdd(new ServiceDescriptor(viewModelType, viewModelType, lifetime));
             }
 
-            // Register the service as concrete type
+            // Register the navigable view concrete type.
             self.TryAdd(new ServiceDescriptor(implementation, implementation, lifetime));
         }
-
-        return self;
     }
 
-    public static IServiceCollection RegisterNavigationViewItemProvider(this IServiceCollection self, Assembly[] assemblies) {
+    private static void RegisterNavigationViewItemProvider(this IServiceCollection self, Assembly[] assemblies) {
         self.TryAddSingleton<INavigationViewItemProvider>(new DiscoverableNavigationViewItemProvider(assemblies));
-
-        return self;
     }
 }

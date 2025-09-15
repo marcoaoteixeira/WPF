@@ -16,7 +16,7 @@ public static class ThemeExtension {
     }
 
     public static ComboBoxItem ToComboBoxItem(this Theme self) {
-        return ComboBoxItemHelper.Create(self);
+        return ComboBoxItemHelper.Create(self, ThemeExtensions.GetDisplayText);
     }
 
     public static ComboBoxItem GetComboBoxItem(this Theme self, ComboBoxItem[] available) {

@@ -72,8 +72,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
 
             var backupRelativeFilePath = Path.Combine(Constants.Database.Backup.DIRECTORY_NAME, backupFileName);
             var backupFilePath = _fileSystem.GetFullPath(backupRelativeFilePath);
-            backupDbConnection = await CreateSqliteConnectionAsync(backupFilePath, cancellationToken)
-                .SuppressContext();
+            backupDbConnection = await CreateSqliteConnectionAsync(backupFilePath, cancellationToken).SuppressContext();
 
             sourceDbConnection.BackupDatabase(backupDbConnection);
 

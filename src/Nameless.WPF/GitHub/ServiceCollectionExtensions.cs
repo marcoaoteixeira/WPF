@@ -49,11 +49,16 @@ public static class ServiceCollectionExtensions {
     }
 
     public static IServiceCollection InnerRegisterGitHubHttpClient(this IServiceCollection self) {
-        self.AddHttpClient<IGitHubHttpClient, GitHubHttpClient>(httpClient => {
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
-            httpClient.DefaultRequestHeaders.Add("X-GitHub-Api-Version", ["2022-11-28"]);
+        self.AddHttpClient<IGitHubHttpClient, GitHubHttpClient>((provider, client) => {
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+            client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", ["2022-11-28"]);
 
-            httpClient.BaseAddress = new Uri("https://api.github.com");
+            var url = provider.GetOptions<GitHubOptions>().Value.Api;
+            if (string.IsNullOrWhiteSpace(url)) {
+                throw new InvalidOperationException("Missing GitHub API URL.");
+            }
+
+            client.BaseAddress = new Uri(url);
         });
 
         return self;
