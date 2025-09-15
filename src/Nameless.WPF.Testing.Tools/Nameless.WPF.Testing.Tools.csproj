@@ -1,10 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
-    <PackageReference Include="Nameless.Testing.Tools" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nameless.WPF.Core\Nameless.WPF.Core.csproj" />
-  </ItemGroup>
+
+	<PropertyGroup>
+		<Title>Nameless WPF Testing Tools Library</Title>
+		<Description>
+			A C# library that provides foundational services and utilities for
+			testing applications that uses Nameless.WPF library.
+		</Description>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Nameless.Testing.Tools" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Nameless.WPF\Nameless.WPF.csproj" />
+	</ItemGroup>
+
 </Project>
