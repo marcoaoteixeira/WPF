@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nameless.Mediator.Requests;
 using Nameless.Validation;
 using Nameless.WPF.Behaviors;
 
@@ -14,7 +13,8 @@ public static class ValidateRequestPipelineBehaviorLoggerExtensions {
         );
 
     internal static void ValidateRequestObjectFailure<TRequest, TResponse>(this ILogger<ValidateRequestPipelineBehavior<TRequest, TResponse>> self, ValidationResult result)
-        where TRequest : IRequest<TResponse> {
+        where TRequest : class
+        where TResponse : class {
         ValidateRequestObjectFailureDelegate(self, typeof(TRequest).GetPrettyName(), result, null /* exception */);
     }
 }

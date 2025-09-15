@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nameless.Mediator.Requests;
 using Nameless.WPF.Behaviors;
 
 namespace Nameless.WPF.Internals;
@@ -20,12 +19,14 @@ public static class PerformanceRequestPipelineBehaviorLoggerExtensions {
         );
 
     internal static void StartPerformanceMonitor<TRequest, TResponse>(this ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> self)
-        where TRequest : IRequest<TResponse> {
+        where TRequest : class
+        where TResponse : class {
         StartPerformanceMonitorDelegate(self, typeof(TRequest).GetPrettyName(), typeof(TResponse).GetPrettyName(), null /* exception */);
     }
 
     internal static void FinishPerformanceMonitor<TRequest, TResponse>(this ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> self, long elapsedMilliseconds)
-        where TRequest : IRequest<TResponse> {
+        where TRequest : class
+        where TResponse : class {
         FinishPerformanceMonitorDelegate(self, typeof(TRequest).GetPrettyName(), typeof(TResponse).GetPrettyName(), elapsedMilliseconds, null /* exception */);
     }
 }
