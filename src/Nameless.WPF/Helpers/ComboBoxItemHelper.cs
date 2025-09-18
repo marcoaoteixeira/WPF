@@ -7,11 +7,11 @@ namespace Nameless.WPF.Helpers;
 public static class ComboBoxItemHelper {
     public static ComboBoxItem EmptyComboBoxItem => new() { Content = Strings.ComboBoxItem_Default_Select_Display_Text };
 
-    public static ComboBoxItem Create<TEnum>(TEnum value, Func<TEnum, string>? displayTextFactory = null)
+    public static ComboBoxItem Create<TEnum>(TEnum value, Func<TEnum, string>? displayText = null)
         where TEnum : struct, Enum {
         return new ComboBoxItem {
-            Content = displayTextFactory is not null
-                ? displayTextFactory(value)
+            Content = displayText is not null
+                ? displayText(value)
                 : value.GetDescription(),
             Tag = value
         };

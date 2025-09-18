@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Client", "samp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Client.Sqlite", "samples\Nameless.WPF.Client.Sqlite\Nameless.WPF.Client.Sqlite.csproj", "{3FC1F0CA-D83D-30A1-9C22-E152BC1588D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Tests", "tests\Nameless.WPF.Tests\Nameless.WPF.Tests.csproj", "{39797F97-CD86-4CB9-B447-3A0176327CB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{3FC1F0CA-D83D-30A1-9C22-E152BC1588D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FC1F0CA-D83D-30A1-9C22-E152BC1588D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FC1F0CA-D83D-30A1-9C22-E152BC1588D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39797F97-CD86-4CB9-B447-3A0176327CB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39797F97-CD86-4CB9-B447-3A0176327CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39797F97-CD86-4CB9-B447-3A0176327CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39797F97-CD86-4CB9-B447-3A0176327CB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{1F4625FE-13BB-4FE7-89FD-1D73750BB93B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{C663A811-F3C7-7E21-BE0F-69A55AEC8924} = {68623D31-C0AA-4657-907A-784D5A51D495}
 		{3FC1F0CA-D83D-30A1-9C22-E152BC1588D6} = {68623D31-C0AA-4657-907A-784D5A51D495}
+		{39797F97-CD86-4CB9-B447-3A0176327CB2} = {92D94781-4395-4BFB-B25F-353BACE1487D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {433D110F-07A8-4681-9532-DEDCCA4D35FE}

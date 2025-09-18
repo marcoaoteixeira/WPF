@@ -19,8 +19,8 @@ public static class VersionHelper {
         var minor = int.Parse(version[2].Value);
         var build = int.Parse(version[3].Value);
 
-        _ = int.TryParse(version[5].Value, out var revision);
-
-        return new Version(major, minor, build, revision);
+        return int.TryParse(version[4].Value, out var revision)
+            ? new Version(major, minor, build, revision)
+            : new Version(major, minor, build);
     }
 }
