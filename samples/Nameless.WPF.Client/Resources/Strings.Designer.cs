@@ -205,6 +205,26 @@ namespace Nameless.WPF.Client.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Não foi possível localizar o recurso de atualização. Tente novamente mais tarde ou contate o suporte..
+        /// </summary>
+        public static string AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Message {
+            get {
+                return ResourceManager.GetString("AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_M" +
+                        "essage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recurso de Atualização.
+        /// </summary>
+        public static string AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Title {
+            get {
+                return ResourceManager.GetString("AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_T" +
+                        "itle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uma nova versão do sistema está disponível. Deseja executar o download?.
         /// </summary>
         public static string AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_ConfirmDownload_MessageBox_Message {

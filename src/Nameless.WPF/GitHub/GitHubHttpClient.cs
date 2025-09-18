@@ -50,4 +50,34 @@ public class GitHubHttpClient : IGitHubHttpClient {
             return GetLastestReleaseResponse.Failure(statusCode, string.Format(Strings.GitHubHttpClient_GetLastestReleaseAsync_Exception, ex.Message));
         }
     }
+
+    /// <inheritdoc />
+    public async Task<GetReleaseAssetsResponse> GetReleaseAssetsAsync(GetReleaseAssetsRequest request, CancellationToken cancellationToken) {
+        Guard.Against.NullOrWhiteSpace(request.Owner);
+        Guard.Against.NullOrWhiteSpace(request.Repository);
+
+        var statusCode = 200;
+
+        try {
+            var url = $"/repos/{request.Owner}/{request.Repository}/releases/{request.ReleaseID}/assets";
+
+            var response = await _httpClient.GetAsync(url, cancellationToken)
+                                            .SuppressContext();
+
+            statusCode = (int)response.StatusCode;
+
+            response.EnsureSuccessStatusCode();
+
+            var release = await response.Content
+                                        .ReadFromJsonAsync<ReleaseAsset[]>(cancellationToken)
+                                        .SuppressContext();
+
+            return release is not null
+                ? GetReleaseAssetsResponse.Success(release)
+                : GetReleaseAssetsResponse.Failure(statusCode, Strings.GitHubHttpClient_GetReleaseAssetsAsync_ReleaseAssets_Serialization_Failure);
+        }
+        catch (Exception ex) {
+            return GetReleaseAssetsResponse.Failure(statusCode, string.Format(Strings.GitHubHttpClient_GetReleaseAssetsAsync_Exception, ex.Message));
+        }
+    }
 }

@@ -13,6 +13,7 @@ using Nameless.WPF.Mvvm;
 using Nameless.WPF.TaskRunner;
 using Nameless.WPF.UseCases.SystemUpdate.Check;
 using Nameless.WPF.UseCases.SystemUpdate.Download;
+using Nameless.WPF.UseCases.SystemUpdate.Fetch;
 using Wpf.Ui.Abstractions.Controls;
 using Wpf.Ui.Appearance;
 
@@ -85,6 +86,7 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         return _taskRunner.CreateBuilder()
                           .SetName(Strings.AppConfigurationPageViewModel_PerformSystemUpdate_TaskRunnerWindow_Title)
                           .SubscribeFor<CheckForUpdateNotification>()
+                          .SubscribeFor<FetchNewVersionInformationNotification>()
                           .SubscribeFor<DownloadUpdateNotification>()
                           .SetDelegate(ExecuteSystemUpdateAsync)
                           .RunAsync();
@@ -135,7 +137,9 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     }
 
     private async Task ExecuteSystemUpdateAsync(CancellationToken cancellationToken) {
-        var checkForUpdateResponse = await ExecuteCheckForUpdateAsync(cancellationToken).SuppressContext();
+        var checkForUpdateResponse = await ExecuteCheckForUpdateAsync(
+            cancellationToken
+        ).SuppressContext();
 
         if (!checkForUpdateResponse.NewVersionAvailable) { return; }
 
@@ -146,7 +150,29 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
         if (result == MessageBoxResult.No) { return; }
 
-        await ExecuteDownloadUpdateAsync(checkForUpdateResponse.Version, checkForUpdateResponse.DownloadUrl, cancellationToken);
+        var fetchNewVersionInformationResponse = await ExecuteFetchNewVersionInformationAsync(
+            checkForUpdateResponse.ReleaseID.Value,
+            checkForUpdateResponse.ApplicationName,
+            checkForUpdateResponse.Version,
+            cancellationToken
+        ).SuppressContext();
+
+        if (!fetchNewVersionInformationResponse.Succeeded) { return; }
+
+        if (fetchNewVersionInformationResponse.Url is null) {
+            _messageBox.ShowAttention(
+                title: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Title,
+                message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Message
+            );
+
+            return;
+        }
+
+        await ExecuteDownloadUpdateAsync(
+            checkForUpdateResponse.Version,
+            fetchNewVersionInformationResponse.Url,
+            cancellationToken
+        ).SuppressContext();
     }
 
     private Task<CheckForUpdateResponse> ExecuteCheckForUpdateAsync(CancellationToken cancellationToken) {
@@ -156,9 +182,20 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         );
     }
 
-    private Task<DownloadUpdateResponse> ExecuteDownloadUpdateAsync(string version, string downloadUrl, CancellationToken cancellationToken) {
+    private Task<FetchNewVersionInformationResponse> ExecuteFetchNewVersionInformationAsync(int releaseID, string applicationName, string version, CancellationToken cancellationToken) {
         return _mediator.ExecuteAsync(
-            new DownloadUpdateRequest(version, downloadUrl),
+            new FetchNewVersionInformationRequest(
+                releaseID,
+                applicationName,
+                version
+            ),
+            cancellationToken
+        );
+    }
+
+    private Task<DownloadUpdateResponse> ExecuteDownloadUpdateAsync(string version, string url, CancellationToken cancellationToken) {
+        return _mediator.ExecuteAsync(
+            new DownloadUpdateRequest(version, url),
             cancellationToken
         );
     }

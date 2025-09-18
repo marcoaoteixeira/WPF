@@ -121,7 +121,7 @@
     <value>A versão instalada é a mais recente.</value>
   </data>
   <data name="CheckForUpdateNotification_Success_NewVersionAvailable" xml:space="preserve">
-    <value>Existe uma nova versão (v{0}) disponível em: {1}</value>
+    <value>Nova versão do aplicativo está disponível: {0}</value>
   </data>
   <data name="CheckForUpdateNotification_Title" xml:space="preserve">
     <value>Verificar Atualização do Sistema</value>
@@ -162,11 +162,32 @@
   <data name="DownloadUpdateNotification_WritingFile" xml:space="preserve">
     <value>Gravando arquivo de atualização do sistema...</value>
   </data>
+  <data name="FetchNewVersionInformationNotification_Failure" xml:space="preserve">
+    <value>Ocorreu um erro ao tentar localizar os novos recursos da versão {0}. Erro: {1}</value>
+  </data>
+  <data name="FetchNewVersionInformationNotification_Success" xml:space="preserve">
+    <value>Recursos localizados com sucesso!</value>
+  </data>
+  <data name="FetchNewVersionInformationNotification_NotFound" xml:space="preserve">
+    <value>Não foi possível localizar os novos recursos.</value>
+  </data>
+  <data name="FetchNewVersionInformationNotification_Starting" xml:space="preserve">
+    <value>Iniciando localização de novos recursos...</value>
+  </data>
+  <data name="FetchNewVersionInformationNotification_Title" xml:space="preserve">
+    <value>Localizar Recursos da Nova Versão</value>
+  </data>
   <data name="GitHubHttpClient_GetLastestReleaseAsync_Exception" xml:space="preserve">
-    <value>An error occurred while trying to retrieve the latest release information. Error: {0}</value>
+    <value>Ocorreu um erro ao tentar recuperar as informações do último release. Erro: {0}</value>
   </data>
   <data name="GitHubHttpClient_GetLastestReleaseAsync_Release_Serialization_Failure" xml:space="preserve">
     <value>Não foi possível deserializar as informações de release.</value>
+  </data>
+  <data name="GitHubHttpClient_GetReleaseAssetsAsync_Exception" xml:space="preserve">
+    <value>Ocorreu um erro ao tentar recuperar as informações de recursos do release. Erro: {0}</value>
+  </data>
+  <data name="GitHubHttpClient_GetReleaseAssetsAsync_ReleaseAssets_Serialization_Failure" xml:space="preserve">
+    <value>Não foi possível deserializar as informações de recursos do release.</value>
   </data>
   <data name="MessageBoxIcon_Attention" xml:space="preserve">
     <value>Atenção</value>

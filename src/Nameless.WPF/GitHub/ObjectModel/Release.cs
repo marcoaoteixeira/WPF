@@ -2,7 +2,7 @@
 
 namespace Nameless.WPF.GitHub.ObjectModel;
 
-public record Release(
+public sealed record Release(
     [property: JsonPropertyName("url")] string Url,
     [property: JsonPropertyName("assets_url")] string AssetsUrl,
     [property: JsonPropertyName("upload_url")] string UploadUrl,

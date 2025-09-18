@@ -3,30 +3,51 @@
 namespace Nameless.WPF.UseCases.SystemUpdate.Check;
 
 public record CheckForUpdateResponse {
+    public int? ReleaseID { get; }
+
+    public string? ApplicationName { get; }
+
     public string? Version { get; }
 
-    public string? DownloadUrl { get; }
-
-    [MemberNotNullWhen(returnValue: true, nameof(Version), nameof(DownloadUrl))]
-    public bool NewVersionAvailable => !string.IsNullOrWhiteSpace(Version) &&
-                                       !string.IsNullOrWhiteSpace(DownloadUrl);
+    [MemberNotNullWhen(returnValue: true, nameof(ReleaseID), nameof(ApplicationName), nameof(Version))]
+    public bool NewVersionAvailable => ReleaseID is not null;
 
     public string? Error { get; }
 
     [MemberNotNullWhen(returnValue: false, nameof(Error))]
     public virtual bool Succeeded => string.IsNullOrWhiteSpace(Error);
 
-    private CheckForUpdateResponse(string? version, string? downloadUrl, string? error) {
+    private CheckForUpdateResponse(int? releaseID, string? applicationName, string? version, string? error) {
+        ReleaseID = releaseID;
+        ApplicationName = applicationName;
         Version = version;
-        DownloadUrl = downloadUrl;
         Error = error;
     }
 
-    public static CheckForUpdateResponse Success(string version, string downloadUrl) {
-        return new CheckForUpdateResponse(version, downloadUrl, error: null);
+    public static CheckForUpdateResponse Skip() {
+        return new CheckForUpdateResponse(
+            releaseID: null,
+            applicationName: null,
+            version: null,
+            error: null
+        );
+    }
+
+    public static CheckForUpdateResponse Success(int releaseID, string applicationName, string version) {
+        return new CheckForUpdateResponse(
+            releaseID,
+            applicationName,
+            version,
+            error: null
+        );
     }
 
     public static CheckForUpdateResponse Failure(string error) {
-        return new CheckForUpdateResponse(version: null, downloadUrl: null, error);
+        return new CheckForUpdateResponse(
+            releaseID: null,
+            applicationName: null,
+            version: null,
+            error
+        );
     }
 }

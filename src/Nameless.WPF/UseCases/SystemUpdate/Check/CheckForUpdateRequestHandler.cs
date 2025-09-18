@@ -3,6 +3,7 @@ using Nameless.Infrastructure;
 using Nameless.Mediator.Requests;
 using Nameless.WPF.GitHub;
 using Nameless.WPF.GitHub.Requests;
+using Nameless.WPF.Helpers;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Check;
@@ -38,21 +39,24 @@ public class CheckForUpdateRequestHandler : IRequestHandler<CheckForUpdateReques
             return CheckForUpdateResponse.Failure(getLastestReleaseResponse.Error);
         }
 
-        var latestVersion = getLastestReleaseResponse.Release.Name[1..];
+        var currentVersion = VersionHelper.Parse(_applicationContext.Version);
+        var latestVersion = VersionHelper.Parse(getLastestReleaseResponse.Release.TagName);
 
-        if (_applicationContext.Version.Equals(latestVersion)) {
+        if (currentVersion >= latestVersion) {
             await _notificationService.PublishAsync(CheckForUpdateNotification.Success())
                                       .SuppressContext();
 
-            return CheckForUpdateResponse.Success(string.Empty, string.Empty);
+            return CheckForUpdateResponse.Skip();
         }
 
-        var downloadUrl = getLastestReleaseResponse.Release.ZipballUrl;
-
-        notification = CheckForUpdateNotification.Success(latestVersion, downloadUrl);
+        notification = CheckForUpdateNotification.Success(latestVersion.ToString(3));
         await _notificationService.PublishAsync(notification)
                                   .SuppressContext();
 
-        return CheckForUpdateResponse.Success(latestVersion, downloadUrl);
+        return CheckForUpdateResponse.Success(
+            releaseID: getLastestReleaseResponse.Release.Id,
+            applicationName: _applicationContext.ApplicationName,
+            version: latestVersion.ToString(3)
+        );
     }
 }

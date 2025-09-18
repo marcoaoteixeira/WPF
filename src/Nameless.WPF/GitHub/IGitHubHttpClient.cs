@@ -29,4 +29,20 @@ public interface IGitHubHttpClient {
     ///     or published.
     /// </remarks>
     Task<GetLastestReleaseResponse> GetLastestReleaseAsync(GetLastestReleaseRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Retrieves a list of all assets related to the specified release.
+    /// </summary>
+    /// <param name="request">
+    ///     The request.
+    /// </param>
+    /// <param name="cancellationToken">
+    ///     The cancellation token.
+    /// </param>
+    /// <returns>
+    ///     A <see cref="Task{TResult}"/> representing the asynchronous action
+    ///     execution, where the <c>Result</c> of the task is the release
+    ///     assets information.
+    /// </returns>
+    Task<GetReleaseAssetsResponse> GetReleaseAssetsAsync(GetReleaseAssetsRequest request, CancellationToken cancellationToken);
 }

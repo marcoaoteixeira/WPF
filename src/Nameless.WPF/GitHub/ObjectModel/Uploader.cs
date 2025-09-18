@@ -2,29 +2,7 @@
 
 namespace Nameless.WPF.GitHub.ObjectModel;
 
-/// <summary>
-///     Defines an author.
-/// </summary>
-/// <param name="Login">The author login.</param>
-/// <param name="Id">The author id.</param>
-/// <param name="NodeId">The GitHub node id for the author.</param>
-/// <param name="AvatarUrl">The author avatar URL.</param>
-/// <param name="GravatarId">The author Gravatar ID.</param>
-/// <param name="Url">The GitHub API URL to the author information.</param>
-/// <param name="HtmlUrl">The GitHub URL for the author.</param>
-/// <param name="FollowersUrl">Followers URL.</param>
-/// <param name="FollowingUrl">Following URL.</param>
-/// <param name="GistsUrl">Gists URL.</param>
-/// <param name="StarredUrl">Starred Projects URL.</param>
-/// <param name="SubscriptionsUrl">Subscriptions URL.</param>
-/// <param name="OrganizationsUrl">Organizations URL.</param>
-/// <param name="ReposUrl">Repositories URL.</param>
-/// <param name="EventsUrl">Events URL.</param>
-/// <param name="ReceivedEventsUrl">Received Events URL.</param>
-/// <param name="Type">Author type.</param>
-/// <param name="UserViewType">User view type.</param>
-/// <param name="SiteAdmin">Whether it is the site administrator.</param>
-public sealed record Author(
+public sealed record Uploader(
     [property: JsonPropertyName("login")] string Login,
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("node_id")] string NodeId,

@@ -70,7 +70,7 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Existe uma nova versão (v{0}) disponível em: {1}.
+        ///   Looks up a localized string similar to Nova versão do aplicativo está disponível: {0}.
         /// </summary>
         public static string CheckForUpdateNotification_Success_NewVersionAvailable {
             get {
@@ -196,7 +196,52 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred while trying to retrieve the latest release information. Error: {0}.
+        ///   Looks up a localized string similar to Ocorreu um erro ao tentar localizar os novos recursos da versão {0}. Erro: {1}.
+        /// </summary>
+        public static string FetchNewVersionInformationNotification_Failure {
+            get {
+                return ResourceManager.GetString("FetchNewVersionInformationNotification_Failure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Não foi possível localizar os novos recursos..
+        /// </summary>
+        public static string FetchNewVersionInformationNotification_NotFound {
+            get {
+                return ResourceManager.GetString("FetchNewVersionInformationNotification_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iniciando localização de novos recursos....
+        /// </summary>
+        public static string FetchNewVersionInformationNotification_Starting {
+            get {
+                return ResourceManager.GetString("FetchNewVersionInformationNotification_Starting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recursos localizados com sucesso!.
+        /// </summary>
+        public static string FetchNewVersionInformationNotification_Success {
+            get {
+                return ResourceManager.GetString("FetchNewVersionInformationNotification_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Localizar Recursos da Nova Versão.
+        /// </summary>
+        public static string FetchNewVersionInformationNotification_Title {
+            get {
+                return ResourceManager.GetString("FetchNewVersionInformationNotification_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações do último release. Erro: {0}.
         /// </summary>
         public static string GitHubHttpClient_GetLastestReleaseAsync_Exception {
             get {
@@ -210,6 +255,24 @@ namespace Nameless.WPF.Resources {
         public static string GitHubHttpClient_GetLastestReleaseAsync_Release_Serialization_Failure {
             get {
                 return ResourceManager.GetString("GitHubHttpClient_GetLastestReleaseAsync_Release_Serialization_Failure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações de recursos do release. Erro: {0}.
+        /// </summary>
+        public static string GitHubHttpClient_GetReleaseAssetsAsync_Exception {
+            get {
+                return ResourceManager.GetString("GitHubHttpClient_GetReleaseAssetsAsync_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Não foi possível deserializar as informações de recursos do release..
+        /// </summary>
+        public static string GitHubHttpClient_GetReleaseAssetsAsync_ReleaseAssets_Serialization_Failure {
+            get {
+                return ResourceManager.GetString("GitHubHttpClient_GetReleaseAssetsAsync_ReleaseAssets_Serialization_Failure", resourceCulture);
             }
         }
         

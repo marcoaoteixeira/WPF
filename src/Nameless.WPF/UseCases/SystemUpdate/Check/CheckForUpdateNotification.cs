@@ -13,20 +13,16 @@ public record CheckForUpdateNotification : INotification {
 
     public string? NewVersion { get; }
 
-    public string? DownloadUrl { get; }
-
-    [MemberNotNullWhen(returnValue: true, nameof(NewVersion), nameof(DownloadUrl))]
-    public bool NewVersionAvailable => !string.IsNullOrWhiteSpace(DownloadUrl);
+    [MemberNotNullWhen(returnValue: true, nameof(NewVersion))]
+    public bool NewVersionAvailable => !string.IsNullOrWhiteSpace(NewVersion);
 
     private CheckForUpdateNotification(
         string message,
         NotificationType type = NotificationType.Information,
-        string? newVersion = null,
-        string? downloadUrl = null) {
+        string? newVersion = null) {
         Message = message;
         Type = type;
         NewVersion = newVersion;
-        DownloadUrl = downloadUrl;
     }
 
     public static CheckForUpdateNotification Failure(string error) {
@@ -36,12 +32,11 @@ public record CheckForUpdateNotification : INotification {
         );
     }
 
-    public static CheckForUpdateNotification Success(string newVersion, string downloadUrl) {
+    public static CheckForUpdateNotification Success(string newVersion) {
         return new CheckForUpdateNotification(
-            message: string.Format(Strings.CheckForUpdateNotification_Success_NewVersionAvailable, newVersion, downloadUrl),
+            message: string.Format(Strings.CheckForUpdateNotification_Success_NewVersionAvailable, newVersion),
             type: NotificationType.Success,
-            newVersion: newVersion,
-            downloadUrl: downloadUrl
+            newVersion: newVersion
         );
     }
 

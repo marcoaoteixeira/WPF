@@ -21,13 +21,13 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
 
     public async Task<DownloadUpdateResponse> HandleAsync(DownloadUpdateRequest request, CancellationToken cancellationToken) {
         Guard.Against.Null(request);
-        Guard.Against.NullOrWhiteSpace(request.DownloadUrl);
+        Guard.Against.NullOrWhiteSpace(request.Url);
 
         try {
             await _notificationService.PublishAsync(DownloadUpdateNotification.Starting())
                                       .SuppressContext();
 
-            var response = await _httpClient.GetAsync(request.DownloadUrl, cancellationToken)
+            var response = await _httpClient.GetAsync(request.Url, cancellationToken)
                                             .SuppressContext();
 
             response.EnsureSuccessStatusCode();
