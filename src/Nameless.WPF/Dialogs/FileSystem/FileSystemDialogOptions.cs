@@ -1,10 +1,9 @@
 ﻿using System.Windows;
 
-namespace Nameless.WPF.Dialogs.DirectorySelectionBox;
+namespace Nameless.WPF.Dialogs.FileSystem;
 
-public class DirectorySelectionOptions {
+public abstract class FileSystemDialogOptions {
     public string? Title { get; set; }
     public string? Root { get; set; }
-    public bool Multiselect { get; set; }
     public Window? Owner { get; set; }
 }

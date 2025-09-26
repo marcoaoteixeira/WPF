@@ -22,6 +22,8 @@ public class CheckForUpdateRequestHandler : IRequestHandler<CheckForUpdateReques
     }
 
     public async Task<CheckForUpdateResponse> HandleAsync(CheckForUpdateRequest request, CancellationToken cancellationToken) {
+        Guard.Against.Null(request);
+
         var notification = CheckForUpdateNotification.Starting();
         await _notificationService.PublishAsync(notification)
                                   .SuppressContext();

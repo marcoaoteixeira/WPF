@@ -13,6 +13,8 @@ namespace Nameless.WPF.Navigation;
 /// </summary>
 public static class ServiceCollectionExtensions {
     public static IServiceCollection RegisterNavigation(this IServiceCollection self, Action<NavigationOptions>? configure = null) {
+        Guard.Against.Null(self);
+
         var innerConfigure = configure ?? (_ => { });
         var options = new NavigationOptions();
 

@@ -8,6 +8,8 @@ namespace Nameless.WPF;
 ///     Factory class to create a <see cref="IHost" /> instance.
 /// </summary>
 public sealed class HostFactory {
+    public const string ENVIRONMENT_KEY = "--env:";
+
     private readonly string[] _args;
 
     private Action<IServiceCollection, IConfiguration> _configure;
@@ -92,15 +94,17 @@ public sealed class HostFactory {
     ///     The built <see cref="IHost" /> instance.
     /// </returns>
     public IHost Build() {
+        var environment = GetEnvironment();
         var host = Host.CreateDefaultBuilder(_args)
-                   .ConfigureHostConfiguration(builder =>
-                       builder
-                           .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                           .AddJsonFile(path: "AppSettings.json", optional: true, reloadOnChange: true)
-                           .AddEnvironmentVariables()
-                    )
-                   .ConfigureServices((ctx, services) => _configure(services, ctx.Configuration))
-                   .Build();
+                       .ConfigureHostConfiguration(builder => {
+                           builder
+                               .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                               .AddJsonFile(path: "AppSettings.json", optional: true, reloadOnChange: true)
+                               .AddJsonFile(path: $"AppSettings.{environment}.json", optional: true, reloadOnChange: true)
+                               .AddEnvironmentVariables();
+                       })
+                       .ConfigureServices((ctx, services) => _configure(services, ctx.Configuration))
+                       .Build();
 
         RegisterHostApplicationLifetimeEvents(host);
 
@@ -112,5 +116,13 @@ public sealed class HostFactory {
 
         lifetime.ApplicationStarted.Register(() => _onStartup(host.Services));
         lifetime.ApplicationStopping.Register(() => _onTearDown(host.Services));
+    }
+
+    private string GetEnvironment() {
+        var environment = _args.SingleOrDefault(
+            arg => arg.StartsWith(ENVIRONMENT_KEY, StringComparison.OrdinalIgnoreCase)
+        );
+
+        return environment?.Split(Separators.COLON).Last() ?? "Development";
     }
 }

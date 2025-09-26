@@ -13,8 +13,8 @@ using Nameless.WPF.Bootstrap;
 using Nameless.WPF.Client.Sqlite.Bootstrap.Steps;
 using Nameless.WPF.Client.Sqlite.Data;
 using Nameless.WPF.Configuration;
-using Nameless.WPF.Dialogs.DirectorySelectionBox;
-using Nameless.WPF.Dialogs.MessageBox;
+using Nameless.WPF.Dialogs.FileSystem;
+using Nameless.WPF.Dialogs.Message;
 using Nameless.WPF.GitHub;
 using Nameless.WPF.Mvvm;
 using Nameless.WPF.Navigation;
@@ -108,8 +108,8 @@ public partial class App {
         services.RegisterFileSystem();
         services.RegisterNotificationService();
         services.RegisterGitHubHttpClient(configuration);
-        services.RegisterDirectorySelectionBox();
-        services.RegisterMessageBox();
+        services.RegisterFileSystemDialog();
+        services.RegisterMessageDialog();
         services.RegisterNavigation(opts => {
             opts.Assemblies = SupportAssemblies;
         });

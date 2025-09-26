@@ -6,6 +6,8 @@ namespace Nameless.WPF.Notifications;
 
 public static class ServiceCollectionExtensions {
     public static IServiceCollection RegisterNotificationService(this IServiceCollection self) {
+        Guard.Against.Null(self);
+
         self.TryAddSingleton<IMessenger, WeakReferenceMessenger>();
         self.TryAddSingleton<INotificationService, NotificationService>();
 

@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using Nameless.WPF.GitHub.ObjectModel;
 using Nameless.WPF.GitHub.Requests;
 using Nameless.WPF.GitHub.Responses;
-using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.GitHub;
 
@@ -23,6 +22,7 @@ public class GitHubHttpClient : IGitHubHttpClient {
 
     /// <inheritdoc />
     public async Task<GetLastestReleaseResponse> GetLastestReleaseAsync(GetLastestReleaseRequest request, CancellationToken cancellationToken) {
+        Guard.Against.Null(request);
         Guard.Against.NullOrWhiteSpace(request.Owner);
         Guard.Against.NullOrWhiteSpace(request.Repository);
 
@@ -44,17 +44,19 @@ public class GitHubHttpClient : IGitHubHttpClient {
 
             return release is not null
                 ? GetLastestReleaseResponse.Success(release)
-                : GetLastestReleaseResponse.Failure(statusCode, Strings.GitHubHttpClient_GetLastestReleaseAsync_Release_Serialization_Failure);
+                : GetLastestReleaseResponse.DeserializationFailure(statusCode);
         }
         catch (Exception ex) {
-            return GetLastestReleaseResponse.Failure(statusCode, string.Format(Strings.GitHubHttpClient_GetLastestReleaseAsync_Exception, ex.Message));
+            return GetLastestReleaseResponse.Failure(statusCode, ex.Message);
         }
     }
 
     /// <inheritdoc />
     public async Task<GetReleaseAssetsResponse> GetReleaseAssetsAsync(GetReleaseAssetsRequest request, CancellationToken cancellationToken) {
+        Guard.Against.Null(request);
         Guard.Against.NullOrWhiteSpace(request.Owner);
         Guard.Against.NullOrWhiteSpace(request.Repository);
+        Guard.Against.LowerThan(request.ReleaseID, compare: 0);
 
         var statusCode = 200;
 
@@ -74,10 +76,10 @@ public class GitHubHttpClient : IGitHubHttpClient {
 
             return release is not null
                 ? GetReleaseAssetsResponse.Success(release)
-                : GetReleaseAssetsResponse.Failure(statusCode, Strings.GitHubHttpClient_GetReleaseAssetsAsync_ReleaseAssets_Serialization_Failure);
+                : GetReleaseAssetsResponse.DeserializationFailure(statusCode);
         }
         catch (Exception ex) {
-            return GetReleaseAssetsResponse.Failure(statusCode, string.Format(Strings.GitHubHttpClient_GetReleaseAssetsAsync_Exception, ex.Message));
+            return GetReleaseAssetsResponse.Failure(statusCode, ex.Message);
         }
     }
 }

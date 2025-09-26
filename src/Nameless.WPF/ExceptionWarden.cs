@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
+using Nameless.WPF.Resources;
 
 namespace Nameless.WPF;
 
 public static class ExceptionWarden {
+    private static volatile Exception? _last;
+
     private static string ApplicationName { get; set; } = string.Empty;
 
     public static void Initialize(string applicationName) {
@@ -28,9 +31,13 @@ public static class ExceptionWarden {
     }
 
     private static void ExceptionHandler(Exception exception) {
+        if (_last is not null) { return; }
+
+        _last = exception;
+
         var messageBoxResult = SysMessageBox.Show(
             exception.Message,
-            "Error",
+            Strings.ExceptionWarden_MessageBox_Title,
             SysMessageBoxButton.OK,
             SysMessageBoxImage.Error
         );

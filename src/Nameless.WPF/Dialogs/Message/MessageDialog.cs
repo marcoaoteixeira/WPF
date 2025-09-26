@@ -1,11 +1,11 @@
-﻿namespace Nameless.WPF.Dialogs.MessageBox;
+﻿namespace Nameless.WPF.Dialogs.Message;
 
-public class MessageBoxImpl : IMessageBox {
-    public MessageBoxResult Show(string message, Action<MessageBoxOptions> configure) {
+public class MessageDialog : IMessageDialog {
+    public MessageDialogResult Show(string message, Action<MessageDialogOptions> configure) {
         Guard.Against.NullOrWhiteSpace(message);
         Guard.Against.Null(configure);
 
-        var options = new MessageBoxOptions();
+        var options = new MessageDialogOptions();
 
         configure(options);
 

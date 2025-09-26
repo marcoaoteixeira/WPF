@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Nameless.WPF.GitHub.ObjectModel;
+using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.GitHub.Responses;
 
@@ -24,6 +25,10 @@ public record GetReleaseAssetsResponse {
     }
 
     public static GetReleaseAssetsResponse Failure(int statusCode, string error) {
-        return new GetReleaseAssetsResponse(assets: [], statusCode, error);
+        return new GetReleaseAssetsResponse(assets: [], statusCode, string.Format(Strings.GetReleaseAssetsResponse_Failure_Message, error));
+    }
+
+    public static GetReleaseAssetsResponse DeserializationFailure(int statusCode) {
+        return new GetReleaseAssetsResponse(assets: [], statusCode, Strings.GetReleaseAssetsResponse_DeserializationFailure_Message);
     }
 };

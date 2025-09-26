@@ -18,6 +18,8 @@ public static class ServiceCollectionExtensions {
     ///     can be chained.
     /// </returns>
     public static IServiceCollection RegisterAppConfigurationManager(this IServiceCollection self) {
+        Guard.Against.Null(self);
+
         self.TryAddSingleton<IAppConfigurationManager, AppConfigurationManager>();
 
         return self;

@@ -6,6 +6,8 @@ namespace Nameless.WPF.Snackbar;
 
 public static class ServiceCollectionExtensions {
     public static IServiceCollection RegisterSnackbarService(this IServiceCollection self) {
+        Guard.Against.Null(self);
+
         self.TryAddSingleton<ISnackbarService, SnackbarService>();
 
         return self;

@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Nameless.WPF.Notifications;
+using Nameless.WPF.Resources;
 using Nameless.WPF.Windows;
 
 namespace Nameless.WPF.TaskRunner;
@@ -16,12 +17,16 @@ public class TaskRunnerBuilder : ITaskRunnerBuilder {
     }
 
     public ITaskRunnerBuilder SetName(string name) {
+        Guard.Against.NullOrWhiteSpace(name);
+
         Window.SetName(name);
 
         return this;
     }
 
     public ITaskRunnerBuilder SetDelegate(TaskRunnerDelegate @delegate) {
+        Guard.Against.Null(@delegate);
+
         Window.SetDelegate(@delegate);
 
         return this;
@@ -42,7 +47,7 @@ public class TaskRunnerBuilder : ITaskRunnerBuilder {
 
     private ITaskRunnerWindow CreateTaskRunnerWindow() {
         if (!_windowFactory.TryCreate<ITaskRunnerWindow>(out var output)) {
-            throw new InvalidOperationException($"Couldn't create {nameof(ITaskRunnerWindow)} instance.");
+            throw new InvalidOperationException(string.Format(Strings.TaskRunnerBuilder_CreateTaskRunnerWindow_Unregistered_Window_Exception, nameof(ITaskRunnerWindow)));
         }
 
         output.SetOwner(Application.Current.MainWindow);

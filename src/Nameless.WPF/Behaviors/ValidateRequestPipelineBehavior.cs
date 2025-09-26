@@ -38,6 +38,9 @@ public class ValidateRequestPipelineBehavior<TRequest, TResponse> : IRequestPipe
 
     /// <inheritdoc />
     public async Task<TResponse> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken) {
+        Guard.Against.Null(request);
+        Guard.Against.Null(next);
+
         var result = await _validationService.ValidateAsync(request, cancellationToken)
                                              .SuppressContext();
 

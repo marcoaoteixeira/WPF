@@ -8,10 +8,15 @@ namespace Nameless.WPF;
 /// </summary>
 public static class ControlAppearanceExtension {
     /// <summary>
-    ///     
+    ///     Retrieves the text title associated with the
+    ///     specified <see cref="ControlAppearance"/>.
     /// </summary>
-    /// <param name="self"></param>
-    /// <returns></returns>
+    /// <param name="self">
+    ///     The current <see cref="ControlAppearance"/>.
+    /// </param>
+    /// <returns>
+    ///     The text title associated with the <see cref="ControlAppearance"/>.
+    /// </returns>
     public static string GetTitle(this ControlAppearance self) {
         return self switch {
             ControlAppearance.Caution => Strings.ControlAppearance_Caution,
@@ -21,6 +26,16 @@ public static class ControlAppearanceExtension {
         };
     }
 
+    /// <summary>
+    ///     Retrieves the icon associated with the
+    ///     specified <see cref="ControlAppearance"/>.
+    /// </summary>
+    /// <param name="self">
+    ///     The current <see cref="ControlAppearance"/>.
+    /// </param>
+    /// <returns>
+    ///     The icon associated with the <see cref="ControlAppearance"/>.
+    /// </returns>
     public static IconElement GetIcon(this ControlAppearance self) {
         return self switch {
             ControlAppearance.Caution => new SymbolIcon(SymbolRegular.Warning28),

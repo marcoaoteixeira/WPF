@@ -22,6 +22,8 @@ public static class ServiceCollectionExtensions {
     ///     can be chained.
     /// </returns>
     public static IServiceCollection RegisterBootstrapper(this IServiceCollection self, Action<BootstrapperOptions>? configure = null) {
+        Guard.Against.Null(self);
+
         var innerConfigure = configure ?? (_ => { });
         var options = new BootstrapperOptions();
 

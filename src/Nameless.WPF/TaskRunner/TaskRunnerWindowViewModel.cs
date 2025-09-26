@@ -17,7 +17,7 @@ public partial class TaskRunnerWindowViewModel : ViewModel {
     private TaskRunnerDelegate? _delegate;
 
     [ObservableProperty]
-    private string _title = Strings.TaskRunnerWindow_Default_Title;
+    private string _title = Strings.TaskRunnerWindow_Title;
 
     [ObservableProperty]
     private bool _running;

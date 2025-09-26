@@ -24,10 +24,12 @@ public sealed class NavigationViewPageProvider : INavigationViewPageProvider {
 
     /// <inheritdoc />
     public object GetPage(Type pageType) {
+        Guard.Against.Null(pageType);
+
         if (typeof(FrameworkElement).IsAssignableFrom(pageType)) {
             return (FrameworkElement)_provider.GetRequiredService(pageType);
         }
 
-        throw new InvalidOperationException(Exceptions.NavigationViewPageProvider_InvalidOperationException_PageMustBeFrameworkElement);
+        throw new InvalidOperationException(Strings.NavigationViewPageProvider_GetPage_Must_FrameworkElement_Exception);
     }
 }

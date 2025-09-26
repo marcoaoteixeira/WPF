@@ -7,7 +7,7 @@ using Nameless.WPF.Client.Resources;
 using Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
 using Nameless.WPF.Client.Views.Pages;
 using Nameless.WPF.Configuration;
-using Nameless.WPF.Dialogs.MessageBox;
+using Nameless.WPF.Dialogs.Message;
 using Nameless.WPF.Helpers;
 using Nameless.WPF.Mvvm;
 using Nameless.WPF.TaskRunner;
@@ -26,7 +26,7 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     private readonly IAppConfigurationManager _appConfigurationManager;
     private readonly IApplicationContext _applicationContext;
     private readonly IMediator _mediator;
-    private readonly IMessageBox _messageBox;
+    private readonly IMessageDialog _messageDialog;
     private readonly ITaskRunner _taskRunner;
 
     private bool _initialized;
@@ -49,12 +49,12 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         IAppConfigurationManager appConfigurationManager,
         IApplicationContext applicationContext,
         IMediator mediator,
-        IMessageBox messageBox,
+        IMessageDialog messageDialog,
         ITaskRunner taskRunner) {
         _appConfigurationManager = Guard.Against.Null(appConfigurationManager);
         _applicationContext = Guard.Against.Null(applicationContext);
         _mediator = Guard.Against.Null(mediator);
-        _messageBox = Guard.Against.Null(messageBox);
+        _messageDialog = Guard.Against.Null(messageDialog);
         _taskRunner = Guard.Against.Null(taskRunner);
     }
 
@@ -143,12 +143,12 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
         if (!checkForUpdateResponse.NewVersionAvailable) { return; }
 
-        var result = _messageBox.ShowQuestion(
+        var result = _messageDialog.ShowQuestion(
             title: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_ConfirmDownload_MessageBox_Title,
             message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_ConfirmDownload_MessageBox_Message
         );
 
-        if (result == MessageBoxResult.No) { return; }
+        if (result == MessageDialogResult.No) { return; }
 
         var fetchNewVersionInformationResponse = await ExecuteFetchNewVersionInformationAsync(
             checkForUpdateResponse.ReleaseID.Value,
@@ -160,7 +160,7 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         if (!fetchNewVersionInformationResponse.Succeeded) { return; }
 
         if (fetchNewVersionInformationResponse.Url is null) {
-            _messageBox.ShowAttention(
+            _messageDialog.ShowAttention(
                 title: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Title,
                 message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Message
             );

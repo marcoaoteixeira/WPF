@@ -1,9 +1,9 @@
-﻿namespace Nameless.WPF.Dialogs.MessageBox;
+﻿namespace Nameless.WPF.Dialogs.Message;
 
 /// <summary>
 ///     Represents which buttons the user should be presented.
 /// </summary>
-public enum MessageBoxButtons {
+public enum MessageDialogButtons {
     /// <summary>
     ///    Button for acknowledge.
     /// </summary>

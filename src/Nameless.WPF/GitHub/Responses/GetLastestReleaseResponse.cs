@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Nameless.WPF.GitHub.ObjectModel;
+using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.GitHub.Responses;
 
@@ -25,6 +26,10 @@ public record GetLastestReleaseResponse {
     }
 
     public static GetLastestReleaseResponse Failure(int statusCode, string error) {
-        return new GetLastestReleaseResponse(release: null, statusCode, error);
+        return new GetLastestReleaseResponse(release: null, statusCode, string.Format(Strings.GetLastestReleaseResponse_Failure_Message, error));
+    }
+
+    public static GetLastestReleaseResponse DeserializationFailure(int statusCode) {
+        return new GetLastestReleaseResponse(release: null, statusCode, Strings.GetLastestReleaseResponse_DeserializationFailure_Message);
     }
 };

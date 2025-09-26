@@ -22,6 +22,9 @@ public static class ServiceCollectionExtensions {
     ///     can be chained.
     /// </returns>
     public static IServiceCollection RegisterGitHubHttpClient(this IServiceCollection self, IConfiguration configuration) {
+        Guard.Against.Null(self);
+        Guard.Against.Null(configuration);
+
         var section = configuration.GetSection(nameof(GitHubOptions));
 
         self.Configure<GitHubOptions>(section);
@@ -43,7 +46,10 @@ public static class ServiceCollectionExtensions {
     ///     can be chained.
     /// </returns>
     public static IServiceCollection RegisterGitHubHttpClient(this IServiceCollection self, Action<GitHubOptions>? configure = null) {
-        self.Configure(configure ?? (_ => { }));
+        Guard.Against.Null(self);
+
+        self.AddOptions<GitHubOptions>()
+            .Configure(configure ?? (_ => { }));
 
         return self.InnerRegisterGitHubHttpClient();
     }
@@ -54,6 +60,7 @@ public static class ServiceCollectionExtensions {
             client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", ["2022-11-28"]);
 
             var url = provider.GetOptions<GitHubOptions>().Value.Api;
+
             if (string.IsNullOrWhiteSpace(url)) {
                 throw new InvalidOperationException("Missing GitHub API URL.");
             }

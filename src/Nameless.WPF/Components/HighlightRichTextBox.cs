@@ -51,11 +51,13 @@ public class HighlightRichTextBox : RichTextBox {
     /// <summary>
     ///     Applies the highlight for the specified terms.
     /// </summary>
-    /// <param name="highlightTerms">
+    /// <param name="terms">
     ///     The terms to highlight.
     /// </param>
-    public void ApplyHighlight(params string[] highlightTerms) {
-        if (highlightTerms.Length == 0) { return; }
+    public void ApplyHighlight(string[] terms) {
+        Guard.Against.Null(terms);
+
+        if (terms.Length == 0) { return; }
 
         var textRange = new TextRange(Document.ContentStart,
                                       Document.ContentEnd);
@@ -63,8 +65,8 @@ public class HighlightRichTextBox : RichTextBox {
 
         var content = textRange.Text;
 
-        foreach (var highlightTerm in highlightTerms) {
-            if (!Regex.IsMatch(content, highlightTerm, RegexOptions.IgnoreCase)) { continue; }
+        foreach (var term in terms) {
+            if (!Regex.IsMatch(content, term, RegexOptions.IgnoreCase)) { continue; }
 
             var startPointer = Document.ContentStart;
             while (startPointer is not null) {
@@ -73,7 +75,7 @@ public class HighlightRichTextBox : RichTextBox {
                 }
 
                 var value = startPointer.GetTextInRun(LogicalDirection.Forward);
-                var highlightTermPosition = value.IndexOf(highlightTerm, StringComparison.CurrentCultureIgnoreCase);
+                var highlightTermPosition = value.IndexOf(term, StringComparison.CurrentCultureIgnoreCase);
 
                 // Didn't find the highlight text in this Run, skip to next one.
                 if (highlightTermPosition < 0) {
@@ -86,7 +88,7 @@ public class HighlightRichTextBox : RichTextBox {
 
                 if (startPointer is null) { break; }
 
-                var nextPointer = startPointer.GetPositionAtOffset(highlightTerm.Length);
+                var nextPointer = startPointer.GetPositionAtOffset(term.Length);
                 var searchedTextRange = new TextRange(startPointer, nextPointer);
 
                 // Finally, highlight it

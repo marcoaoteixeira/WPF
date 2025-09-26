@@ -8,7 +8,7 @@ using Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
 using Nameless.WPF.Client.ViewModels.Windows;
 using Nameless.WPF.Configuration;
 using Nameless.WPF.DependencyInjection;
-using Nameless.WPF.Dialogs.MessageBox;
+using Nameless.WPF.Dialogs.Message;
 using Nameless.WPF.Mvvm;
 using Nameless.WPF.Notifications;
 using Nameless.WPF.Snackbar;
@@ -25,7 +25,7 @@ namespace Nameless.WPF.Client.Views.Windows;
 public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowViewModel> {
     private readonly IAppConfigurationManager _appConfigurationManager;
     private readonly IContentDialogService _contentDialogService;
-    private readonly IMessageBox _messageBox;
+    private readonly IMessageDialog _messageDialog;
     private readonly INavigationService _navigationService;
     private readonly INavigationViewPageProvider _navigationViewPageProvider;
     private readonly INotificationService _notificationService;
@@ -40,7 +40,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
         MainWindowViewModel viewModel,
         IAppConfigurationManager appConfigurationManager,
         IContentDialogService contentDialogService,
-        IMessageBox messageBox,
+        IMessageDialog messageDialog,
         INavigationService navigationService,
         INavigationViewPageProvider navigationViewPageProvider,
         INotificationService notificationService,
@@ -52,7 +52,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
 
         _appConfigurationManager = Guard.Against.Null(appConfigurationManager);
         _contentDialogService = Guard.Against.Null(contentDialogService);
-        _messageBox = Guard.Against.Null(messageBox);
+        _messageDialog = Guard.Against.Null(messageDialog);
         _navigationService = Guard.Against.Null(navigationService);
         _navigationViewPageProvider = Guard.Against.Null(navigationViewPageProvider);
         _notificationService = Guard.Against.Null(notificationService);
@@ -92,7 +92,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
             return;
         }
 
-        var result = _messageBox.ShowQuestion(
+        var result = _messageDialog.ShowQuestion(
             title: Strings.MainWindow_ConfirmApplicationExit_MessageBox_Title,
             message: Strings.MainWindow_ConfirmApplicationExit_MessageBox_Message,
             buttons: MessageBoxButtons.YesNoCancel);

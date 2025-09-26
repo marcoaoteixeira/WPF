@@ -1,9 +1,9 @@
-﻿namespace Nameless.WPF.Dialogs.MessageBox;
+﻿namespace Nameless.WPF.Dialogs.Message;
 
 /// <summary>
 ///     Represents one of the possible user dialog results.
 /// </summary>
-public enum MessageBoxResult {
+public enum MessageDialogResult {
     /// <summary>
     ///     Acknowledge result.
     /// </summary>

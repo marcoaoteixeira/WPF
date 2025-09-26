@@ -23,6 +23,8 @@ public static class ServiceCollectionExtensions {
     ///     can be chained.
     /// </returns>
     public static IServiceCollection RegisterWindowFactory(this IServiceCollection self, Action<WindowFactoryOptions>? configure = null) {
+        Guard.Against.Null(self);
+
         var innerConfigure = configure ?? (_ => { });
         var options = new WindowFactoryOptions();
 

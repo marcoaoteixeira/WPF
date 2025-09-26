@@ -99,9 +99,9 @@ namespace Nameless.WPF.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Selecione.
         /// </summary>
-        public static string ComboBoxItem_Default_Select_Display_Text {
+        public static string ComboBoxItemHelper_EmptyComboBoxItem_Content {
             get {
-                return ResourceManager.GetString("ComboBoxItem_Default_Select_Display_Text", resourceCulture);
+                return ResourceManager.GetString("ComboBoxItemHelper_EmptyComboBoxItem_Content", resourceCulture);
             }
         }
         
@@ -142,20 +142,11 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Selecione o diretório....
+        ///   Looks up a localized string similar to Missing &apos;{0}&apos; attribute..
         /// </summary>
-        public static string DirectorySelectionBoxImpl_FallbackTitle {
+        public static string DiscoverableNavigationViewItemProvider_CreateTuple_Missing_Attribute_Exception {
             get {
-                return ResourceManager.GetString("DirectorySelectionBoxImpl_FallbackTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Selecione os diretórios....
-        /// </summary>
-        public static string DirectorySelectionBoxImpl_FallbackTitle_Plural {
-            get {
-                return ResourceManager.GetString("DirectorySelectionBoxImpl_FallbackTitle_Plural", resourceCulture);
+                return ResourceManager.GetString("DiscoverableNavigationViewItemProvider_CreateTuple_Missing_Attribute_Exception", resourceCulture);
             }
         }
         
@@ -192,6 +183,15 @@ namespace Nameless.WPF.Resources {
         public static string DownloadUpdateNotification_WritingFile {
             get {
                 return ResourceManager.GetString("DownloadUpdateNotification_WritingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Falha Catastrófica.
+        /// </summary>
+        public static string ExceptionWarden_MessageBox_Title {
+            get {
+                return ResourceManager.GetString("ExceptionWarden_MessageBox_Title", resourceCulture);
             }
         }
         
@@ -241,83 +241,146 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selecionar diretório....
+        /// </summary>
+        public static string FileSystemDialog_OpenDirectory_Fallback_Title {
+            get {
+                return ResourceManager.GetString("FileSystemDialog_OpenDirectory_Fallback_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecionar diretórios....
+        /// </summary>
+        public static string FileSystemDialog_OpenDirectory_Fallback_Title_Plural {
+            get {
+                return ResourceManager.GetString("FileSystemDialog_OpenDirectory_Fallback_Title_Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecionar arquivo....
+        /// </summary>
+        public static string FileSystemDialog_OpenFile_Fallback_Title {
+            get {
+                return ResourceManager.GetString("FileSystemDialog_OpenFile_Fallback_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selecionar arquivos....
+        /// </summary>
+        public static string FileSystemDialog_OpenFile_Fallback_Title_Plural {
+            get {
+                return ResourceManager.GetString("FileSystemDialog_OpenFile_Fallback_Title_Plural", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Salvar arquivo....
+        /// </summary>
+        public static string FileSystemDialog_OpenSave_Fallback_Title {
+            get {
+                return ResourceManager.GetString("FileSystemDialog_OpenSave_Fallback_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Não foi possível deserializar as informações do último release..
+        /// </summary>
+        public static string GetLastestReleaseResponse_DeserializationFailure_Message {
+            get {
+                return ResourceManager.GetString("GetLastestReleaseResponse_DeserializationFailure_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações do último release. Erro: {0}.
         /// </summary>
-        public static string GitHubHttpClient_GetLastestReleaseAsync_Exception {
+        public static string GetLastestReleaseResponse_Failure_Message {
             get {
-                return ResourceManager.GetString("GitHubHttpClient_GetLastestReleaseAsync_Exception", resourceCulture);
+                return ResourceManager.GetString("GetLastestReleaseResponse_Failure_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Não foi possível deserializar as informações de release..
+        ///   Looks up a localized string similar to Não foi possível deserializar as informações de recursos da release..
         /// </summary>
-        public static string GitHubHttpClient_GetLastestReleaseAsync_Release_Serialization_Failure {
+        public static string GetReleaseAssetsResponse_DeserializationFailure_Message {
             get {
-                return ResourceManager.GetString("GitHubHttpClient_GetLastestReleaseAsync_Release_Serialization_Failure", resourceCulture);
+                return ResourceManager.GetString("GetReleaseAssetsResponse_DeserializationFailure_Message", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações de recursos do release. Erro: {0}.
+        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações de recursos da release. Erro: {0}.
         /// </summary>
-        public static string GitHubHttpClient_GetReleaseAssetsAsync_Exception {
+        public static string GetReleaseAssetsResponse_Failure_Message {
             get {
-                return ResourceManager.GetString("GitHubHttpClient_GetReleaseAssetsAsync_Exception", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Não foi possível deserializar as informações de recursos do release..
-        /// </summary>
-        public static string GitHubHttpClient_GetReleaseAssetsAsync_ReleaseAssets_Serialization_Failure {
-            get {
-                return ResourceManager.GetString("GitHubHttpClient_GetReleaseAssetsAsync_ReleaseAssets_Serialization_Failure", resourceCulture);
+                return ResourceManager.GetString("GetReleaseAssetsResponse_Failure_Message", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Atenção.
         /// </summary>
-        public static string MessageBoxIcon_Attention {
+        public static string MessageDialogIcon_Attention {
             get {
-                return ResourceManager.GetString("MessageBoxIcon_Attention", resourceCulture);
+                return ResourceManager.GetString("MessageDialogIcon_Attention", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Erro.
         /// </summary>
-        public static string MessageBoxIcon_Error {
+        public static string MessageDialogIcon_Error {
             get {
-                return ResourceManager.GetString("MessageBoxIcon_Error", resourceCulture);
+                return ResourceManager.GetString("MessageDialogIcon_Error", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Informação.
         /// </summary>
-        public static string MessageBoxIcon_Information {
+        public static string MessageDialogIcon_Information {
             get {
-                return ResourceManager.GetString("MessageBoxIcon_Information", resourceCulture);
+                return ResourceManager.GetString("MessageDialogIcon_Information", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Questão.
         /// </summary>
-        public static string MessageBoxIcon_Question {
+        public static string MessageDialogIcon_Question {
             get {
-                return ResourceManager.GetString("MessageBoxIcon_Question", resourceCulture);
+                return ResourceManager.GetString("MessageDialogIcon_Question", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Cuidado.
         /// </summary>
-        public static string MessageBoxIcon_Warning {
+        public static string MessageDialogIcon_Warning {
             get {
-                return ResourceManager.GetString("MessageBoxIcon_Warning", resourceCulture);
+                return ResourceManager.GetString("MessageDialogIcon_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The page element must be a FrameworkElement type..
+        /// </summary>
+        public static string NavigationViewPageProvider_GetPage_Must_FrameworkElement_Exception {
+            get {
+                return ResourceManager.GetString("NavigationViewPageProvider_GetPage_Must_FrameworkElement_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t create &apos;{0}&apos; instance..
+        /// </summary>
+        public static string TaskRunnerBuilder_CreateTaskRunnerWindow_Unregistered_Window_Exception {
+            get {
+                return ResourceManager.GetString("TaskRunnerBuilder_CreateTaskRunnerWindow_Unregistered_Window_Exception", resourceCulture);
             }
         }
         
@@ -342,9 +405,9 @@ namespace Nameless.WPF.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Executando Tarefa....
         /// </summary>
-        public static string TaskRunnerWindow_Default_Title {
+        public static string TaskRunnerWindow_Title {
             get {
-                return ResourceManager.GetString("TaskRunnerWindow_Default_Title", resourceCulture);
+                return ResourceManager.GetString("TaskRunnerWindow_Title", resourceCulture);
             }
         }
         

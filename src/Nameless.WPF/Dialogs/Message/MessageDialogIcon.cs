@@ -1,9 +1,9 @@
-﻿namespace Nameless.WPF.Dialogs.MessageBox;
+﻿namespace Nameless.WPF.Dialogs.Message;
 
 /// <summary>
 ///     Represents icons to be shown in the user dialog message.
 /// </summary>
-public enum MessageBoxIcon {
+public enum MessageDialogIcon {
     /// <summary>
     ///     An information dialog.
     /// </summary>

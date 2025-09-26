@@ -33,6 +33,8 @@ public class PerformanceRequestPipelineBehavior<TRequest, TResponse> : IRequestP
 
     /// <inheritdoc />
     public async Task<TResponse> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken) {
+        Guard.Against.Null(next);
+
         var sw = Stopwatch.StartNew();
 
         _logger.StartPerformanceMonitor();
