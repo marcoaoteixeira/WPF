@@ -47,10 +47,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Client.Sqlite"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Tests", "tests\Nameless.WPF.Tests\Nameless.WPF.Tests.csproj", "{39797F97-CD86-4CB9-B447-3A0176327CB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nameless.WPF.Resources", "libs\Nameless.WPF.Resources\Nameless.WPF.Resources.csproj", "{A48B120E-9884-44F8-91D2-88CEB1DD6966}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{0C46B811-517C-405A-90AD-4193EFDB159D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,10 +69,6 @@ Global
 		{39797F97-CD86-4CB9-B447-3A0176327CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39797F97-CD86-4CB9-B447-3A0176327CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39797F97-CD86-4CB9-B447-3A0176327CB2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A48B120E-9884-44F8-91D2-88CEB1DD6966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A48B120E-9884-44F8-91D2-88CEB1DD6966}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A48B120E-9884-44F8-91D2-88CEB1DD6966}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A48B120E-9884-44F8-91D2-88CEB1DD6966}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,7 +82,6 @@ Global
 		{C663A811-F3C7-7E21-BE0F-69A55AEC8924} = {68623D31-C0AA-4657-907A-784D5A51D495}
 		{3FC1F0CA-D83D-30A1-9C22-E152BC1588D6} = {68623D31-C0AA-4657-907A-784D5A51D495}
 		{39797F97-CD86-4CB9-B447-3A0176327CB2} = {92D94781-4395-4BFB-B25F-353BACE1487D}
-		{A48B120E-9884-44F8-91D2-88CEB1DD6966} = {0C46B811-517C-405A-90AD-4193EFDB159D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {433D110F-07A8-4681-9532-DEDCCA4D35FE}
