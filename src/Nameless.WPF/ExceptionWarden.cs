@@ -11,7 +11,7 @@ public static class ExceptionWarden {
     private static string ApplicationName { get; set; } = string.Empty;
 
     public static void Initialize(string applicationName) {
-        ApplicationName = Guard.Against.NullOrWhiteSpace(applicationName);
+        ApplicationName = applicationName;
 
         Application.Current.DispatcherUnhandledException += UnhandledExceptionHandler;
         Dispatcher.CurrentDispatcher.UnhandledException += UnhandledExceptionHandler;

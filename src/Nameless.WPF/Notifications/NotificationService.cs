@@ -13,14 +13,11 @@ public class NotificationService : INotificationService {
     ///     The messenger.
     /// </param>
     public NotificationService(IMessenger messenger) {
-        _messenger = Guard.Against.Null(messenger);
+        _messenger = messenger;
     }
 
     public void Subscribe<TMessage>(object recipient, Action<object, TMessage> handler)
         where TMessage : class, INotification {
-        Guard.Against.Null(recipient);
-        Guard.Against.Null(handler);
-
         if (_messenger.IsRegistered<TMessage>(recipient)) {
             return;
         }
@@ -33,15 +30,11 @@ public class NotificationService : INotificationService {
 
     public void Unsubscribe<TMessage>(object recipient)
         where TMessage : class, INotification {
-        Guard.Against.Null(recipient);
-
         _messenger.Unregister<TMessage>(recipient);
     }
 
     public Task PublishAsync<TMessage>(TMessage notification)
         where TMessage : class, INotification {
-        Guard.Against.Null(notification);
-
         _messenger.Send(notification);
 
         return Task.CompletedTask;

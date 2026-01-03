@@ -16,10 +16,7 @@ public static class ProcessHelper {
     ///     The directory path.
     /// </param>
     public static void OpenDirectory(string directoryPath) {
-        Guard.Against.NullOrWhiteSpace(directoryPath);
-
-        using var process = Process.Start(fileName: EXPLORER_APP,
-                                          arguments: directoryPath);
+        Execute(EXPLORER_APP, arguments: directoryPath);
     }
 
     /// <summary>
@@ -29,10 +26,7 @@ public static class ProcessHelper {
     ///     The file path.
     /// </param>
     public static void OpenTextFile(string filePath) {
-        Guard.Against.NullOrWhiteSpace(filePath);
-
-        using var process = Process.Start(fileName: NOTEPAD_APP,
-                                          arguments: filePath);
+        Execute(NOTEPAD_APP, arguments: filePath);
     }
 
     /// <summary>
@@ -42,9 +36,10 @@ public static class ProcessHelper {
     ///     The file path.
     /// </param>
     public static void OpenFile(string filePath) {
-        Guard.Against.NullOrWhiteSpace(filePath);
+        Execute(EXPLORER_APP, arguments: filePath);
+    }
 
-        using var process = Process.Start(fileName: EXPLORER_APP,
-                                          arguments: filePath);
+    private static void Execute(string app, string arguments) {
+        using var process = Process.Start(fileName: app, arguments);
     }
 }

@@ -37,7 +37,7 @@ public sealed record LoggerRichTextBoxEntry {
     /// </returns>
     public static LoggerRichTextBoxEntry Information(string message) {
         return new LoggerRichTextBoxEntry {
-            Message = Guard.Against.NullOrWhiteSpace(message),
+            Message = message,
             Background = Brushes.Transparent,
             Foreground = Brushes.Black
         };
@@ -55,8 +55,8 @@ public sealed record LoggerRichTextBoxEntry {
     /// </returns>
     public static LoggerRichTextBoxEntry Error(string message) {
         return new LoggerRichTextBoxEntry {
-            Message = Guard.Against.NullOrWhiteSpace(message),
-            Background = Brushes.Yellow,
+            Message = message,
+            Background = Brushes.DarkSalmon,
             Foreground = Brushes.DarkRed
         };
     }
@@ -73,7 +73,7 @@ public sealed record LoggerRichTextBoxEntry {
     /// </returns>
     public static LoggerRichTextBoxEntry Success(string message) {
         return new LoggerRichTextBoxEntry {
-            Message = Guard.Against.NullOrWhiteSpace(message),
+            Message = message,
             Background = Brushes.Transparent,
             Foreground = Brushes.Green
         };
@@ -91,7 +91,7 @@ public sealed record LoggerRichTextBoxEntry {
     /// </returns>
     public static LoggerRichTextBoxEntry Warning(string message) {
         return new LoggerRichTextBoxEntry {
-            Message = Guard.Against.NullOrWhiteSpace(message),
+            Message = message,
             Background = Brushes.Transparent,
             Foreground = Brushes.Goldenrod
         };

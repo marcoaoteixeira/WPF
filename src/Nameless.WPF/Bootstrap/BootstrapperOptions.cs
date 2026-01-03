@@ -22,7 +22,7 @@ public class BootstrapperOptions {
     ///     can be chained.
     /// </returns>
     public BootstrapperOptions RegisterStep<TStep>()
-        where TStep : BootstrapStep {
+        where TStep : Step {
         if (!_steps.Contains(typeof(TStep))) {
             _steps.Add(typeof(TStep));
         }

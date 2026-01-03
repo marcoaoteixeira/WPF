@@ -9,12 +9,10 @@ public class FileSystemDialog : IFileSystemDialog {
     private readonly IApplicationContext _applicationContext;
 
     public FileSystemDialog(IApplicationContext applicationContext) {
-        _applicationContext = Guard.Against.Null(applicationContext);
+        _applicationContext = applicationContext;
     }
 
     public IEnumerable<string> OpenDirectory(Action<DirectorySelectionOptions> configure) {
-        Guard.Against.Null(configure);
-
         var options = new DirectorySelectionOptions();
 
         configure(options);
@@ -38,8 +36,6 @@ public class FileSystemDialog : IFileSystemDialog {
     }
 
     public IEnumerable<string> OpenFile(Action<FileSelectionOptions> configure) {
-        Guard.Against.Null(configure);
-
         var options = new FileSelectionOptions();
 
         configure(options);
@@ -64,8 +60,6 @@ public class FileSystemDialog : IFileSystemDialog {
     }
 
     public string OpenSave(Action<SaveSelectionOptions> configure) {
-        Guard.Against.Null(configure);
-
         var options = new SaveSelectionOptions();
 
         configure(options);

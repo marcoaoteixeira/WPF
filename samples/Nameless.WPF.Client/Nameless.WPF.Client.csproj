@@ -26,12 +26,10 @@
 
 	<!-- Resources -->
 	<ItemGroup>
-		<Resource Include="Resources\application_16x16.png" />
-		<Resource Include="Resources\application_24x24.png" />
-		<Resource Include="Resources\application_32x32.png" />
+		<Resource Include="Resources\AlteHaasGroteskBold.ttf" />
 		<Resource Include="Resources\application_64x64.png" />
-		<Resource Include="Resources\application_128x128.png" />
-		<Resource Include="Resources\application_256x256.png" />
+		<Resource Include="Resources\loading_64x64.png" />
+		<Resource Include="Resources\splash_screen_256x256.png" />
 		<Resource Include="Resources\ValidationResourceDictionary.xaml">
 			<SubType>Designer</SubType>
 			<Generator>MSBuild:Compile</Generator>
@@ -39,9 +37,6 @@
 	</ItemGroup>
 
 	<!-- Splash Screen -->
-	<ItemGroup>
-		<SplashScreen Include="Resources\application_512x512.png" />
-	</ItemGroup>
 
 	<!-- Output Folder Files -->
 	<ItemGroup>

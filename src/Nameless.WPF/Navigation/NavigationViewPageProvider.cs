@@ -19,13 +19,11 @@ public sealed class NavigationViewPageProvider : INavigationViewPageProvider {
     ///     The service provider.
     /// </param>
     public NavigationViewPageProvider(IServiceProvider provider) {
-        _provider = Guard.Against.Null(provider);
+        _provider = provider;
     }
 
     /// <inheritdoc />
     public object GetPage(Type pageType) {
-        Guard.Against.Null(pageType);
-
         if (typeof(FrameworkElement).IsAssignableFrom(pageType)) {
             return (FrameworkElement)_provider.GetRequiredService(pageType);
         }

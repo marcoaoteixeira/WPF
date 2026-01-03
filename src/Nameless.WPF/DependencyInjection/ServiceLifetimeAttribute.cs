@@ -18,9 +18,6 @@ public sealed class ServiceLifetimeAttribute : Attribute {
     }
 
     public static ServiceLifetime GetLifetime(Type type, ServiceLifetime fallback = ServiceLifetime.Singleton) {
-        Guard.Against.Null(type);
-
-        return type.GetCustomAttribute<ServiceLifetimeAttribute>()?.Lifetime
-               ?? fallback;
+        return type.GetCustomAttribute<ServiceLifetimeAttribute>()?.Lifetime ?? fallback;
     }
 }

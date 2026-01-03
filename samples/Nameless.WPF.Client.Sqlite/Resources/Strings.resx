@@ -120,22 +120,22 @@
   <data name="InitializeDbContextBootstrapStep_Name" xml:space="preserve">
     <value>Inicializar Contexto da Base de Dados</value>
   </data>
-  <data name="PerformDatabaseBackupNotification_BackupDatabaseDataFailure" xml:space="preserve">
+  <data name="PerformDatabaseBackupNotification_BackupDatabase_Failure" xml:space="preserve">
     <value>Ocorreu um erro ao executar o backup dos dados da base de dados. Erro: {0}</value>
   </data>
-  <data name="PerformDatabaseBackupNotification_BackupDatabaseDataFinish" xml:space="preserve">
+  <data name="PerformDatabaseBackupNotification_BackupDatabase_Finish" xml:space="preserve">
     <value>Backup dos dados da base de dados concluído.</value>
   </data>
-  <data name="PerformDatabaseBackupNotification_BackupDatabaseDataStarting" xml:space="preserve">
+  <data name="PerformDatabaseBackupNotification_BackupDatabase_Starting" xml:space="preserve">
     <value>Iniciando o backup dos dados da base de dados...</value>
   </data>
-  <data name="PerformDatabaseBackupNotification_PrepareBackupFileFailure" xml:space="preserve">
+  <data name="PerformDatabaseBackupNotification_PrepareBackupFile_Failure" xml:space="preserve">
     <value>Ocorreu um erro durante a preparação do arquivo de backup da base de dados. Erro: {0}</value>
   </data>
-  <data name="PerformDatabaseBackupNotification_PrepareBackupFileFinish" xml:space="preserve">
+  <data name="PerformDatabaseBackupNotification_PrepareBackupFile_Finish" xml:space="preserve">
     <value>Preparação do arquivo de backup da base de dados concluído.</value>
   </data>
-  <data name="PerformDatabaseBackupNotification_PrepareBackupFileStarting" xml:space="preserve">
+  <data name="PerformDatabaseBackupNotification_PrepareBackupFile_Starting" xml:space="preserve">
     <value>Iniciando a preparação do arquivo de backup da base de dados...</value>
   </data>
   <data name="PerformDatabaseBackupNotification_Success" xml:space="preserve">

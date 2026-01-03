@@ -2,6 +2,8 @@
 using System.Net.Http;
 using Nameless.IO.FileSystem;
 using Nameless.Mediator.Requests;
+using Nameless.ObjectModel;
+using Nameless.WPF.Internals;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Download;
@@ -13,22 +15,19 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
     private readonly TimeProvider _timeProvider;
 
     public DownloadUpdateRequestHandler(IFileSystem fileSystem, HttpClient httpClient, INotificationService notificationService, TimeProvider timeProvider) {
-        _fileSystem = Guard.Against.Null(fileSystem);
-        _httpClient = Guard.Against.Null(httpClient);
-        _notificationService = Guard.Against.Null(notificationService);
-        _timeProvider = Guard.Against.Null(timeProvider);
+        _fileSystem = fileSystem;
+        _httpClient = httpClient;
+        _notificationService = notificationService;
+        _timeProvider = timeProvider;
     }
 
     public async Task<DownloadUpdateResponse> HandleAsync(DownloadUpdateRequest request, CancellationToken cancellationToken) {
-        Guard.Against.Null(request);
-        Guard.Against.NullOrWhiteSpace(request.Url);
-
         try {
-            await _notificationService.PublishAsync(DownloadUpdateNotification.Starting())
-                                      .SuppressContext();
+            await _notificationService.DownloadUpdateStartingAsync()
+                                      .SkipContextSync();
 
             var response = await _httpClient.GetAsync(request.Url, cancellationToken)
-                                            .SuppressContext();
+                                            .SkipContextSync();
 
             response.EnsureSuccessStatusCode();
 
@@ -39,30 +38,30 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
             var filePath = Path.Combine(Constants.SystemUpdate.DIRECTORY_NAME, fileName);
             var file = _fileSystem.GetFile(filePath);
 
-            await _notificationService.PublishAsync(DownloadUpdateNotification.WritingFile())
-                                      .SuppressContext();
+            await _notificationService.DownloadUpdateWritingFileAsync()
+                                      .SkipContextSync();
 
             await using var fileStream = file.Open();
             await using var httpStream = await response.Content
                                                        .ReadAsStreamAsync(cancellationToken)
-                                                       .SuppressContext();
+                                                       .SkipContextSync();
 
             await httpStream.CopyToAsync(fileStream, cancellationToken)
-                            .SuppressContext();
+                            .SkipContextSync();
 
             httpStream.Close();
             fileStream.Close();
 
-            await _notificationService.PublishAsync(DownloadUpdateNotification.Success(file.Path))
-                                      .SuppressContext();
+            await _notificationService.DownloadUpdateSuccessAsync(file.Path)
+                                      .SkipContextSync();
 
-            return DownloadUpdateResponse.Success(file.Path);
+            return new DownloadedUpdateMetadata(file.Path);
         }
         catch (Exception ex) {
-            await _notificationService.PublishAsync(DownloadUpdateNotification.Failure(ex.Message))
-                                      .SuppressContext();
+            await _notificationService.DownloadUpdateFailureAsync(ex.Message)
+                                      .SkipContextSync();
 
-            return DownloadUpdateResponse.Failure(ex.Message);
+            return Error.Failure(ex.Message);
         }
     }
 }

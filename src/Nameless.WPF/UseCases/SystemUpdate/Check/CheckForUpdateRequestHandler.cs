@@ -4,6 +4,7 @@ using Nameless.Mediator.Requests;
 using Nameless.WPF.GitHub;
 using Nameless.WPF.GitHub.Requests;
 using Nameless.WPF.Helpers;
+using Nameless.WPF.Internals;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Check;
@@ -15,50 +16,45 @@ public class CheckForUpdateRequestHandler : IRequestHandler<CheckForUpdateReques
     private readonly IOptions<GitHubOptions> _options;
 
     public CheckForUpdateRequestHandler(IApplicationContext applicationContext, IGitHubHttpClient gitHubHttpClient, INotificationService notificationService, IOptions<GitHubOptions> options) {
-        _applicationContext = Guard.Against.Null(applicationContext);
-        _gitHubHttpClient = Guard.Against.Null(gitHubHttpClient);
-        _notificationService = Guard.Against.Null(notificationService);
-        _options = Guard.Against.Null(options);
+        _applicationContext = applicationContext;
+        _gitHubHttpClient = gitHubHttpClient;
+        _notificationService = notificationService;
+        _options = options;
     }
 
     public async Task<CheckForUpdateResponse> HandleAsync(CheckForUpdateRequest request, CancellationToken cancellationToken) {
-        Guard.Against.Null(request);
-
-        var notification = CheckForUpdateNotification.Starting();
-        await _notificationService.PublishAsync(notification)
-                                  .SuppressContext();
+        await _notificationService.CheckForUpdateStartingAsync()
+                                  .SkipContextSync();
 
         var options = _options.Value;
         var getLatestReleaseRequest = new GetLastestReleaseRequest(options.Owner, options.Repository);
         var getLastestReleaseResponse = await _gitHubHttpClient.GetLastestReleaseAsync(getLatestReleaseRequest, cancellationToken)
-                                                               .SuppressContext();
+                                                               .SkipContextSync();
 
-        if (!getLastestReleaseResponse.Succeeded) {
-            notification = CheckForUpdateNotification.Failure(getLastestReleaseResponse.Error);
-            await _notificationService.PublishAsync(notification)
-                                      .SuppressContext();
+        if (!getLastestReleaseResponse.Success) {
+            await _notificationService.CheckForUpdateFailureAsync(getLastestReleaseResponse.Errors[0].Message)
+                                      .SkipContextSync();
 
-            return CheckForUpdateResponse.Failure(getLastestReleaseResponse.Error);
+            return getLastestReleaseResponse.Errors[0];
         }
 
         var currentVersion = VersionHelper.Parse(_applicationContext.Version);
-        var latestVersion = VersionHelper.Parse(getLastestReleaseResponse.Release.TagName);
+        var latestVersion = VersionHelper.Parse(getLastestReleaseResponse.Value.TagName);
 
         if (currentVersion >= latestVersion) {
-            await _notificationService.PublishAsync(CheckForUpdateNotification.Success())
-                                      .SuppressContext();
+            await _notificationService.CheckForUpdateSuccessAsync()
+                                      .SkipContextSync();
 
-            return CheckForUpdateResponse.Skip();
+            return (CheckForUpdateMetadata)default;
         }
 
-        notification = CheckForUpdateNotification.Success(latestVersion.ToString(3));
-        await _notificationService.PublishAsync(notification)
-                                  .SuppressContext();
+        await _notificationService.CheckForUpdateSuccessAsync(latestVersion.ToString(3))
+                                  .SkipContextSync();
 
-        return CheckForUpdateResponse.Success(
-            releaseID: getLastestReleaseResponse.Release.Id,
-            applicationName: _applicationContext.ApplicationName,
-            version: latestVersion.ToString(3)
+        return new CheckForUpdateMetadata(
+            ReleaseID: getLastestReleaseResponse.Value.Id,
+            ApplicationName: _applicationContext.ApplicationName,
+            Version: latestVersion.ToString(3)
         );
     }
 }

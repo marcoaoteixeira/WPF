@@ -2,9 +2,6 @@
 
 public class MessageDialog : IMessageDialog {
     public MessageDialogResult Show(string message, Action<MessageDialogOptions> configure) {
-        Guard.Against.NullOrWhiteSpace(message);
-        Guard.Against.Null(configure);
-
         var options = new MessageDialogOptions();
 
         configure(options);

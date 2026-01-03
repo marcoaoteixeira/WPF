@@ -8,66 +8,60 @@ namespace Nameless.WPF.GitHub;
 ///     <see cref="IServiceCollection"/> extension methods.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    /// <summary>
-    ///     Register GitHub HTTP client.
-    /// </summary>
     /// <param name="self">
     ///     The current <see cref="IServiceCollection"/>.
     /// </param>
-    /// <param name="configuration">
-    ///     The configuration.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="IServiceCollection"/> so other actions
-    ///     can be chained.
-    /// </returns>
-    public static IServiceCollection RegisterGitHubHttpClient(this IServiceCollection self, IConfiguration configuration) {
-        Guard.Against.Null(self);
-        Guard.Against.Null(configuration);
+    extension(IServiceCollection self) {
+        /// <summary>
+        ///     Register GitHub HTTP client.
+        /// </summary>
+        /// <param name="configuration">
+        ///     The configuration.
+        /// </param>
+        /// <returns>
+        ///     The current <see cref="IServiceCollection"/> so other actions
+        ///     can be chained.
+        /// </returns>
+        public IServiceCollection RegisterGitHubHttpClient(IConfiguration configuration) {
+            var section = configuration.GetSection(nameof(GitHubOptions));
 
-        var section = configuration.GetSection(nameof(GitHubOptions));
+            self.Configure<GitHubOptions>(section);
 
-        self.Configure<GitHubOptions>(section);
+            return self.InnerRegisterGitHubHttpClient();
+        }
 
-        return self.InnerRegisterGitHubHttpClient();
-    }
+        /// <summary>
+        ///     Register GitHub HTTP client.
+        /// </summary>
+        /// <param name="configure">
+        ///     The configuration action.
+        /// </param>
+        /// <returns>
+        ///     The current <see cref="IServiceCollection"/> so other actions
+        ///     can be chained.
+        /// </returns>
+        public IServiceCollection RegisterGitHubHttpClient(Action<GitHubOptions>? configure = null) {
+            self.AddOptions<GitHubOptions>()
+                .Configure(configure ?? (_ => { }));
 
-    /// <summary>
-    ///     Register GitHub HTTP client.
-    /// </summary>
-    /// <param name="self">
-    ///     The current <see cref="IServiceCollection"/>.
-    /// </param>
-    /// <param name="configure">
-    ///     The configuration action.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="IServiceCollection"/> so other actions
-    ///     can be chained.
-    /// </returns>
-    public static IServiceCollection RegisterGitHubHttpClient(this IServiceCollection self, Action<GitHubOptions>? configure = null) {
-        Guard.Against.Null(self);
+            return self.InnerRegisterGitHubHttpClient();
+        }
 
-        self.AddOptions<GitHubOptions>()
-            .Configure(configure ?? (_ => { }));
+        private IServiceCollection InnerRegisterGitHubHttpClient() {
+            self.AddHttpClient<IGitHubHttpClient, GitHubHttpClient>((provider, client) => {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+                client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", ["2022-11-28"]);
 
-        return self.InnerRegisterGitHubHttpClient();
-    }
+                var url = provider.GetOptions<GitHubOptions>().Value.Api;
 
-    public static IServiceCollection InnerRegisterGitHubHttpClient(this IServiceCollection self) {
-        self.AddHttpClient<IGitHubHttpClient, GitHubHttpClient>((provider, client) => {
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
-            client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", ["2022-11-28"]);
+                if (string.IsNullOrWhiteSpace(url)) {
+                    throw new InvalidOperationException("Missing GitHub API URL.");
+                }
 
-            var url = provider.GetOptions<GitHubOptions>().Value.Api;
+                client.BaseAddress = new Uri(url);
+            });
 
-            if (string.IsNullOrWhiteSpace(url)) {
-                throw new InvalidOperationException("Missing GitHub API URL.");
-            }
-
-            client.BaseAddress = new Uri(url);
-        });
-
-        return self;
+            return self;
+        }
     }
 }

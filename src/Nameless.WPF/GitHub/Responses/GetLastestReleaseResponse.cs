@@ -1,35 +1,18 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Nameless.ObjectModel;
+using Nameless.Results;
 using Nameless.WPF.GitHub.ObjectModel;
-using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.GitHub.Responses;
 
-public record GetLastestReleaseResponse {
-    public Release? Release { get; }
+public class GetLastestReleaseResponse : Result<Release> {
+    private GetLastestReleaseResponse(Release? value, Error[] errors)
+        : base (value, errors) { }
 
-    public int StatusCode { get; }
-
-    public string? Error { get; }
-
-    [MemberNotNullWhen(returnValue: true, nameof(Release))]
-    [MemberNotNullWhen(returnValue: false, nameof(Error))]
-    public bool Succeeded => string.IsNullOrWhiteSpace(Error);
-
-    private GetLastestReleaseResponse(Release? release, int statusCode, string? error) {
-        Release = release;
-        StatusCode = statusCode;
-        Error = error;
+    public static implicit operator GetLastestReleaseResponse(Release value) {
+        return new GetLastestReleaseResponse(value, errors: []);
     }
 
-    public static GetLastestReleaseResponse Success(Release release) {
-        return new GetLastestReleaseResponse(release, statusCode: 200, error: null);
+    public static implicit operator GetLastestReleaseResponse(Error error) {
+        return new GetLastestReleaseResponse(value: null, errors: [error]);
     }
-
-    public static GetLastestReleaseResponse Failure(int statusCode, string error) {
-        return new GetLastestReleaseResponse(release: null, statusCode, string.Format(Strings.GetLastestReleaseResponse_Failure_Message, error));
-    }
-
-    public static GetLastestReleaseResponse DeserializationFailure(int statusCode) {
-        return new GetLastestReleaseResponse(release: null, statusCode, Strings.GetLastestReleaseResponse_DeserializationFailure_Message);
-    }
-};
+}

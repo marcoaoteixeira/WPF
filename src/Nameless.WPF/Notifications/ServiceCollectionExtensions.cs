@@ -5,12 +5,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Nameless.WPF.Notifications;
 
 public static class ServiceCollectionExtensions {
-    public static IServiceCollection RegisterNotificationService(this IServiceCollection self) {
-        Guard.Against.Null(self);
+    extension(IServiceCollection self) {
+        public IServiceCollection RegisterNotificationService() {
+            self.TryAddSingleton<IMessenger, WeakReferenceMessenger>();
+            self.TryAddSingleton<INotificationService, NotificationService>();
 
-        self.TryAddSingleton<IMessenger, WeakReferenceMessenger>();
-        self.TryAddSingleton<INotificationService, NotificationService>();
-
-        return self;
+            return self;
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace Nameless.WPF.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -286,7 +286,7 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Não foi possível deserializar as informações do último release..
+        ///   Looks up a localized string similar to Não foi possível deserializar as informações do último release. Código de status: {0}.
         /// </summary>
         public static string GetLastestReleaseResponse_DeserializationFailure_Message {
             get {
@@ -295,7 +295,7 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações do último release. Erro: {0}.
+        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações do último release. Código de status: {0} | Erro: {1}.
         /// </summary>
         public static string GetLastestReleaseResponse_Failure_Message {
             get {
@@ -304,7 +304,7 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Não foi possível deserializar as informações de recursos da release..
+        ///   Looks up a localized string similar to Não foi possível deserializar as informações de recursos da release. Código de status: {0}.
         /// </summary>
         public static string GetReleaseAssetsResponse_DeserializationFailure_Message {
             get {
@@ -313,7 +313,7 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações de recursos da release. Erro: {0}.
+        ///   Looks up a localized string similar to Ocorreu um erro ao tentar recuperar as informações de recursos da release. Código de status: {0} | Erro: {1}.
         /// </summary>
         public static string GetReleaseAssetsResponse_Failure_Message {
             get {

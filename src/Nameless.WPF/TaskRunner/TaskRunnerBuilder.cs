@@ -12,21 +12,17 @@ public class TaskRunnerBuilder : ITaskRunnerBuilder {
     private ITaskRunnerWindow Window => _taskRunnerWindow.Value;
 
     public TaskRunnerBuilder(IWindowFactory windowFactory) {
-        _windowFactory = Guard.Against.Null(windowFactory);
+        _windowFactory = windowFactory;
         _taskRunnerWindow = new Lazy<ITaskRunnerWindow>(CreateTaskRunnerWindow);
     }
 
     public ITaskRunnerBuilder SetName(string name) {
-        Guard.Against.NullOrWhiteSpace(name);
-
         Window.SetName(name);
 
         return this;
     }
 
     public ITaskRunnerBuilder SetDelegate(TaskRunnerDelegate @delegate) {
-        Guard.Against.Null(@delegate);
-
         Window.SetDelegate(@delegate);
 
         return this;

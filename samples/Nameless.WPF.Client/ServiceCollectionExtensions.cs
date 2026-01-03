@@ -10,24 +10,26 @@ namespace Nameless.WPF.Client;
 ///     <see cref="IServiceCollection"/> extension methods.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    public static IServiceCollection RegisterTimeProvider(this IServiceCollection self) {
-        self.TryAddSingleton(TimeProvider.System);
+    extension(IServiceCollection self) {
+        public IServiceCollection RegisterTimeProvider() {
+            self.TryAddSingleton(TimeProvider.System);
 
-        return self;
-    }
+            return self;
+        }
 
-    public static IServiceCollection RegisterContentDialogService(this IServiceCollection self) {
-        self.TryAddSingleton<IContentDialogService, ContentDialogService>();
+        public IServiceCollection RegisterContentDialogService() {
+            self.TryAddSingleton<IContentDialogService, ContentDialogService>();
 
-        return self;
-    }
+            return self;
+        }
 
-    public static IServiceCollection RegisterLogging(this IServiceCollection self) {
-        self.AddLogging(configure => {
-            configure.ClearProviders();
-            configure.AddNLog();
-        });
+        public IServiceCollection RegisterLogging() {
+            self.AddLogging(configure => {
+                configure.ClearProviders();
+                configure.AddNLog();
+            });
 
-        return self;
+            return self;
+        }
     }
 }

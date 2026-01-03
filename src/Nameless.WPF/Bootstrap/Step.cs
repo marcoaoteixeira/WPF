@@ -1,9 +1,16 @@
-﻿namespace Nameless.WPF.Bootstrap;
+﻿using Nameless.Null;
+
+namespace Nameless.WPF.Bootstrap;
 
 /// <summary>
-///     Represents a bootstrap step.
+///     Represents a step.
 /// </summary>
-public abstract class BootstrapStep {
+public abstract class Step {
+    /// <summary>
+    ///     Gets the progress reporter.
+    /// </summary>
+    protected IProgress<StepProgressReport> Progress { get; private set; } = NullProgress<StepProgressReport>.Instance;
+
     /// <summary>
     ///     Gets the name of the step
     /// </summary>
@@ -25,4 +32,14 @@ public abstract class BootstrapStep {
     ///     execution.
     /// </returns>
     public abstract Task ExecuteAsync(CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Sets the progress reporter.
+    /// </summary>
+    /// <param name="progress">
+    ///     The progress reporter.
+    /// </param>
+    public void SetProgress(IProgress<StepProgressReport> progress) {
+        Progress = progress;
+    }
 }

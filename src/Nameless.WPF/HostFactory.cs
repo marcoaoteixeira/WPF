@@ -48,7 +48,7 @@ public sealed class HostFactory {
     ///     actions can be chained.
     /// </returns>
     public HostFactory ConfigureServices(Action<IServiceCollection, IConfiguration> configure) {
-        _configure = Guard.Against.Null(configure);
+        _configure = configure;
 
         return this;
     }
@@ -65,7 +65,7 @@ public sealed class HostFactory {
     ///     actions can be chained.
     /// </returns>
     public HostFactory OnStartup(Action<IServiceProvider> callback) {
-        _onStartup = Guard.Against.Null(callback);
+        _onStartup = callback;
 
         return this;
     }
@@ -82,7 +82,7 @@ public sealed class HostFactory {
     ///     actions can be chained.
     /// </returns>
     public HostFactory OnTearDown(Action<IServiceProvider> callback) {
-        _onTearDown = Guard.Against.Null(callback);
+        _onTearDown = callback;
 
         return this;
     }

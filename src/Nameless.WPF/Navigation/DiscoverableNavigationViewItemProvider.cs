@@ -9,7 +9,7 @@ public class DiscoverableNavigationViewItemProvider : INavigationViewItemProvide
     private readonly Lazy<Entry[]> _entries;
 
     public DiscoverableNavigationViewItemProvider(Assembly[] assemblies) {
-        _assemblies = Guard.Against.Null(assemblies);
+        _assemblies = assemblies;
         _entries = new Lazy<Entry[]>(DiscoverNavigationViewItems);
     }
 

@@ -20,8 +20,8 @@ public sealed class MainWindowViewModel : ViewModel {
     public NavigationViewItem[] FooterMenuItemsSource => _footerMenuItemsSource.Value;
 
     public MainWindowViewModel(IApplicationContext applicationContext, INavigationViewItemProvider navigationViewItemProvider) {
-        _applicationContext = Guard.Against.Null(applicationContext);
-        _navigationViewItemProvider = Guard.Against.Null(navigationViewItemProvider);
+        _applicationContext = applicationContext;
+        _navigationViewItemProvider = navigationViewItemProvider;
 
         _appTitle = new Lazy<string>(GetAppTitle);
         _appVersion = new Lazy<string>(GetAppVersion);

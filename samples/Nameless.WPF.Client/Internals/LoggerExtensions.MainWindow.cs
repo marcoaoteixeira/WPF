@@ -11,7 +11,9 @@ internal static class MainWindowLoggerExtensions {
             formatString: "An error occurred while trying to set the main window icon."
         );
 
-    internal static void SetWindowIconFailure(this ILogger<MainWindow> self, Exception exception) {
-        SetWindowIconFailureDelegate(self, exception);
+    extension(ILogger<MainWindow> self) {
+        internal void SetWindowIconFailure(Exception exception) {
+            SetWindowIconFailureDelegate(self, exception);
+        }
     }
 }

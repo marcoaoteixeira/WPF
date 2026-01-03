@@ -5,7 +5,9 @@ using Nameless.WPF.Resources;
 namespace Nameless.WPF.Helpers;
 
 public static class ComboBoxItemHelper {
-    public static ComboBoxItem EmptyComboBoxItem => new() { Content = Strings.ComboBoxItemHelper_EmptyComboBoxItem_Content };
+    public static ComboBoxItem EmptyComboBoxItem => new() {
+        Content = Strings.ComboBoxItemHelper_EmptyComboBoxItem_Content
+    };
 
     public static ComboBoxItem Create<TEnum>(TEnum value, Func<TEnum, string>? displayText = null)
         where TEnum : struct, Enum {
@@ -19,13 +21,9 @@ public static class ComboBoxItemHelper {
 
     public static bool TrySelect<TEnum>(ComboBoxItem[] items, TEnum value, [NotNullWhen(returnValue: true)] out ComboBoxItem? output)
         where TEnum : struct, Enum {
-        Guard.Against.Null(items);
-
         output = items.FirstOrDefault(item => Equals(item.Tag, value));
 
-        if (output is not null) {
-            output.IsSelected = true;
-        }
+        output?.IsSelected = true;
 
         return output is not null;
     }

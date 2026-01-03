@@ -12,9 +12,9 @@ public static class ValidateRequestPipelineBehaviorLoggerExtensions {
             formatString: "Request object '{RequestType}' is invalid: {@ValidationResult}"
         );
 
-    internal static void ValidateRequestObjectFailure<TRequest, TResponse>(this ILogger<ValidateRequestPipelineBehavior<TRequest, TResponse>> self, ValidationResult result)
-        where TRequest : class
-        where TResponse : class {
-        ValidateRequestObjectFailureDelegate(self, typeof(TRequest).GetPrettyName(), result, null /* exception */);
+    extension<TRequest, TResponse>(ILogger<ValidateRequestPipelineBehavior<TRequest, TResponse>> self) where TRequest : notnull {
+        internal void ValidateRequestObjectFailure(ValidationResult result) {
+            ValidateRequestObjectFailureDelegate(self, typeof(TRequest).GetPrettyName(), result, null /* exception */);
+        }
     }
 }

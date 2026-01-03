@@ -13,7 +13,7 @@ public partial class AppConfigurationPage : INavigableView<AppConfigurationPageV
     public AppConfigurationPageViewModel ViewModel { get; }
 
     public AppConfigurationPage(AppConfigurationPageViewModel viewModel) {
-        ViewModel = Guard.Against.Null(viewModel);
+        ViewModel = viewModel;
 
         DataContext = ViewModel;
 

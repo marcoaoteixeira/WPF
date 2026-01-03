@@ -12,56 +12,59 @@ namespace Nameless.WPF.Client.Sqlite.Data;
 ///     <see cref="IServiceCollection"/> extension methods.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    /// <summary>
-    ///     Registers the application database context.
-    /// </summary>
     /// <param name="self">
     ///     The current <see cref="IServiceCollection"/>.
     /// </param>
-    /// <param name="configure">
-    ///     The configuration action.
-    /// </param>
-    /// <returns>
-    ///     The current <see cref="IServiceCollection"/> so other actions
-    ///     can be chained.
-    /// </returns>
-    public static IServiceCollection RegisterAppDbContext(this IServiceCollection self, Action<AppDbContextOptions>? configure = null) {
-        var innerConfigure = configure ?? (_ => { });
-        var options = new AppDbContextOptions();
+    extension(IServiceCollection self)
+    {
+        /// <summary>
+        ///     Registers the application database context.
+        /// </summary>
+        /// <param name="configure">
+        ///     The configuration action.
+        /// </param>
+        /// <returns>
+        ///     The current <see cref="IServiceCollection"/> so other actions
+        ///     can be chained.
+        /// </returns>
+        public IServiceCollection RegisterAppDbContext(Action<AppDbContextOptions>? configure = null) {
+            var innerConfigure = configure ?? (_ => { });
+            var options = new AppDbContextOptions();
 
-        innerConfigure(options);
+            innerConfigure(options);
 
-        self.RegisterInterceptors(options);
+            self.RegisterInterceptors(options);
 
-        self.AddDbContext<AppDbContext>((provider, builder) => {
-            var applicationContext = provider.GetRequiredService<IApplicationContext>();
-            var databaseFilePath = Path.Combine(applicationContext.DataDirectoryPath, Constants.Database.DATABASE_FILE_NAME);
-            var connectionString = string.Format(Constants.Database.CONN_STR_PATTERN, databaseFilePath);
-            var interceptors = provider.GetServices<IInterceptor>();
+            self.AddDbContext<AppDbContext>((provider, builder) => {
+                var applicationContext = provider.GetRequiredService<IApplicationContext>();
+                var databaseFilePath = Path.Combine(applicationContext.DataDirectoryPath, Constants.Database.DATABASE_FILE_NAME);
+                var connectionString = string.Format(Constants.Database.CONN_STR_PATTERN, databaseFilePath);
+                var interceptors = provider.GetServices<IInterceptor>();
 
-            builder.UseSqlite(connectionString)
-                   .AddInterceptors(interceptors)
-                   .UseSeeding(options.Seeding)
-                   .UseAsyncSeeding(options.SeedingAsync);
-        });
+                builder.UseSqlite(connectionString)
+                       .AddInterceptors(interceptors)
+                       .UseSeeding(options.Seeding)
+                       .UseAsyncSeeding(options.SeedingAsync);
+            });
 
-        return self;
-    }
+            return self;
+        }
 
-    private static void RegisterInterceptors(this IServiceCollection self, AppDbContextOptions options) {
-        var service = typeof(IInterceptor);
-        var descriptors = options.Interceptors
-                                 .Where(type => !type.IsGenericTypeDefinition)
-                                 .Select(implementation => CreateServiceDescriptor(service, implementation));
+        private void RegisterInterceptors(AppDbContextOptions options) {
+            var service = typeof(IInterceptor);
+            var descriptors = options.Interceptors
+                                     .Where(type => !type.IsGenericTypeDefinition)
+                                     .Select(implementation => CreateServiceDescriptor(service, implementation));
 
-        self.TryAddEnumerable(descriptors);
+            self.TryAddEnumerable(descriptors);
 
-        return;
+            return;
 
-        static ServiceDescriptor CreateServiceDescriptor(Type service, Type implementation) {
-            var lifetime = ServiceLifetimeAttribute.GetLifetime(implementation);
+            static ServiceDescriptor CreateServiceDescriptor(Type service, Type implementation) {
+                var lifetime = ServiceLifetimeAttribute.GetLifetime(implementation);
 
-            return new ServiceDescriptor(service, implementation, lifetime);
+                return new ServiceDescriptor(service, implementation, lifetime);
+            }
         }
     }
 }

@@ -1,38 +1,17 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Nameless.ObjectModel;
+using Nameless.Results;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Fetch;
 
-public record FetchNewVersionInformationResponse {
-    public string? Url { get; }
+public class FetchNewVersionInformationResponse : Result<FetchNewVersionMetadata> {
+    private FetchNewVersionInformationResponse(FetchNewVersionMetadata value, Error[] errors)
+        : base(value, errors) { }
 
-    public string? Error { get; }
-
-    [MemberNotNullWhen(returnValue: false, nameof(Error))]
-    public virtual bool Succeeded => string.IsNullOrWhiteSpace(Error);
-
-    private FetchNewVersionInformationResponse(string? url, string? error) {
-        Url = url;
-        Error = error;
+    public static implicit operator FetchNewVersionInformationResponse(FetchNewVersionMetadata value) {
+        return new FetchNewVersionInformationResponse(value, errors: []);
     }
 
-    public static FetchNewVersionInformationResponse Success(string url) {
-        return new FetchNewVersionInformationResponse(
-            url,
-            error: null
-        );
-    }
-
-    public static FetchNewVersionInformationResponse Skip() {
-        return new FetchNewVersionInformationResponse(
-            url: null,
-            error: null
-        );
-    }
-
-    public static FetchNewVersionInformationResponse Failure(string error) {
-        return new FetchNewVersionInformationResponse(
-            url: null,
-            error: error
-        );
+    public static implicit operator FetchNewVersionInformationResponse(Error error) {
+        return new FetchNewVersionInformationResponse(value: default, errors: [error]);
     }
 }

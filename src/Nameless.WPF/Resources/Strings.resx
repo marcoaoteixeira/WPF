@@ -193,16 +193,16 @@
     <value>Salvar arquivo...</value>
   </data>
   <data name="GetLastestReleaseResponse_DeserializationFailure_Message" xml:space="preserve">
-    <value>Não foi possível deserializar as informações do último release.</value>
+    <value>Não foi possível deserializar as informações do último release. Código de status: {0}</value>
   </data>
   <data name="GetLastestReleaseResponse_Failure_Message" xml:space="preserve">
-    <value>Ocorreu um erro ao tentar recuperar as informações do último release. Erro: {0}</value>
+    <value>Ocorreu um erro ao tentar recuperar as informações do último release. Código de status: {0} | Erro: {1}</value>
   </data>
   <data name="GetReleaseAssetsResponse_DeserializationFailure_Message" xml:space="preserve">
-    <value>Não foi possível deserializar as informações de recursos da release.</value>
+    <value>Não foi possível deserializar as informações de recursos da release. Código de status: {0}</value>
   </data>
   <data name="GetReleaseAssetsResponse_Failure_Message" xml:space="preserve">
-    <value>Ocorreu um erro ao tentar recuperar as informações de recursos da release. Erro: {0}</value>
+    <value>Ocorreu um erro ao tentar recuperar as informações de recursos da release. Código de status: {0} | Erro: {1}</value>
   </data>
   <data name="MessageDialogIcon_Attention" xml:space="preserve">
     <value>Atenção</value>

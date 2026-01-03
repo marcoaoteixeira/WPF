@@ -18,15 +18,14 @@ public static class PerformanceRequestPipelineBehaviorLoggerExtensions {
             formatString: "Execution of request handler 'IRequestHandler<{RequestType}, {ResponseType}>' took {ElapsedMilliseconds}ms."
         );
 
-    internal static void StartPerformanceMonitor<TRequest, TResponse>(this ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> self)
-        where TRequest : class
-        where TResponse : class {
-        StartPerformanceMonitorDelegate(self, typeof(TRequest).GetPrettyName(), typeof(TResponse).GetPrettyName(), null /* exception */);
-    }
+    extension<TRequest, TResponse>(ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> self)
+        where TRequest : notnull {
+        internal void StartPerformanceMonitor() {
+            StartPerformanceMonitorDelegate(self, typeof(TRequest).GetPrettyName(), typeof(TResponse).GetPrettyName(), null /* exception */);
+        }
 
-    internal static void FinishPerformanceMonitor<TRequest, TResponse>(this ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> self, long elapsedMilliseconds)
-        where TRequest : class
-        where TResponse : class {
-        FinishPerformanceMonitorDelegate(self, typeof(TRequest).GetPrettyName(), typeof(TResponse).GetPrettyName(), elapsedMilliseconds, null /* exception */);
+        internal void FinishPerformanceMonitor(long elapsedMilliseconds) {
+            FinishPerformanceMonitorDelegate(self, typeof(TRequest).GetPrettyName(), typeof(TResponse).GetPrettyName(), elapsedMilliseconds, null /* exception */);
+        }
     }
 }

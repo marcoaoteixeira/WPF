@@ -3,12 +3,14 @@
 namespace Nameless.WPF.Notifications;
 
 public static class NotificationTypeExtensions {
-    public static ControlAppearance ToControlAppearance(this NotificationType self) {
-        return self switch {
-            NotificationType.Error => ControlAppearance.Danger,
-            NotificationType.Success => ControlAppearance.Success,
-            NotificationType.Warning => ControlAppearance.Caution,
-            _ => ControlAppearance.Primary,
-        };
+    extension(NotificationType self) {
+        public ControlAppearance ToControlAppearance() {
+            return self switch {
+                NotificationType.Error => ControlAppearance.Danger,
+                NotificationType.Success => ControlAppearance.Success,
+                NotificationType.Warning => ControlAppearance.Caution,
+                _ => ControlAppearance.Primary,
+            };
+        }
     }
 }

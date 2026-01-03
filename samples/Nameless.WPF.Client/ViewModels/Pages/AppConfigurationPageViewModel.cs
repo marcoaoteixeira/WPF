@@ -51,11 +51,11 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         IMediator mediator,
         IMessageDialog messageDialog,
         ITaskRunner taskRunner) {
-        _appConfigurationManager = Guard.Against.Null(appConfigurationManager);
-        _applicationContext = Guard.Against.Null(applicationContext);
-        _mediator = Guard.Against.Null(mediator);
-        _messageDialog = Guard.Against.Null(messageDialog);
-        _taskRunner = Guard.Against.Null(taskRunner);
+        _appConfigurationManager = appConfigurationManager;
+        _applicationContext = applicationContext;
+        _mediator = mediator;
+        _messageDialog = messageDialog;
+        _taskRunner = taskRunner;
     }
 
     public Task OnNavigatedToAsync() {
@@ -133,33 +133,40 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
     private async Task ExecuteDatabaseBackupAsync(CancellationToken cancellationToken) {
         _ = await _mediator.ExecuteAsync(new PerformDatabaseBackupRequest(), cancellationToken)
-                           .SuppressContext();
+                           .SkipContextSync();
     }
 
     private async Task ExecuteSystemUpdateAsync(CancellationToken cancellationToken) {
-        var checkForUpdateResponse = await ExecuteCheckForUpdateAsync(
-            cancellationToken
-        ).SuppressContext();
+        var checkForUpdateResponse = await ExecuteCheckForUpdateAsync(cancellationToken).SkipContextSync();
 
-        if (!checkForUpdateResponse.NewVersionAvailable) { return; }
+        if (!checkForUpdateResponse.Success) { return; }
+
+        if (!checkForUpdateResponse.Value.IsNewVersionAvailable) {
+            _messageDialog.ShowInformation(
+                title: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageBox_Title,
+                message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageBox_Message
+            );
+
+            return;
+        }
 
         var result = _messageDialog.ShowQuestion(
             title: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_ConfirmDownload_MessageBox_Title,
             message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_ConfirmDownload_MessageBox_Message
         );
 
-        if (result == MessageDialogResult.No) { return; }
+        if (result == MessageBoxResult.No) { return; }
 
         var fetchNewVersionInformationResponse = await ExecuteFetchNewVersionInformationAsync(
-            checkForUpdateResponse.ReleaseID.Value,
-            checkForUpdateResponse.ApplicationName,
-            checkForUpdateResponse.Version,
+            checkForUpdateResponse.Value.ReleaseID,
+            checkForUpdateResponse.Value.ApplicationName,
+            checkForUpdateResponse.Value.Version,
             cancellationToken
-        ).SuppressContext();
+        ).SkipContextSync();
 
-        if (!fetchNewVersionInformationResponse.Succeeded) { return; }
+        if (!fetchNewVersionInformationResponse.Success) { return; }
 
-        if (fetchNewVersionInformationResponse.Url is null) {
+        if (!fetchNewVersionInformationResponse.Value.IsNewVersionAvailable) {
             _messageDialog.ShowAttention(
                 title: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Title,
                 message: Strings.AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Message
@@ -169,34 +176,23 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
         }
 
         await ExecuteDownloadUpdateAsync(
-            checkForUpdateResponse.Version,
-            fetchNewVersionInformationResponse.Url,
-            cancellationToken
-        ).SuppressContext();
+            version: checkForUpdateResponse.Value.Version,
+            url: fetchNewVersionInformationResponse.Value.Url,
+            cancellationToken: cancellationToken
+        ).SkipContextSync();
     }
 
     private Task<CheckForUpdateResponse> ExecuteCheckForUpdateAsync(CancellationToken cancellationToken) {
-        return _mediator.ExecuteAsync(
-            new CheckForUpdateRequest(),
-            cancellationToken
-        );
+        return _mediator.ExecuteAsync(new CheckForUpdateRequest(), cancellationToken);
     }
 
     private Task<FetchNewVersionInformationResponse> ExecuteFetchNewVersionInformationAsync(int releaseID, string applicationName, string version, CancellationToken cancellationToken) {
-        return _mediator.ExecuteAsync(
-            new FetchNewVersionInformationRequest(
-                releaseID,
-                applicationName,
-                version
-            ),
-            cancellationToken
-        );
+        var request = new FetchNewVersionInformationRequest(releaseID, applicationName, version);
+        
+        return _mediator.ExecuteAsync(request, cancellationToken);
     }
 
     private Task<DownloadUpdateResponse> ExecuteDownloadUpdateAsync(string version, string url, CancellationToken cancellationToken) {
-        return _mediator.ExecuteAsync(
-            new DownloadUpdateRequest(version, url),
-            cancellationToken
-        );
+        return _mediator.ExecuteAsync(new DownloadUpdateRequest(version, url), cancellationToken);
     }
 }

@@ -7,21 +7,21 @@ namespace Nameless.WPF.Dialogs.Message;
 ///     <see cref="IServiceCollection"/> extensions methods.
 /// </summary>
 public static class ServiceCollectionExtensions {
-    /// <summary>
-    ///     Registers the <see cref="IMessageDialog"/> service.
-    /// </summary>
     /// <param name="self">
     ///     The current <see cref="IServiceCollection"/>.
     /// </param>
-    /// <returns>
-    ///     The <see cref="IServiceCollection"/> so other actions
-    ///     can be chained.
-    /// </returns>
-    public static IServiceCollection RegisterMessageDialog(this IServiceCollection self) {
-        Guard.Against.Null(self);
+    extension(IServiceCollection self) {
+        /// <summary>
+        ///     Registers the <see cref="IMessageDialog"/> service.
+        /// </summary>
+        /// <returns>
+        ///     The <see cref="IServiceCollection"/> so other actions
+        ///     can be chained.
+        /// </returns>
+        public IServiceCollection RegisterMessageDialog() {
+            self.TryAddSingleton<IMessageDialog, MessageDialog>();
 
-        self.TryAddSingleton<IMessageDialog, MessageDialog>();
-
-        return self;
+            return self;
+        }
     }
 }

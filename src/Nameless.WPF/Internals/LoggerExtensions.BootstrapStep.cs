@@ -29,15 +29,17 @@ internal static class BootstrapperLoggerExtensions {
             formatString: "Execution of bootstrap step '{Step}' finished in {Duration}ms."
         );
 
-    internal static void StartingExecution(this ILogger<Bootstrapper> self, BootstrapStep step) {
-        StartingExecutionDelegate(self, step.Name, null /* exception */);
-    }
+    extension(ILogger<Bootstrapper> self) {
+        internal void StartingExecution(Step step) {
+            StartingExecutionDelegate(self, step.Name, null /* exception */);
+        }
 
-    internal static void ExecutionFailure(this ILogger<Bootstrapper> self, BootstrapStep step, Exception exception) {
-        ExecutionFailureDelegate(self, step.Name, exception);
-    }
+        internal void ExecutionFailure(Step step, Exception exception) {
+            ExecutionFailureDelegate(self, step.Name, exception);
+        }
 
-    internal static void ExecutionFinished(this ILogger<Bootstrapper> self, BootstrapStep step, TimeSpan duration) {
-        ExecutionFinishedDelegate(self, step.Name, duration.Milliseconds, null /* exception */);
+        internal void ExecutionFinished(Step step, TimeSpan duration) {
+            ExecutionFinishedDelegate(self, step.Name, duration.Milliseconds, null /* exception */);
+        }
     }
 }

@@ -11,7 +11,9 @@ internal static class WindowFactoryLoggerExtensions {
             formatString: "The window '{Window}' is not available. The error may be caused by the window not being registered in the dependency container."
         );
 
-    internal static void WindowUnavailable(this ILogger<WindowFactory> self, Type windowType) {
-        WindowUnavailableDelegate(self, windowType.Name, null /* exception */);
+    extension(ILogger<WindowFactory> self) {
+        internal void WindowUnavailable(Type windowType) {
+            WindowUnavailableDelegate(self, windowType.Name, null /* exception */);
+        }
     }
 }

@@ -1,26 +1,17 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Nameless.ObjectModel;
+using Nameless.Results;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Download;
 
-public record DownloadUpdateResponse {
-    public string? FilePath { get; }
+public class DownloadUpdateResponse : Result<DownloadedUpdateMetadata> {
+    private DownloadUpdateResponse(DownloadedUpdateMetadata value, Error[] errors)
+        : base(value, errors) { }
 
-    public string? Error { get; }
-
-    [MemberNotNullWhen(returnValue: true, nameof(FilePath))]
-    [MemberNotNullWhen(returnValue: false, nameof(Error))]
-    public virtual bool Succeeded => string.IsNullOrWhiteSpace(Error);
-
-    private DownloadUpdateResponse(string? filePath, string? error) {
-        FilePath = filePath;
-        Error = error;
+    public static implicit operator DownloadUpdateResponse(DownloadedUpdateMetadata value) {
+        return new DownloadUpdateResponse(value, errors: []);
     }
 
-    public static DownloadUpdateResponse Success(string filePath) {
-        return new DownloadUpdateResponse(filePath, error: null);
-    }
-
-    public static DownloadUpdateResponse Failure(string error) {
-        return new DownloadUpdateResponse(filePath: null, error);
+    public static implicit operator DownloadUpdateResponse(Error error) {
+        return new DownloadUpdateResponse(value: default, errors: [error]);
     }
 }

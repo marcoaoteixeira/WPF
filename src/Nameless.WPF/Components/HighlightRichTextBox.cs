@@ -55,12 +55,10 @@ public class HighlightRichTextBox : RichTextBox {
     ///     The terms to highlight.
     /// </param>
     public void ApplyHighlight(string[] terms) {
-        Guard.Against.Null(terms);
-
         if (terms.Length == 0) { return; }
 
-        var textRange = new TextRange(Document.ContentStart,
-                                      Document.ContentEnd);
+        var textRange = new TextRange(Document.ContentStart, Document.ContentEnd);
+
         textRange.ClearAllProperties();
 
         var content = textRange.Text;

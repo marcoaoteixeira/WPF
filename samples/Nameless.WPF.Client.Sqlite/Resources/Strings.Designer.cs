@@ -19,7 +19,7 @@ namespace Nameless.WPF.Client.Sqlite.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -72,54 +72,54 @@ namespace Nameless.WPF.Client.Sqlite.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Ocorreu um erro ao executar o backup dos dados da base de dados. Erro: {0}.
         /// </summary>
-        public static string PerformDatabaseBackupNotification_BackupDatabaseDataFailure {
+        public static string PerformDatabaseBackupNotification_BackupDatabase_Failure {
             get {
-                return ResourceManager.GetString("PerformDatabaseBackupNotification_BackupDatabaseDataFailure", resourceCulture);
+                return ResourceManager.GetString("PerformDatabaseBackupNotification_BackupDatabase_Failure", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Backup dos dados da base de dados concluído..
         /// </summary>
-        public static string PerformDatabaseBackupNotification_BackupDatabaseDataFinish {
+        public static string PerformDatabaseBackupNotification_BackupDatabase_Finish {
             get {
-                return ResourceManager.GetString("PerformDatabaseBackupNotification_BackupDatabaseDataFinish", resourceCulture);
+                return ResourceManager.GetString("PerformDatabaseBackupNotification_BackupDatabase_Finish", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Iniciando o backup dos dados da base de dados....
         /// </summary>
-        public static string PerformDatabaseBackupNotification_BackupDatabaseDataStarting {
+        public static string PerformDatabaseBackupNotification_BackupDatabase_Starting {
             get {
-                return ResourceManager.GetString("PerformDatabaseBackupNotification_BackupDatabaseDataStarting", resourceCulture);
+                return ResourceManager.GetString("PerformDatabaseBackupNotification_BackupDatabase_Starting", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ocorreu um erro durante a preparação do arquivo de backup da base de dados. Erro: {0}.
         /// </summary>
-        public static string PerformDatabaseBackupNotification_PrepareBackupFileFailure {
+        public static string PerformDatabaseBackupNotification_PrepareBackupFile_Failure {
             get {
-                return ResourceManager.GetString("PerformDatabaseBackupNotification_PrepareBackupFileFailure", resourceCulture);
+                return ResourceManager.GetString("PerformDatabaseBackupNotification_PrepareBackupFile_Failure", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Preparação do arquivo de backup da base de dados concluído..
         /// </summary>
-        public static string PerformDatabaseBackupNotification_PrepareBackupFileFinish {
+        public static string PerformDatabaseBackupNotification_PrepareBackupFile_Finish {
             get {
-                return ResourceManager.GetString("PerformDatabaseBackupNotification_PrepareBackupFileFinish", resourceCulture);
+                return ResourceManager.GetString("PerformDatabaseBackupNotification_PrepareBackupFile_Finish", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Iniciando a preparação do arquivo de backup da base de dados....
         /// </summary>
-        public static string PerformDatabaseBackupNotification_PrepareBackupFileStarting {
+        public static string PerformDatabaseBackupNotification_PrepareBackupFile_Starting {
             get {
-                return ResourceManager.GetString("PerformDatabaseBackupNotification_PrepareBackupFileStarting", resourceCulture);
+                return ResourceManager.GetString("PerformDatabaseBackupNotification_PrepareBackupFile_Starting", resourceCulture);
             }
         }
         

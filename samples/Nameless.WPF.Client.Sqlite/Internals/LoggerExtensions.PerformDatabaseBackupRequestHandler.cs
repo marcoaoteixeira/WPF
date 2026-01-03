@@ -18,11 +18,14 @@ internal static class PerformDatabaseBackupRequestHandlerLoggerExtensions {
             formatString: "An error occurred while preparing the database backup file for storage."
         );
 
-    internal static void ExecuteDatabaseDataBackupFailure(this ILogger<PerformDatabaseBackupRequestHandler> self, Exception exception) {
-        ExecuteDatabaseBackupFailureDelegate(self, exception);
-    }
+    extension(ILogger<PerformDatabaseBackupRequestHandler> self)
+    {
+        internal void ExecuteDatabaseDataBackupFailure(Exception exception) {
+            ExecuteDatabaseBackupFailureDelegate(self, exception);
+        }
 
-    internal static void PrepareBackupFileFailure(this ILogger<PerformDatabaseBackupRequestHandler> self, Exception exception) {
-        PrepareBackupFileFailureDelegate(self, exception);
+        internal void PrepareBackupFileFailure(Exception exception) {
+            PrepareBackupFileFailureDelegate(self, exception);
+        }
     }
 }

@@ -24,7 +24,7 @@ public partial class TaskRunnerWindow : ITaskRunnerWindow {
     ///     The view model.
     /// </param>
     public TaskRunnerWindow(TaskRunnerWindowViewModel viewModel) {
-        ViewModel = Guard.Against.Null(viewModel);
+        ViewModel = viewModel;
 
         DataContext = ViewModel;
 
@@ -33,7 +33,7 @@ public partial class TaskRunnerWindow : ITaskRunnerWindow {
 
     /// <inheritdoc />
     public ITaskRunnerWindow SetName(string name) {
-        ViewModel.Title = Guard.Against.NullOrWhiteSpace(name);
+        ViewModel.Title = name;
 
         return this;
     }
@@ -55,7 +55,7 @@ public partial class TaskRunnerWindow : ITaskRunnerWindow {
 
     /// <inheritdoc />
     public ITaskRunnerWindow SetDelegate(TaskRunnerDelegate @delegate) {
-        ViewModel.SetHandler(Guard.Against.Null(@delegate));
+        ViewModel.SetHandler(@delegate);
 
         return this;
     }

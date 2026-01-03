@@ -4,11 +4,11 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 namespace Nameless.WPF.TaskRunner;
 
 public static class ServiceCollectionExtensions {
-    public static IServiceCollection RegisterTaskRunner(this IServiceCollection self) {
-        Guard.Against.Null(self);
+    extension(IServiceCollection self) {
+        public IServiceCollection RegisterTaskRunner() {
+            self.TryAddSingleton<ITaskRunner, TaskRunnerImpl>();
 
-        self.TryAddSingleton<ITaskRunner, TaskRunnerImpl>();
-
-        return self;
+            return self;
+        }
     }
 }

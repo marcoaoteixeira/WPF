@@ -4,27 +4,21 @@ public static class AppConfigurationManagerExtensions {
     private const string THEME_KEY = nameof(Theme);
     private const string CONFIRM_BEFORE_EXIT_KEY = "ConfirmBeforeExit";
 
-    public static Theme GetTheme(this IAppConfigurationManager self) {
-        return Guard.Against
-                    .Null(self)
-                    .TryGet<Theme>(THEME_KEY, out var output) ? output : default;
-    }
+    extension(IAppConfigurationManager self) {
+        public Theme GetTheme() {
+            return self.TryGet<Theme>(THEME_KEY, out var output) ? output : default;
+        }
 
-    public static void SetTheme(this IAppConfigurationManager self, Theme value) {
-        Guard.Against
-             .Null(self)
-             .Set(THEME_KEY, value);
-    }
+        public void SetTheme(Theme value) {
+            self.Set(THEME_KEY, value);
+        }
 
-    public static bool GetConfirmBeforeExit(this IAppConfigurationManager self) {
-        return Guard.Against
-                    .Null(self)
-                    .TryGet<bool>(CONFIRM_BEFORE_EXIT_KEY, out var output) && output;
-    }
+        public bool GetConfirmBeforeExit() {
+            return self.TryGet<bool>(CONFIRM_BEFORE_EXIT_KEY, out var output) && output;
+        }
 
-    public static void SetConfirmBeforeExit(this IAppConfigurationManager self, bool value) {
-        Guard.Against
-             .Null(self)
-             .Set(CONFIRM_BEFORE_EXIT_KEY, value);
+        public void SetConfirmBeforeExit(bool value) {
+            self.Set(CONFIRM_BEFORE_EXIT_KEY, value);
+        }
     }
 }

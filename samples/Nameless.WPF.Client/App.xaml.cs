@@ -12,6 +12,7 @@ using Nameless.WPF.Behaviors;
 using Nameless.WPF.Bootstrap;
 using Nameless.WPF.Client.Sqlite.Bootstrap.Steps;
 using Nameless.WPF.Client.Sqlite.Data;
+using Nameless.WPF.Client.Views.Windows;
 using Nameless.WPF.Configuration;
 using Nameless.WPF.Dialogs.FileSystem;
 using Nameless.WPF.Dialogs.Message;
@@ -48,18 +49,18 @@ public partial class App {
 
     public App() { ExceptionWarden.Initialize(Constants.Application.NAME); }
 
-    // ReSharper disable once AsyncVoidMethod
+    // ReSharper disable once AsyncVoidEventHandlerMethod
     protected override async void OnStartup(StartupEventArgs e) {
         await CurrentHost.StartAsync()
-                         .SuppressContext();
+                         .SkipContextSync();
 
         base.OnStartup(e);
     }
 
-    // ReSharper disable once AsyncVoidMethod
+    // ReSharper disable once AsyncVoidEventHandlerMethod
     protected override async void OnExit(ExitEventArgs e) {
         await CurrentHost.StopAsync()
-                         .SuppressContext();
+                         .SkipContextSync();
 
         CurrentHost.Dispose();
 
@@ -103,7 +104,7 @@ public partial class App {
             opts.RegisterInterceptor<UpdateAuditableEntitySaveChangesInterceptor>();
         });
         services.RegisterBootstrapper(opts => {
-            opts.RegisterStep<InitializeDbContextBootstrapStep>();
+            opts.RegisterStep<InitializeDbContextStep>();
         });
         services.RegisterFileSystem();
         services.RegisterNotificationService();
@@ -123,20 +124,19 @@ public partial class App {
         });
     }
 
-    // ReSharper disable once AsyncVoidMethod
-    private static async void OnHostStartup(IServiceProvider provider) {
-        await provider.GetRequiredService<IBootstrapper>()
-                      .ExecuteAsync(CancellationToken.None)
-                      .SuppressContext();
+    private static void OnHostStartup(IServiceProvider provider) {
+        var main = provider.GetRequiredService<INavigationWindow>();
 
-        provider.GetRequiredService<INavigationWindow>()
-                .ShowWindow();
+        provider.GetRequiredService<ISplashScreenWindow>()
+                .Show(WindowStartupLocation.CenterScreen);
+
+        main.ShowWindow();
     }
 
     // ReSharper disable once AsyncVoidMethod
     private static async void OnHostTearDown(IServiceProvider provider) {
         await provider.GetRequiredService<IAppConfigurationManager>()
                       .SaveChangesAsync(CancellationToken.None)
-                      .SuppressContext();
+                      .SkipContextSync();
     }
 }

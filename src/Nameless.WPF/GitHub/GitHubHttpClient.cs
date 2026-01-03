@@ -1,8 +1,10 @@
 ﻿using System.Net.Http;
 using System.Net.Http.Json;
+using Nameless.ObjectModel;
 using Nameless.WPF.GitHub.ObjectModel;
 using Nameless.WPF.GitHub.Requests;
 using Nameless.WPF.GitHub.Responses;
+using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.GitHub;
 
@@ -17,22 +19,18 @@ public class GitHubHttpClient : IGitHubHttpClient {
     ///     The underlying HTTP client.
     /// </param>
     public GitHubHttpClient(HttpClient httpClient) {
-        _httpClient = Guard.Against.Null(httpClient);
+        _httpClient = httpClient;
     }
 
     /// <inheritdoc />
     public async Task<GetLastestReleaseResponse> GetLastestReleaseAsync(GetLastestReleaseRequest request, CancellationToken cancellationToken) {
-        Guard.Against.Null(request);
-        Guard.Against.NullOrWhiteSpace(request.Owner);
-        Guard.Against.NullOrWhiteSpace(request.Repository);
-
         var statusCode = 200;
 
         try {
             var url = $"/repos/{request.Owner}/{request.Repository}/releases/latest";
 
             var response = await _httpClient.GetAsync(url, cancellationToken)
-                                            .SuppressContext();
+                                            .SkipContextSync();
 
             statusCode = (int)response.StatusCode;
 
@@ -40,46 +38,45 @@ public class GitHubHttpClient : IGitHubHttpClient {
 
             var release = await response.Content
                                         .ReadFromJsonAsync<Release>(cancellationToken)
-                                        .SuppressContext();
+                                        .SkipContextSync();
 
-            return release is not null
-                ? GetLastestReleaseResponse.Success(release)
-                : GetLastestReleaseResponse.DeserializationFailure(statusCode);
+            if (release is null) {
+                return Error.Failure(string.Format(Strings.GetLastestReleaseResponse_DeserializationFailure_Message, statusCode));
+            }
+
+            return release;
         }
         catch (Exception ex) {
-            return GetLastestReleaseResponse.Failure(statusCode, ex.Message);
+            return Error.Failure(string.Format(Strings.GetLastestReleaseResponse_Failure_Message, statusCode, ex.Message));
         }
     }
 
     /// <inheritdoc />
     public async Task<GetReleaseAssetsResponse> GetReleaseAssetsAsync(GetReleaseAssetsRequest request, CancellationToken cancellationToken) {
-        Guard.Against.Null(request);
-        Guard.Against.NullOrWhiteSpace(request.Owner);
-        Guard.Against.NullOrWhiteSpace(request.Repository);
-        Guard.Against.LowerThan(request.ReleaseID, compare: 0);
-
         var statusCode = 200;
 
         try {
             var url = $"/repos/{request.Owner}/{request.Repository}/releases/{request.ReleaseID}/assets";
 
             var response = await _httpClient.GetAsync(url, cancellationToken)
-                                            .SuppressContext();
+                                            .SkipContextSync();
 
             statusCode = (int)response.StatusCode;
 
             response.EnsureSuccessStatusCode();
 
-            var release = await response.Content
-                                        .ReadFromJsonAsync<ReleaseAsset[]>(cancellationToken)
-                                        .SuppressContext();
+            var assets = await response.Content
+                                       .ReadFromJsonAsync<ReleaseAsset[]>(cancellationToken)
+                                       .SkipContextSync();
 
-            return release is not null
-                ? GetReleaseAssetsResponse.Success(release)
-                : GetReleaseAssetsResponse.DeserializationFailure(statusCode);
+            if (assets is null) {
+                return Error.Failure(string.Format(Strings.GetReleaseAssetsResponse_DeserializationFailure_Message, statusCode));
+            }
+
+            return assets;
         }
         catch (Exception ex) {
-            return GetReleaseAssetsResponse.Failure(statusCode, ex.Message);
+            return Error.Failure(string.Format(Strings.GetReleaseAssetsResponse_Failure_Message, statusCode, ex.Message));
         }
     }
 }

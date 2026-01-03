@@ -16,7 +16,7 @@ internal static class InitializeAppDbContextBootstrapStepLoggerExtensions {
             formatString: "DbContext references a non-relational database, skipping migration action."
         );
 
-    internal static void SkipMigrationForNonRelationalDatabase(this ILogger<InitializeDbContextBootstrapStep> self) {
+    internal static void SkipMigrationForNonRelationalDatabase(this ILogger<InitializeDbContextStep> self) {
         SkipMigrationForNonRelationalDatabaseDelegate(self, null /* exception */);
     }
 }

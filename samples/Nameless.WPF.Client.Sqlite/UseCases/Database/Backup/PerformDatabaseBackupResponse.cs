@@ -1,26 +1,17 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Nameless.ObjectModel;
+using Nameless.Results;
 
 namespace Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
 
-public record PerformDatabaseBackupResponse {
-    public string? BackupFilePath { get; }
+public class PerformDatabaseBackupResponse : Result<PerformDatabaseBackupMetadata> {
+    private PerformDatabaseBackupResponse(PerformDatabaseBackupMetadata value, Error[] errors)
+        : base(value, errors) { }
 
-    public string? Error { get; }
-
-    [MemberNotNullWhen(returnValue: true, nameof(BackupFilePath))]
-    [MemberNotNullWhen(returnValue: false, nameof(Error))]
-    public virtual bool Succeeded => string.IsNullOrWhiteSpace(Error);
-
-    private PerformDatabaseBackupResponse(string? backupFilePath, string? error) {
-        BackupFilePath = backupFilePath;
-        Error = error;
+    public static implicit operator PerformDatabaseBackupResponse(PerformDatabaseBackupMetadata value) {
+        return new PerformDatabaseBackupResponse(value, errors: []);
     }
 
-    public static PerformDatabaseBackupResponse Success(string backupFilePath) {
-        return new PerformDatabaseBackupResponse(backupFilePath, error: null);
-    }
-
-    public static PerformDatabaseBackupResponse Failure(string error) {
-        return new PerformDatabaseBackupResponse(backupFilePath: null, error);
+    public static implicit operator PerformDatabaseBackupResponse(Error error) {
+        return new PerformDatabaseBackupResponse(value: default, errors: [error]);
     }
 }

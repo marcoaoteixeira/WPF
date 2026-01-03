@@ -19,7 +19,7 @@ namespace Nameless.WPF.Client.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -241,6 +241,26 @@ namespace Nameless.WPF.Client.Resources {
             get {
                 return ResourceManager.GetString("AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_ConfirmDownload_MessageBox" +
                         "_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A versão atual é a mais recente..
+        /// </summary>
+        public static string AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageBox_Message {
+            get {
+                return ResourceManager.GetString("AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageB" +
+                        "ox_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Versão Mais Recente.
+        /// </summary>
+        public static string AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageBox_Title {
+            get {
+                return ResourceManager.GetString("AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageB" +
+                        "ox_Title", resourceCulture);
             }
         }
         

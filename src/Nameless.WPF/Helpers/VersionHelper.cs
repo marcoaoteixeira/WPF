@@ -6,8 +6,6 @@ public static class VersionHelper {
     private static readonly Version Prime = new(1, 0, 0);
 
     public static Version Parse(string value) {
-        Guard.Against.NullOrWhiteSpace(value);
-
         var matches = RegexCache.SemVersionPattern().Matches(value);
         if (matches.Count == 0) {
             return Prime;

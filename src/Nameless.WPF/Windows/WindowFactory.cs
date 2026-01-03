@@ -20,8 +20,8 @@ public class WindowFactory : IWindowFactory {
     ///     The logger.
     /// </param>
     public WindowFactory(IServiceProvider provider, ILogger<WindowFactory> logger) {
-        _provider = Guard.Against.Null(provider);
-        _logger = Guard.Against.Null(logger);
+        _provider = provider;
+        _logger = logger;
     }
 
     /// <inheritdoc />

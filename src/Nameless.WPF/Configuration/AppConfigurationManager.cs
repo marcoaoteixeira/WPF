@@ -30,15 +30,13 @@ public class AppConfigurationManager : IAppConfigurationManager {
     ///     The logger.
     /// </param>
     public AppConfigurationManager(IFileSystem fileSystem, ILogger<AppConfigurationManager> logger) {
-        _fileSystem = Guard.Against.Null(fileSystem);
-        _logger = Guard.Against.Null(logger);
+        _fileSystem = fileSystem;
+        _logger = logger;
         _appConfiguration = new Lazy<Dictionary<string, JsonElement>>(GetAppConfiguration);
     }
 
     /// <inheritdoc />
     public bool TryGet<TValue>(string name, [NotNullWhen(returnValue: true)] out TValue? output) {
-        Guard.Against.Null(name);
-
         output = default;
 
         var element = AppConfiguration.GetValueOrDefault(name);
@@ -61,8 +59,6 @@ public class AppConfigurationManager : IAppConfigurationManager {
 
     /// <inheritdoc />
     public void Set<TValue>(string name, TValue value) {
-        Guard.Against.NullOrWhiteSpace(name);
-
         AppConfiguration[name] = JsonSerializer.SerializeToElement(value);
     }
 
@@ -73,8 +69,7 @@ public class AppConfigurationManager : IAppConfigurationManager {
             var json = JsonSerializer.SerializeToUtf8Bytes(AppConfiguration);
 
             await using var stream = file.Open(FileMode.Create);
-            await stream.WriteAsync(json, cancellationToken)
-                        .SuppressContext();
+            await stream.WriteAsync(json, cancellationToken);
         }
         catch (Exception ex) { _logger.SaveAppConfigurationFailure(ex); }
     }

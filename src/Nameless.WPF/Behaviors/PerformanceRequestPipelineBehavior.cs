@@ -16,8 +16,7 @@ namespace Nameless.WPF.Behaviors;
 ///     Type of the response.
 /// </typeparam>
 public class PerformanceRequestPipelineBehavior<TRequest, TResponse> : IRequestPipelineBehavior<TRequest, TResponse>
-    where TRequest : class
-    where TResponse : class {
+    where TRequest : notnull {
     private readonly ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> _logger;
 
     /// <summary>
@@ -28,7 +27,7 @@ public class PerformanceRequestPipelineBehavior<TRequest, TResponse> : IRequestP
     ///     The logger.
     /// </param>
     public PerformanceRequestPipelineBehavior(ILogger<PerformanceRequestPipelineBehavior<TRequest, TResponse>> logger) {
-        _logger = Guard.Against.Null(logger);
+        _logger = logger;
     }
 
     /// <inheritdoc />
@@ -39,7 +38,7 @@ public class PerformanceRequestPipelineBehavior<TRequest, TResponse> : IRequestP
 
         _logger.StartPerformanceMonitor();
 
-        try { return await next(cancellationToken).SuppressContext(); }
+        try { return await next(cancellationToken).SkipContextSync(); }
         finally { _logger.FinishPerformanceMonitor(sw.ElapsedMilliseconds); }
     }
 }

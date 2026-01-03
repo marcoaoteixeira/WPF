@@ -1,34 +1,18 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Nameless.ObjectModel;
+using Nameless.Results;
 using Nameless.WPF.GitHub.ObjectModel;
-using Nameless.WPF.Resources;
 
 namespace Nameless.WPF.GitHub.Responses;
 
-public record GetReleaseAssetsResponse {
-    public ReleaseAsset[] Assets { get; } = [];
+public class GetReleaseAssetsResponse : Result<ReleaseAsset[]> {
+    private GetReleaseAssetsResponse(ReleaseAsset[] value, Error[] errors)
+        : base(value, errors) { }
 
-    public int StatusCode { get; }
-
-    public string? Error { get; }
-
-    [MemberNotNullWhen(returnValue: false, nameof(Error))]
-    public bool Succeeded => string.IsNullOrWhiteSpace(Error);
-
-    private GetReleaseAssetsResponse(ReleaseAsset[] assets, int statusCode, string? error) {
-        Assets = assets;
-        StatusCode = statusCode;
-        Error = error;
+    public static implicit operator GetReleaseAssetsResponse(ReleaseAsset[] value) {
+        return new GetReleaseAssetsResponse(value, errors: []);
     }
 
-    public static GetReleaseAssetsResponse Success(ReleaseAsset[] assets) {
-        return new GetReleaseAssetsResponse(assets, statusCode: 200, error: null);
+    public static implicit operator GetReleaseAssetsResponse(Error error) {
+        return new GetReleaseAssetsResponse(value: [], errors: [error]);
     }
-
-    public static GetReleaseAssetsResponse Failure(int statusCode, string error) {
-        return new GetReleaseAssetsResponse(assets: [], statusCode, string.Format(Strings.GetReleaseAssetsResponse_Failure_Message, error));
-    }
-
-    public static GetReleaseAssetsResponse DeserializationFailure(int statusCode) {
-        return new GetReleaseAssetsResponse(assets: [], statusCode, Strings.GetReleaseAssetsResponse_DeserializationFailure_Message);
-    }
-};
+}

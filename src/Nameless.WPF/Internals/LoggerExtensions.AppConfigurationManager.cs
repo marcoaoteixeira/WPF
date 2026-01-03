@@ -28,15 +28,17 @@ internal static class AppConfigurationManagerLoggerExtensions {
             formatString: "An error occurred while trying to load the configuration file."
         );
 
-    internal static void SaveAppConfigurationFailure(this ILogger<AppConfigurationManager> self, Exception exception) {
-        SaveAppConfigurationFailureDelegate(self, exception);
-    }
+    extension(ILogger<AppConfigurationManager> self) {
+        internal void SaveAppConfigurationFailure(Exception exception) {
+            SaveAppConfigurationFailureDelegate(self, exception);
+        }
 
-    internal static void TryGetValueFailure(this ILogger<AppConfigurationManager> self, string key, Type type, Exception exception) {
-        TryGetValueFailureDelegate(self, key, type.Name, exception);
-    }
+        internal void TryGetValueFailure(string key, Type type, Exception exception) {
+            TryGetValueFailureDelegate(self, key, type.Name, exception);
+        }
 
-    internal static void LoadingConfigurationFailure(this ILogger<AppConfigurationManager> self, Exception exception) {
-        LoadingConfigurationFailureDelegate(self, exception);
+        internal void LoadingConfigurationFailure(Exception exception) {
+            LoadingConfigurationFailureDelegate(self, exception);
+        }
     }
 }

@@ -47,17 +47,17 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
         ISnackbarService snackbarService,
         ILogger<MainWindow> logger) {
 
-        ViewModel = Guard.Against.Null(viewModel);
+        ViewModel = viewModel;
         DataContext = ViewModel;
 
-        _appConfigurationManager = Guard.Against.Null(appConfigurationManager);
-        _contentDialogService = Guard.Against.Null(contentDialogService);
-        _messageDialog = Guard.Against.Null(messageDialog);
-        _navigationService = Guard.Against.Null(navigationService);
-        _navigationViewPageProvider = Guard.Against.Null(navigationViewPageProvider);
-        _notificationService = Guard.Against.Null(notificationService);
-        _snackbarService = Guard.Against.Null(snackbarService);
-        _logger = Guard.Against.Null(logger);
+        _appConfigurationManager = appConfigurationManager;
+        _contentDialogService = contentDialogService;
+        _messageDialog = messageDialog;
+        _navigationService = navigationService;
+        _navigationViewPageProvider = navigationViewPageProvider;
+        _notificationService = notificationService;
+        _snackbarService = snackbarService;
+        _logger = logger;
 
         InitializeComponent();
         InitializeWindow();

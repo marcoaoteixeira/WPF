@@ -3,13 +3,13 @@
 namespace Nameless.WPF.Notifications;
 
 public static class NotificationExtensions {
-    public static SnackbarParameters ToSnackbarParameters(this INotification self) {
-        Guard.Against.Null(self);
-
-        return new SnackbarParameters {
-            Title = self.Title,
-            Content = self.Message,
-            Appearance = self.Type.ToControlAppearance()
-        };
+    extension(INotification self) {
+        public SnackbarParameters ToSnackbarParameters() {
+            return new SnackbarParameters {
+                Title = self.Title,
+                Content = self.Message,
+                Appearance = self.Type.ToControlAppearance()
+            };
+        }
     }
 }

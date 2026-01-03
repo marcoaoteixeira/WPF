@@ -2,6 +2,7 @@
 using Nameless.Mediator.Requests;
 using Nameless.WPF.GitHub;
 using Nameless.WPF.GitHub.Requests;
+using Nameless.WPF.Internals;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Fetch;
@@ -12,20 +13,14 @@ public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNew
     private readonly IOptions<GitHubOptions> _options;
 
     public FetchNewVersionInformationRequestHandler(IGitHubHttpClient httpClient, INotificationService notificationService, IOptions<GitHubOptions> options) {
-        _httpClient = Guard.Against.Null(httpClient);
-        _notificationService = Guard.Against.Null(notificationService);
-        _options = Guard.Against.Null(options);
+        _httpClient = httpClient;
+        _notificationService = notificationService;
+        _options = options;
     }
 
     public async Task<FetchNewVersionInformationResponse> HandleAsync(FetchNewVersionInformationRequest request, CancellationToken cancellationToken) {
-        Guard.Against.Null(request);
-        Guard.Against.LowerThan(request.ReleaseID, compare: 0);
-        Guard.Against.NullOrWhiteSpace(request.ApplicationName);
-        Guard.Against.NullOrWhiteSpace(request.Version);
-
-        var notification = FetchNewVersionInformationNotification.Starting();
-        await _notificationService.PublishAsync(notification)
-                                  .SuppressContext();
+        await _notificationService.FetchNewVersionInformationStartingAsync()
+                                  .SkipContextSync();
 
         var options = _options.Value;
         var getReleaseAssetsRequest = new GetReleaseAssetsRequest(
@@ -34,32 +29,28 @@ public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNew
             request.ReleaseID
         );
         var getReleaseAssetsResponse = await _httpClient.GetReleaseAssetsAsync(getReleaseAssetsRequest, cancellationToken)
-                                                        .SuppressContext();
+                                                        .SkipContextSync();
 
-        if (!getReleaseAssetsResponse.Succeeded) {
-            notification = FetchNewVersionInformationNotification.Failure(getReleaseAssetsResponse.Error, request.Version);
-            await _notificationService.PublishAsync(notification)
-                                      .SuppressContext();
+        if (!getReleaseAssetsResponse.Success) {
+            await _notificationService.FetchNewVersionInformationFailureAsync(request.Version, getReleaseAssetsResponse.Errors[0].Message)
+                                      .SkipContextSync();
 
-            return FetchNewVersionInformationResponse.Failure(getReleaseAssetsResponse.Error);
+            return getReleaseAssetsResponse.Errors[0];
         }
 
         var assetName = $"{request.ApplicationName}.v{request.Version}.zip";
-        var asset = getReleaseAssetsResponse.Assets
-                                            .SingleOrDefault(item => item.Name == assetName);
+        var asset = getReleaseAssetsResponse.Value.SingleOrDefault(item => item.Name == assetName);
 
         if (asset is null) {
-            notification = FetchNewVersionInformationNotification.NotFound();
-            await _notificationService.PublishAsync(notification)
-                                      .SuppressContext();
+            await _notificationService.FetchNewVersionInformationNotFoundAsync()
+                                      .SkipContextSync();
 
-            return FetchNewVersionInformationResponse.Skip();
+            return (FetchNewVersionMetadata)default;
         }
 
-        notification = FetchNewVersionInformationNotification.Success();
-        await _notificationService.PublishAsync(notification)
-                                  .SuppressContext();
+        await _notificationService.FetchNewVersionInformationSuccessAsync()
+                                  .SkipContextSync();
 
-        return FetchNewVersionInformationResponse.Success(asset.BrowserDownloadUrl);
+        return new FetchNewVersionMetadata(asset.BrowserDownloadUrl);
     }
 }

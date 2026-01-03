@@ -189,4 +189,10 @@
   <data name="AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_AssetNotFound_MessageBox_Message" xml:space="preserve">
     <value>Não foi possível localizar o recurso de atualização. Tente novamente mais tarde ou contate o suporte.</value>
   </data>
+  <data name="AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageBox_Message" xml:space="preserve">
+    <value>A versão atual é a mais recente.</value>
+  </data>
+  <data name="AppConfigurationPageViewModel_ExecuteSystemUpdateAsync_UpdateUnavailable_MessageBox_Title" xml:space="preserve">
+    <value>Versão Mais Recente</value>
+  </data>
 </root>

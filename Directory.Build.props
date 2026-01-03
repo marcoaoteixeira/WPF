@@ -9,20 +9,21 @@
 <Project>
 	<!-- Boolean variables -->
 	<PropertyGroup>
-		<IsSampleProject>$(MSBuildProjectFullPath.Contains('\samples\'))</IsSampleProject>
-		<IsSrcProject>$(MSBuildProjectFullPath.Contains('\src\'))</IsSrcProject>
-		<IsTestProject>$(MSBuildProjectFullPath.Contains('\tests\'))</IsTestProject>
+		<IsSrcProject>$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectFullPath), `[\\|\/]src[\\|\/]`))</IsSrcProject>
+		<IsTestsProject>$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectFullPath), `[\\|\/]tests[\\|\/]`))</IsTestsProject>
+		<IsSamplesProject>$([System.Text.RegularExpressions.Regex]::IsMatch($(MSBuildProjectFullPath), `[\\|\/]samples[\\|\/]`))</IsSamplesProject>
 
 		<EnableCodeAnalysis>False</EnableCodeAnalysis>
-		<EnableCodeAnalysis Condition="$(IsTestProject) == 'False'">True</EnableCodeAnalysis>
+		<EnableCodeAnalysis Condition="$(IsSrcProject) == 'True'">True</EnableCodeAnalysis>
 
 		<!-- Pack only projects in "src" folder. -->
-		<IncludeNuGetPackageInfo>$(MSBuildProjectFullPath.Contains('\src\'))</IncludeNuGetPackageInfo>
+		<IncludeNuGetPackageInfo>False</IncludeNuGetPackageInfo>
+		<IncludeNuGetPackageInfo Condition="$(IsSrcProject) == 'True'">True</IncludeNuGetPackageInfo>
 	</PropertyGroup>
 
 	<!-- All projects must include these properties. -->
 	<PropertyGroup>
-		<TargetFramework>net9.0-windows</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
@@ -32,7 +33,7 @@
 	</PropertyGroup>
 
 	<!-- All projects, except tests, must include these properties -->
-	<PropertyGroup Condition="$(IsTestProject) == 'False'">
+	<PropertyGroup Condition="$(IsTestsProject) == 'False'">
 		<UseWPF>true</UseWPF>
 		<AnalysisLevel>latest</AnalysisLevel>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
@@ -43,14 +44,14 @@
 	</PropertyGroup>
 
 	<!-- For test projects, use these properties -->
-	<PropertyGroup Condition="$(IsTestProject)">
+	<PropertyGroup Condition="$(IsTestsProject)">
 		<Nullable>disable</Nullable>
 		<IsPackable>False</IsPackable>
 		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 
 	<!-- Test projects must include these properties -->
-	<ItemGroup Condition="$(IsTestProject)">
+	<ItemGroup Condition="$(IsTestsProject)">
 		<Using Include="Xunit" />
 	</ItemGroup>
 

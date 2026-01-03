@@ -36,7 +36,7 @@ public partial class TaskRunnerWindowViewModel : ViewModel {
     ///     The notification service.
     /// </param>
     public TaskRunnerWindowViewModel(INotificationService notificationService) {
-        _notificationService = Guard.Against.Null(notificationService);
+        _notificationService = notificationService;
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public partial class TaskRunnerWindowViewModel : ViewModel {
     ///     The async delegate.
     /// </param>
     public void SetHandler(TaskRunnerDelegate @delegate) {
-        _delegate = Guard.Against.Null(@delegate);
+        _delegate = @delegate;
     }
 
     /// <summary>
