@@ -26,3 +26,9 @@ jobs:
       - name: Get Version Number From Tag
         run: |
           Write-Host "GITHUB_REF = $env:GITHUB_REF"
+          Write-Host "GITHUB_REF = $env:GITHUB_ENV"
+
+      - name: Get Version Number From Tag 2
+        run: |
+          Write-Host "GITHUB_REF = $env:GITHUB_REF"
+          Write-Host "GITHUB_REF = $env:GITHUB_ENV"
