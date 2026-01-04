@@ -25,13 +25,13 @@ jobs:
 
       - name: Get Version Number From Tag
         run: |
-          Write-Host 'GITHUB_REF = $env:GITHUB_REF'
+          Write-Host "GITHUB_REF = $env:GITHUB_REF"
           $version = '1.0.0'
           if ([regex]::IsMatch($env:GITHUB_REF, '\d+(\.\d+)+')) {
           	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
           }
-          Write-Output 'VERSION=$version' >> $env:GITHUB_ENV
-          Write-Host 'VERSION = $version'
+          Write-Output "VERSION=$version" >> $env:GITHUB_ENV
+          Write-Host "VERSION = $version"
 
       - name: Checkout Source Code
         uses: actions/checkout@v6.0.1
