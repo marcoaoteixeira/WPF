@@ -25,11 +25,10 @@ jobs:
 
       - name: Get Version Number From Tag
         run: |
-          Write-Host "env.GITHUB_REF = $env:GITHUB_REF"
-          Write-Host "GITHUB_REF = $GITHUB_REF"
+          Write-Host "GITHUB_REF = $env:GITHUB_REF"
           $version = "1.0.0"
-          if ($GITHUB_REF -like 'v*') {
-            $version = $env:GITHUB_REF.Substring(1)
+          if ([regex]::IsMatch($env:GITHUB_REF, '\d+(\.\d+)+')) {
+          	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
           }
           [System.Environment]::SetEnvironmentVariable('VERSION', $version, 'Process')
           Write-Host "VERSION = $env:VERSION"
