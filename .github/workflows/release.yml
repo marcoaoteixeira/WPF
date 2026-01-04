@@ -59,10 +59,10 @@ jobs:
           --nologo
           --output ${{ env.NUPKG_OUTPUT_PATH }}
           --verbosity minimal
-          -p:AssemblyVersion=${{ env.VERSION }}
-          -p:FileVersion=${{ env.VERSION }}
-          -p:PackageVersion=${{ env.VERSION }}
-          -p:Version=${{ env.VERSION }}
+          -p:AssemblyVersion=$env.VERSION
+          -p:FileVersion=$env.VERSION
+          -p:PackageVersion=$env.VERSION
+          -p:Version=$env.VERSION
 
       - name: Print NuGet Package Directory
         uses: jaywcjlove/github-action-folder-tree@main
