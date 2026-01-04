@@ -74,4 +74,4 @@ jobs:
       - name: Publish NuGet Packages
         run: |
           ls ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
-          dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }} --api-key ${{ secrets.PACKAGE_SOURCE_API_KEY_NUGET_ORG }} --skip-duplicate
+          dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}/Nameless.WPF.3.6.0.nupkg --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }} --api-key ${{ secrets.PACKAGE_SOURCE_API_KEY_NUGET_ORG }} --skip-duplicate
