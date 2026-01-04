@@ -26,9 +26,15 @@ jobs:
       - name: Get Version Number From Tag
         run: |
           Write-Host "GITHUB_REF = $env:GITHUB_REF"
-          Write-Host "GITHUB_REF = $env:GITHUB_ENV"
+          $version = "1.0.0"
+          if ([regex]::IsMatch($env:GITHUB_REF, '\d+(\.\d+)+')) {
+           	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
+          }
+          Write-Host "VERSION=$version" >> $env:GITHUB_ENV
+          Write-Host "GITHUB_REF = $env:GITHUB_REF"
+          Write-Host "GITHUB_ENV = $env:GITHUB_ENV"
 
       - name: Get Version Number From Tag 2
         run: |
           Write-Host "GITHUB_REF = $env:GITHUB_REF"
-          Write-Host "GITHUB_REF = $env:GITHUB_ENV"
+          Write-Host "GITHUB_ENV = $env:GITHUB_ENV"
