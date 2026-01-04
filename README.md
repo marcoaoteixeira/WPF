@@ -8,7 +8,7 @@ A simple WPF template.
 
 Nothing too fancy. I'm using:
 
-- .NET 9
+- .NET 10
 - [WPF-UI](https://github.com/lepoco/wpfui)
 - [CommunityToolkit](https://github.com/CommunityToolkit/dotnet)
 
