@@ -6,8 +6,8 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
 env:
-  SOLUTION: "WPF.sln"
-  NUPKG_OUTPUT_PATH: 'nupkgs'
+  SOLUTION: "./WPF.sln"
+  NUPKG_OUTPUT_PATH: './nupkgs'
 
 jobs:
   release:
@@ -75,5 +75,4 @@ jobs:
         run: >-
           dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
           --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }}
-          --api-key ${{ secrets.PACKAGE_SOURCE_API_KEY_NUGET_ORG }}
           --skip-duplicate
