@@ -44,11 +44,11 @@ jobs:
           --name github ${{ vars.PACKAGE_SOURCE_URL_GITHUB }}
 
       - name: Build Solution
-        run: >-
-          dotnet build ${{ env.SOLUTION }}
-          --configuration Release
-          --nologo
-          --verbosity minimal
+        run: |
+          Write-Host "VERSION=$env.VERSION"
+          Write-Host "VERSION=$VERSION"
+          Write-Host "VERSION=${{ env.VERSION }}"
+          dotnet build ${{ env.SOLUTION }} --configuration Release --nologo --verbosity minimal
 
       - name: Create NuGet Packages
         run: |
