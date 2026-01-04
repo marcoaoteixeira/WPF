@@ -6,8 +6,8 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
 env:
-  SOLUTION: "./WPF.sln"
-  NUPKG_OUTPUT_PATH: './nupkgs'
+  SOLUTION: "WPF.sln"
+  NUPKG_OUTPUT_PATH: 'nupkgs'
 
 jobs:
   release:
