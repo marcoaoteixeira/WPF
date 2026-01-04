@@ -72,7 +72,4 @@ jobs:
           depth: 2 
 
       - name: Publish NuGet Packages
-        run: >-
-          dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
-          --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }}
-          --skip-duplicate
+        run: ls ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
