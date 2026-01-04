@@ -65,12 +65,12 @@
 		<Authors>Marco Antonio Orestes Teixeira</Authors>
 		<Company>Nameless</Company>
 		<Copyright>MIT</Copyright>
-		<PackageProjectUrl>https://github.com/marcoaoteixeira/nameless</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/marcoaoteixeira/WPF</PackageProjectUrl>
 		<RepositoryType>git</RepositoryType>
-		<RepositoryUrl>https://github.com/marcoaoteixeira/nameless</RepositoryUrl>
-		<PackageReleaseNotes>https://github.com/marcoaoteixeira/nameless/releases</PackageReleaseNotes>
+		<RepositoryUrl>https://github.com/marcoaoteixeira/WPF</RepositoryUrl>
+		<PackageReleaseNotes>https://github.com/marcoaoteixeira/WPF/releases</PackageReleaseNotes>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageIconUrl>https://github.com/marcoaoteixeira/Nameless/tree/main/branding/icon.png</PackageIconUrl>
+		<PackageIconUrl>https://github.com/marcoaoteixeira/WPF/tree/main/branding/icon.png</PackageIconUrl>
 		<Version>1.0.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<IncludeSymbols>True</IncludeSymbols>
