@@ -10,10 +10,10 @@ on:
       - 'develop'
 
 env:
-  SOLUTION: "./WPF.sln"
-  CODE_COVERAGE_COBERTURA_FILE_PATH: "./code-coverage/**/coverage.cobertura.xml"
-  CODE_COVERAGE_REPORT_FOLDER_PATH: "./code-coverage/report"
-  CODE_COVERAGE_FOLDER_PATH: "./code-coverage"
+  SOLUTION: '.\WPF.sln'
+  CODE_COVERAGE_COBERTURA_FILE_PATH: '.\code-coverage\**\coverage.cobertura.xml'
+  CODE_COVERAGE_REPORT_FOLDER_PATH: '.\code-coverage\report'
+  CODE_COVERAGE_FOLDER_PATH: '.\code-coverage'
 
 jobs:
   development:
@@ -21,7 +21,7 @@ jobs:
 
     strategy:
       matrix:
-        dotnet-version: ["10.0.x"]
+        dotnet-version: ['10.0.x']
 
     steps:
       - name: Setup .NET
@@ -50,9 +50,9 @@ jobs:
         run: >-
           dotnet test ${{ env.SOLUTION }}
           --configuration Debug
-          --collect:"XPlat Code Coverage"
-          --filter "Category!=RunsOnDevMachine"
-          --logger:"Html;LogFileName=code-coverage-log.html"
+          --collect:'XPlat Code Coverage'
+          --filter 'Category!=RunsOnDevMachine'
+          --logger:'Html;LogFileName=code-coverage-log.html'
           --nologo
           --results-directory ${{ env.CODE_COVERAGE_FOLDER_PATH }}
           --settings .runsettings
@@ -61,8 +61,8 @@ jobs:
       - name: Generate Coverage Report
         run: >-
           reportgenerator
-          "-reports:${{ env.CODE_COVERAGE_COBERTURA_FILE_PATH }}"
-          "-targetdir:${{ env.CODE_COVERAGE_REPORT_FOLDER_PATH }}"
+          '-reports:${{ env.CODE_COVERAGE_COBERTURA_FILE_PATH }}'
+          '-targetdir:${{ env.CODE_COVERAGE_REPORT_FOLDER_PATH }}'
           -reporttypes:Html
 
       - name: Upload Coverage Report to Artifacts

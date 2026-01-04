@@ -6,8 +6,8 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
 
 env:
-  SOLUTION: "./WPF.sln"
-  NUPKG_OUTPUT_PATH: './nupkgs'
+  SOLUTION: '.\WPF.sln'
+  NUPKG_OUTPUT_PATH: '.\nupkgs'
 
 jobs:
   release:
@@ -25,13 +25,13 @@ jobs:
 
       - name: Get Version Number From Tag
         run: |
-          Write-Host "GITHUB_REF = $env:GITHUB_REF"
-          $version = "1.0.0"
+          Write-Host 'GITHUB_REF = $env:GITHUB_REF'
+          $version = '1.0.0'
           if ([regex]::IsMatch($env:GITHUB_REF, '\d+(\.\d+)+')) {
           	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
           }
-          Write-Output "VERSION=$version" >> $env:GITHUB_ENV
-          Write-Host "VERSION = $version"
+          Write-Output 'VERSION=$version' >> $env:GITHUB_ENV
+          Write-Host 'VERSION = $version'
 
       - name: Checkout Source Code
         uses: actions/checkout@v6.0.1
@@ -65,13 +65,12 @@ jobs:
           -p:PackageVersion=${{ env.VERSION }}
           -p:Version=${{ env.VERSION }}
 
-      - name: Print NuGet Package Directory
-        uses: jaywcjlove/github-action-folder-tree@main
-        with:
-          path: ${{ env.NUPKG_OUTPUT_PATH }}
-          depth: 2 
+      - name: Print NuGet Package Directory Content
+        run: ls ${{ env.NUPKG_OUTPUT_PATH }}\*.nupkg
 
       - name: Publish NuGet Packages
-        run: |
-          ls ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
-          dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}/Nameless.WPF.3.6.0.nupkg --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }} --api-key ${{ secrets.PACKAGE_SOURCE_API_KEY_NUGET_ORG }} --skip-duplicate
+        run: >-
+          dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}\*.nupkg
+          --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }}
+          --api-key ${{ secrets.PACKAGE_SOURCE_API_KEY_NUGET_ORG }}
+          --skip-duplicate
