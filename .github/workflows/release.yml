@@ -72,4 +72,6 @@ jobs:
           depth: 2 
 
       - name: Publish NuGet Packages
-        run: ls ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
+        run: |
+          ls ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
+          dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }} --api-key ${{ secrets.PACKAGE_SOURCE_API_KEY_NUGET_ORG }} --skip-duplicate
