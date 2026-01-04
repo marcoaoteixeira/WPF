@@ -15,8 +15,7 @@ public static class ServiceCollectionExtensions {
     /// <param name="self">
     ///     The current <see cref="IServiceCollection"/>.
     /// </param>
-    extension(IServiceCollection self)
-    {
+    extension(IServiceCollection self) {
         /// <summary>
         ///     Registers the application database context.
         /// </summary>

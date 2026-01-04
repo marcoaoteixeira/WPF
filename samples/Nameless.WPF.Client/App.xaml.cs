@@ -101,7 +101,7 @@ public partial class App {
         // From Core
         services.RegisterAppConfigurationManager();
         services.RegisterAppDbContext(opts => {
-            opts.RegisterInterceptor<UpdateAuditableEntitySaveChangesInterceptor>();
+            opts.RegisterInterceptor<AuditableEntitySaveChangesInterceptor>();
         });
         services.RegisterBootstrapper(opts => {
             opts.RegisterStep<InitializeDbContextStep>();
