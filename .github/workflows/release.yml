@@ -25,12 +25,18 @@ jobs:
 
       - name: Get Version Number From Tag
         run: |
-          Write-Host "GITHUB_REF = $env:GITHUB_REF"
-          $version = "1.0.0"
+          Write-Host 'GITHUB_REF = $env:GITHUB_REF'
+          $version = '1.0.0'
           if ([regex]::IsMatch($env:GITHUB_REF, '\d+(\.\d+)+')) {
           	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
           }
-          Write-Host ("VERSION=$version") >> $env:GITHUB_ENV
+          Write-Host ('VERSION=$version') >> $env:GITHUB_ENV
+
+      - name: Show FUCKING env vars
+        run: |
+          Write-Host 'env:GITHUB_ENV = $env:GITHUB_ENV'
+          Write-Host 'env:GITHUB_REF = $env:GITHUB_REF'
+          Write-Host 'env:VERSION = $env:VERSION'
 
       - name: Checkout Source Code
         uses: actions/checkout@v6.0.1
@@ -44,18 +50,25 @@ jobs:
           --name github ${{ vars.PACKAGE_SOURCE_URL_GITHUB }}
 
       - name: Build Solution
-        run: |
-          Write-Host "VERSION=$env.VERSION"
-          Write-Host "VERSION=$VERSION"
-          Write-Host "VERSION=${{ env.VERSION }}"
-          dotnet build ${{ env.SOLUTION }} --configuration Release --nologo --verbosity minimal
+        run: >-
+          dotnet build ${{ env.SOLUTION }}
+          --configuration Release
+          --nologo
+          --verbosity minimal
 
       - name: Create NuGet Packages
-        run: |
-          Write-Host "GITHUB_ENV=$env.GITHUB_ENV"
-          Write-Host "GITHUB_ENV=$GITHUB_ENV"
-          Write-Host "GITHUB_ENV=${{ env.GITHUB_ENV }}"
-          dotnet pack --force --configuration Release --include-symbols --nologo --output ${{ env.NUPKG_OUTPUT_PATH }} --verbosity minimal -p:AssemblyVersion=$env.VERSION -p:FileVersion=$env.VERSION -p:PackageVersion=$env.VERSION -p:Version=$env.VERSION
+        run: >-
+          dotnet pack
+          --force
+          --configuration Release
+          --include-symbols
+          --nologo
+          --output ${{ env.NUPKG_OUTPUT_PATH }}
+          --verbosity minimal
+          -p:AssemblyVersion=${{ env.VERSION }}
+          -p:FileVersion=${{ env.VERSION }}
+          -p:PackageVersion=${{ env.VERSION }}
+          -p:Version=${{ env.VERSION }}
 
       - name: Print NuGet Package Directory
         uses: jaywcjlove/github-action-folder-tree@main
