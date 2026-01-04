@@ -18,13 +18,11 @@ jobs:
         dotnet-version: ['10.0.x']
 
     steps:
-      - name: Show FUCKING env vars
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5.0.1
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+    
+      - name: Get Version Number From Tag
         run: |
-          Write-Host 'env.GITHUB_REF=$(env.GITHUB_REF)'
-          Write-Host 'env.GITHUB_ENV=$(env.GITHUB_ENV)'
-          Write-Host 'GITHUB_REF=$(GITHUB_REF)'
-          Write-Host 'GITHUB_ENV=$(GITHUB_ENV)'
-          Write-Host 'env.GITHUB_REF=$env.GITHUB_REF'
-          Write-Host 'env.GITHUB_ENV=$env.GITHUB_ENV'
-          Write-Host 'env.GITHUB_REF=GITHUB_REF'
-          Write-Host 'env.GITHUB_ENV=GITHUB_ENV'
+          Write-Host "GITHUB_REF = $env:GITHUB_REF"
