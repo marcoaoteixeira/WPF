@@ -30,7 +30,7 @@ jobs:
           if ([regex]::IsMatch($env:GITHUB_REF, '\d+(\.\d+)+')) {
           	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
           }
-          [System.Environment]::SetEnvironmentVariable('VERSION', $version, 'Machine')
+          Write-Host "VERSION=$version" >> $env:GITHUB_ENV
           Write-Host "VERSION = $env:VERSION"
 
       - name: Checkout Source Code
