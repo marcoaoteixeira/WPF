@@ -46,7 +46,7 @@ $SCRIPT_NAME = [System.IO.Path]::GetFileNameWithoutExtension($MyInvocation.MyCom
 $SCRIPT_DIRECTORY_PATH = Split-Path $script:MyInvocation.MyCommand.Path
 
 # Project Variables
-$DBCONTEXT_PROJECT_PATH = [System.IO.Path]::Combine("src", "Nameless.WPF.Core", "Nameless.WPF.Core.csproj")
+$DBCONTEXT_PROJECT_PATH = [System.IO.Path]::Combine("samples", "Nameless.WPF.Client.Sqlite", "Nameless.WPF.Client.Sqlite.csproj")
 $MIGRATION_OUTPUT_PATH = [System.IO.Path]::Combine("Data", "Migrations")
 
 #==========================================================
