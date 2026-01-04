@@ -22,21 +22,58 @@ jobs:
         uses: actions/setup-dotnet@v5.0.1
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-    
+
       - name: Get Version Number From Tag
         run: |
           Write-Host "GITHUB_REF = $env:GITHUB_REF"
           $version = "1.0.0"
           if ([regex]::IsMatch($env:GITHUB_REF, '\d+(\.\d+)+')) {
-           	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
+          	$version = [regex]::Match($env:GITHUB_REF, '\d+(\.\d+)+').Value
           }
-          Write-Output ("VERSION=$version") >> $env:GITHUB_ENV
-          Write-Host "VERSION = $env:VERSION"
-          Write-Host "GITHUB_REF = $env:GITHUB_REF"
-          Write-Host "GITHUB_ENV = $env:GITHUB_ENV"
+          Write-Output "VERSION=$version" >> $env:GITHUB_ENV
+          Write-Host "VERSION = $version"
 
-      - name: Get Version Number From Tag 2
-        run: |
-          Write-Host "VERSION = $env:VERSION"
-          Write-Host "GITHUB_REF = $env:GITHUB_REF"
-          Write-Host "GITHUB_ENV = $env:GITHUB_ENV"
+      - name: Checkout Source Code
+        uses: actions/checkout@v6.0.1
+
+      - name: Register GitHub Package Registry As NuGet Source
+        run: >-
+          dotnet nuget add source
+          --username ${{ github.repository_owner }}
+          --password ${{ secrets.GITHUB_TOKEN }}
+          --store-password-in-clear-text
+          --name github ${{ vars.PACKAGE_SOURCE_URL_GITHUB }}
+
+      - name: Build Solution
+        run: >-
+          dotnet build ${{ env.SOLUTION }}
+          --configuration Release
+          --nologo
+          --verbosity minimal
+
+      - name: Create NuGet Packages
+        run: >-
+          dotnet pack
+          --force
+          --configuration Release
+          --include-symbols
+          --nologo
+          --output ${{ env.NUPKG_OUTPUT_PATH }}
+          --verbosity minimal
+          -p:AssemblyVersion=${{ env.VERSION }}
+          -p:FileVersion=${{ env.VERSION }}
+          -p:PackageVersion=${{ env.VERSION }}
+          -p:Version=${{ env.VERSION }}
+
+      - name: Print NuGet Package Directory
+        uses: jaywcjlove/github-action-folder-tree@main
+        with:
+          path: ${{ env.NUPKG_OUTPUT_PATH }}
+          depth: 2 
+
+      - name: Publish NuGet Packages
+        run: >-
+          dotnet nuget push ${{ env.NUPKG_OUTPUT_PATH }}/*.nupkg
+          --source ${{ vars.PACKAGE_SOURCE_URL_NUGET_ORG }}
+          --api-key ${{ secrets.PACKAGE_SOURCE_API_KEY_NUGET_ORG }}
+          --skip-duplicate
