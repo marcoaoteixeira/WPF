@@ -52,9 +52,9 @@ jobs:
 
       - name: Create NuGet Packages
         run: |
-          Write-Host "VERSION=$env.VERSION"
-          Write-Host "VERSION=$VERSION"
-          Write-Host "VERSION=${{ env.VERSION }}"
+          Write-Host "GITHUB_ENV=$env.GITHUB_ENV"
+          Write-Host "GITHUB_ENV=$GITHUB_ENV"
+          Write-Host "GITHUB_ENV=${{ env.GITHUB_ENV }}"
           dotnet pack --force --configuration Release --include-symbols --nologo --output ${{ env.NUPKG_OUTPUT_PATH }} --verbosity minimal -p:AssemblyVersion=$env.VERSION -p:FileVersion=$env.VERSION -p:PackageVersion=$env.VERSION -p:Version=$env.VERSION
 
       - name: Print NuGet Package Directory
