@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
 
-namespace Nameless.WPF.Client.Sqlite.Internals;
+namespace Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
 
-internal static class PerformDatabaseBackupRequestHandlerLoggerExtensions {
+internal static class LoggerExtensions {
     private static readonly Action<ILogger, Exception> ExecuteDatabaseBackupFailureDelegate
         = LoggerMessage.Define(
             logLevel: LogLevel.Error,
@@ -18,9 +17,8 @@ internal static class PerformDatabaseBackupRequestHandlerLoggerExtensions {
             formatString: "An error occurred while preparing the database backup file for storage."
         );
 
-    extension(ILogger<PerformDatabaseBackupRequestHandler> self)
-    {
-        internal void ExecuteDatabaseDataBackupFailure(Exception exception) {
+    extension(ILogger<PerformDatabaseBackupRequestHandler> self) {
+        internal void ExecuteDatabaseBackupFailure(Exception exception) {
             ExecuteDatabaseBackupFailureDelegate(self, exception);
         }
 

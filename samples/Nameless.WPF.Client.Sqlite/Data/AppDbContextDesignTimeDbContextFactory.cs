@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Design;
 namespace Nameless.WPF.Client.Sqlite.Data;
 
 // This is necessary to use the EF Core CLI tool
-public sealed class AppDbContextDesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext> {
+public class AppDbContextDesignTimeDbContextFactory : IDesignTimeDbContextFactory<AppDbContext> {
     public AppDbContext CreateDbContext(string[] args) {
         var databaseFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "database.db");
         var options = new DbContextOptionsBuilder<AppDbContext>()

@@ -4,7 +4,6 @@ using Nameless.Mediator.Requests;
 using Nameless.WPF.GitHub;
 using Nameless.WPF.GitHub.Requests;
 using Nameless.WPF.Helpers;
-using Nameless.WPF.Internals;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Check;
@@ -23,7 +22,7 @@ public class CheckForUpdateRequestHandler : IRequestHandler<CheckForUpdateReques
     }
 
     public async Task<CheckForUpdateResponse> HandleAsync(CheckForUpdateRequest request, CancellationToken cancellationToken) {
-        await _notificationService.CheckForUpdateStartingAsync()
+        await _notificationService.NotifyStartingAsync()
                                   .SkipContextSync();
 
         var options = _options.Value;
@@ -32,7 +31,7 @@ public class CheckForUpdateRequestHandler : IRequestHandler<CheckForUpdateReques
                                                                .SkipContextSync();
 
         if (!getLastestReleaseResponse.Success) {
-            await _notificationService.CheckForUpdateFailureAsync(getLastestReleaseResponse.Errors[0].Message)
+            await _notificationService.NotifyFailureAsync(getLastestReleaseResponse.Errors[0].Message)
                                       .SkipContextSync();
 
             return getLastestReleaseResponse.Errors[0];
@@ -42,13 +41,13 @@ public class CheckForUpdateRequestHandler : IRequestHandler<CheckForUpdateReques
         var latestVersion = VersionHelper.Parse(getLastestReleaseResponse.Value.TagName);
 
         if (currentVersion >= latestVersion) {
-            await _notificationService.CheckForUpdateSuccessAsync()
+            await _notificationService.NotifySuccessAsync()
                                       .SkipContextSync();
 
             return (CheckForUpdateMetadata)default;
         }
 
-        await _notificationService.CheckForUpdateSuccessAsync(latestVersion.ToString(3))
+        await _notificationService.NotifySuccessAsync(latestVersion.ToString(3))
                                   .SkipContextSync();
 
         return new CheckForUpdateMetadata(

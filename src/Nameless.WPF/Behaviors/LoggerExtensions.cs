@@ -1,6 +1,6 @@
-﻿namespace Nameless.WPF.Client.Sqlite.Internals;
+﻿namespace Nameless.WPF.Behaviors;
 
 // Root object used to nest other logger extensions.
 // You can see it in the "Solution Explorer" using
 // the nesting setting "Web"
-internal readonly record struct NotificationServiceExtensions;
+internal static class LoggerExtensions;

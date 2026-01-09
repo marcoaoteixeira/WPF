@@ -6,7 +6,6 @@ using Nameless.IO.FileSystem;
 using Nameless.Mediator.Requests;
 using Nameless.ObjectModel;
 using Nameless.Results;
-using Nameless.WPF.Client.Sqlite.Internals;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
@@ -58,7 +57,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
         SqliteConnection? sourceDbConnection = null;
 
         try {
-            await _notificationService.PerformDatabaseBackup_DatabaseBackup_StartingAsync()
+            await _notificationService.NotifyDatabaseBackupStartingAsync()
                                       .SkipContextSync();
 
             var sourceFilePath = _fileSystem.GetFullPath(Constants.Database.DATABASE_FILE_NAME);
@@ -76,15 +75,15 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
 
             sourceDbConnection.BackupDatabase(backupDbConnection);
 
-            await _notificationService.PerformDatabaseBackup_DatabaseBackup_FinishAsync()
+            await _notificationService.NotifyDatabaseBackupFinishAsync()
                                       .SkipContextSync();
 
             return backupRelativeFilePath;
         }
         catch (Exception ex) {
-            _logger.ExecuteDatabaseDataBackupFailure(ex);
+            _logger.ExecuteDatabaseBackupFailure(ex);
 
-            await _notificationService.PerformDatabaseBackup_DatabaseBackup_FailureAsync(ex.Message)
+            await _notificationService.NotifyDatabaseBackupFailureAsync(ex.Message)
                                       .SkipContextSync();
 
             return Error.Failure(ex.Message);
@@ -104,7 +103,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
 
     private async Task<Result<string>> PrepareBackupFileAsync(string backupRelativeFilePath, CancellationToken cancellationToken) {
         try {
-            await _notificationService.PerformDatabaseBackup_PrepareBackupFile_StartingAsync()
+            await _notificationService.NotifyPrepareBackupFileStartingAsync()
                                       .SkipContextSync();
 
             var backupFileStream = _fileSystem.GetFile(backupRelativeFilePath)
@@ -124,7 +123,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
             _fileSystem.GetFile(backupRelativeFilePath)
                        .Delete();
 
-            await _notificationService.PerformDatabaseBackup_PrepareBackupFile_FinishAsync()
+            await _notificationService.NotifyPrepareBackupFileFinishAsync()
                                       .SkipContextSync();
 
             return _fileSystem.GetFullPath(compressRelativeFilePath);
@@ -132,7 +131,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
         catch (Exception ex) {
             _logger.PrepareBackupFileFailure(ex);
 
-            await _notificationService.PerformDatabaseBackup_PrepareBackupFile_FailureAsync(ex.Message)
+            await _notificationService.NotifyPrepareBackupFileFailureAsync(ex.Message)
                                       .SkipContextSync();
 
             return Error.Failure(ex.Message);
@@ -140,7 +139,7 @@ public class PerformDatabaseBackupRequestHandler : IRequestHandler<PerformDataba
     }
 
     private async Task<PerformDatabaseBackupResponse> OnSuccess(string backupFilePath) {
-        await _notificationService.PerformDatabaseBackup_SuccessAsync(backupFilePath)
+        await _notificationService.NotifySuccessAsync(backupFilePath)
                                   .SkipContextSync();
 
         return new PerformDatabaseBackupMetadata(backupFilePath);

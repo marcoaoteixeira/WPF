@@ -8,7 +8,7 @@ namespace Nameless.WPF.Converters;
 ///     <see cref="TimeOnly"/> given the target type.
 ///     Works also in the opposite direction.
 /// </summary>
-public sealed class TimeToStringValueConverter : IValueConverter {
+public class TimeToStringValueConverter : IValueConverter {
     /// <inheritdoc />
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         return value switch {

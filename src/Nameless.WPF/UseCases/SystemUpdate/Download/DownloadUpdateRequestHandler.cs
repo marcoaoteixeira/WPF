@@ -3,7 +3,6 @@ using System.Net.Http;
 using Nameless.IO.FileSystem;
 using Nameless.Mediator.Requests;
 using Nameless.ObjectModel;
-using Nameless.WPF.Internals;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Download;
@@ -23,7 +22,7 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
 
     public async Task<DownloadUpdateResponse> HandleAsync(DownloadUpdateRequest request, CancellationToken cancellationToken) {
         try {
-            await _notificationService.DownloadUpdateStartingAsync()
+            await _notificationService.NotifyStartingAsync()
                                       .SkipContextSync();
 
             var response = await _httpClient.GetAsync(request.Url, cancellationToken)
@@ -38,7 +37,7 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
             var filePath = Path.Combine(Constants.SystemUpdate.DIRECTORY_NAME, fileName);
             var file = _fileSystem.GetFile(filePath);
 
-            await _notificationService.DownloadUpdateWritingFileAsync()
+            await _notificationService.NotifyWritingFileAsync()
                                       .SkipContextSync();
 
             await using var fileStream = file.Open();
@@ -52,13 +51,13 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
             httpStream.Close();
             fileStream.Close();
 
-            await _notificationService.DownloadUpdateSuccessAsync(file.Path)
+            await _notificationService.NotifySuccessAsync(file.Path)
                                       .SkipContextSync();
 
-            return new DownloadedUpdateMetadata(file.Path);
+            return new DownloadUpdateMetadata(file.Path);
         }
         catch (Exception ex) {
-            await _notificationService.DownloadUpdateFailureAsync(ex.Message)
+            await _notificationService.NotifyFailureAsync(ex.Message)
                                       .SkipContextSync();
 
             return Error.Failure(ex.Message);

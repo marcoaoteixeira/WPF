@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Nameless.Null;
-using Nameless.WPF.Internals;
 
 namespace Nameless.WPF.Bootstrap;
 

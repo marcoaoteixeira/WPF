@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nameless.WPF.Bootstrap;
 using Nameless.WPF.Client.Sqlite.Data;
-using Nameless.WPF.Client.Sqlite.Internals;
 using Nameless.WPF.Client.Sqlite.Resources;
 
 namespace Nameless.WPF.Client.Sqlite.Bootstrap.Steps;

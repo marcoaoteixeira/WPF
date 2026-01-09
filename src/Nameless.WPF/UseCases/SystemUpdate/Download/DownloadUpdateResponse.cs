@@ -3,11 +3,11 @@ using Nameless.Results;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Download;
 
-public class DownloadUpdateResponse : Result<DownloadedUpdateMetadata> {
-    private DownloadUpdateResponse(DownloadedUpdateMetadata value, Error[] errors)
+public class DownloadUpdateResponse : Result<DownloadUpdateMetadata> {
+    private DownloadUpdateResponse(DownloadUpdateMetadata value, Error[] errors)
         : base(value, errors) { }
 
-    public static implicit operator DownloadUpdateResponse(DownloadedUpdateMetadata value) {
+    public static implicit operator DownloadUpdateResponse(DownloadUpdateMetadata value) {
         return new DownloadUpdateResponse(value, errors: []);
     }
 

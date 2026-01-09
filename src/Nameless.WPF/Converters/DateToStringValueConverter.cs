@@ -8,7 +8,7 @@ namespace Nameless.WPF.Converters;
 ///     <see cref="DateTimeOffset"/> or <see cref="DateOnly"/> given the
 ///     target type. Works also in the opposite direction.
 /// </summary>
-public sealed class DateToStringValueConverter : IValueConverter {
+public class DateToStringValueConverter : IValueConverter {
     /// <inheritdoc />
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) {
         return value switch {

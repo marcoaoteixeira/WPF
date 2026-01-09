@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nameless.WPF.Configuration;
 
-namespace Nameless.WPF.Internals;
+namespace Nameless.WPF.Configuration;
 
 /// <summary>
 ///     <see cref="AppConfigurationManager"/> logger extensions.
 /// </summary>
-internal static class AppConfigurationManagerLoggerExtensions {
+internal static class LoggerExtensions {
     private static readonly Action<ILogger, Exception> SaveAppConfigurationFailureDelegate
         = LoggerMessage.Define(
             logLevel: LogLevel.Error,

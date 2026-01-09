@@ -8,7 +8,7 @@ namespace Nameless.WPF.Navigation;
 /// <summary>
 ///     Default implementation of <see cref="INavigationViewPageProvider"/>.
 /// </summary>
-public sealed class NavigationViewPageProvider : INavigationViewPageProvider {
+public class NavigationViewPageProvider : INavigationViewPageProvider {
     private readonly IServiceProvider _provider;
 
     /// <summary>
