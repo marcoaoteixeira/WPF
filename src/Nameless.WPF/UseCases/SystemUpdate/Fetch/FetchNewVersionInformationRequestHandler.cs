@@ -2,7 +2,6 @@
 using Nameless.Mediator.Requests;
 using Nameless.WPF.GitHub;
 using Nameless.WPF.GitHub.Requests;
-using Nameless.WPF.Internals;
 using Nameless.WPF.Notifications;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Fetch;
@@ -19,7 +18,7 @@ public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNew
     }
 
     public async Task<FetchNewVersionInformationResponse> HandleAsync(FetchNewVersionInformationRequest request, CancellationToken cancellationToken) {
-        await _notificationService.FetchNewVersionInformationStartingAsync()
+        await _notificationService.NotifyStartingAsync()
                                   .SkipContextSync();
 
         var options = _options.Value;
@@ -32,7 +31,7 @@ public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNew
                                                         .SkipContextSync();
 
         if (!getReleaseAssetsResponse.Success) {
-            await _notificationService.FetchNewVersionInformationFailureAsync(request.Version, getReleaseAssetsResponse.Errors[0].Message)
+            await _notificationService.NotifyFailureAsync(request.Version, getReleaseAssetsResponse.Errors[0].Message)
                                       .SkipContextSync();
 
             return getReleaseAssetsResponse.Errors[0];
@@ -42,13 +41,13 @@ public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNew
         var asset = getReleaseAssetsResponse.Value.SingleOrDefault(item => item.Name == assetName);
 
         if (asset is null) {
-            await _notificationService.FetchNewVersionInformationNotFoundAsync()
+            await _notificationService.NotifyNotFoundAsync()
                                       .SkipContextSync();
 
             return (FetchNewVersionMetadata)default;
         }
 
-        await _notificationService.FetchNewVersionInformationSuccessAsync()
+        await _notificationService.NotifySuccessAsync()
                                   .SkipContextSync();
 
         return new FetchNewVersionMetadata(asset.BrowserDownloadUrl);

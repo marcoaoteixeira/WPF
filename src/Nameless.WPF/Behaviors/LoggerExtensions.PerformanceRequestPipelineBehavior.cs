@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nameless.WPF.Behaviors;
 
-namespace Nameless.WPF.Internals;
+namespace Nameless.WPF.Behaviors;
 
 public static class PerformanceRequestPipelineBehaviorLoggerExtensions {
     private static readonly Action<ILogger, string, string, Exception?> StartPerformanceMonitorDelegate

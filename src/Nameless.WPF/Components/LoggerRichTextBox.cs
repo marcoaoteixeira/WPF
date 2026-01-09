@@ -10,7 +10,7 @@ namespace Nameless.WPF.Components;
 /// <summary>
 ///     A <see cref="RichTextBox"/> that displays log entries with different styles.
 /// </summary>
-public sealed class LoggerRichTextBox : RichTextBox {
+public class LoggerRichTextBox : RichTextBox {
     /// <summary>
     ///     Dependency property for <see cref="Entries"/>.
     /// </summary>

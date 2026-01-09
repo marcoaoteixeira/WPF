@@ -1,8 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Nameless.Validation;
-using Nameless.WPF.Behaviors;
 
-namespace Nameless.WPF.Internals;
+namespace Nameless.WPF.Behaviors;
 
 public static class ValidateRequestPipelineBehaviorLoggerExtensions {
     private static readonly Action<ILogger, string, ValidationResult, Exception?> ValidateRequestObjectFailureDelegate

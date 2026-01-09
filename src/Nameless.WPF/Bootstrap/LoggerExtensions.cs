@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nameless.WPF.Bootstrap;
 
-namespace Nameless.WPF.Internals;
+namespace Nameless.WPF.Bootstrap;
 
 /// <summary>
 ///     Extension methods for <see cref="ILogger"/> that target
 ///     the <see cref="Bootstrapper"/> implementations.
 /// </summary>
-internal static class BootstrapperLoggerExtensions {
+internal static class LoggerExtensions {
     private static readonly Action<ILogger, string, Exception?> StartingExecutionDelegate
         = LoggerMessage.Define<string>(
             logLevel: LogLevel.Information,

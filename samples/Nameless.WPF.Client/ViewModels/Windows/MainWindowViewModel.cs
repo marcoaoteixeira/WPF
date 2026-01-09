@@ -5,7 +5,7 @@ using Wpf.Ui.Controls;
 
 namespace Nameless.WPF.Client.ViewModels.Windows;
 
-public sealed class MainWindowViewModel : ViewModel {
+public class MainWindowViewModel : ViewModel {
     private readonly IApplicationContext _applicationContext;
     private readonly INavigationViewItemProvider _navigationViewItemProvider;
 

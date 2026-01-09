@@ -1,33 +1,32 @@
 ﻿using Nameless.WPF.Notifications;
 using Nameless.WPF.Resources;
-using Nameless.WPF.UseCases.SystemUpdate.Download;
 
-namespace Nameless.WPF.Internals;
+namespace Nameless.WPF.UseCases.SystemUpdate.Download;
 
-internal static class NotificationServiceExtensionsDownloadUpdateNotification {
+internal static class NotificationServiceExtensions {
     extension(INotificationService self) {
-        internal Task DownloadUpdateSuccessAsync(string filePath) {
+        internal Task NotifySuccessAsync(string filePath) {
             return self.PublishAsync(new DownloadUpdateNotification(
                 message: string.Format(Strings.DownloadUpdateNotification_Success, filePath),
                 type: NotificationType.Success
             ));
         }
 
-        internal Task DownloadUpdateFailureAsync(string error) {
+        internal Task NotifyFailureAsync(string error) {
             return self.PublishAsync(new DownloadUpdateNotification(
                 message: error,
                 type: NotificationType.Error
             ));
         }
 
-        internal Task DownloadUpdateStartingAsync() {
+        internal Task NotifyStartingAsync() {
             return self.PublishAsync(new DownloadUpdateNotification(
                 message: Strings.DownloadUpdateNotification_Starting,
                 type: NotificationType.Information
             ));
         }
 
-        internal Task DownloadUpdateWritingFileAsync() {
+        internal Task NotifyWritingFileAsync() {
             return self.PublishAsync(new DownloadUpdateNotification(
                 message: Strings.DownloadUpdateNotification_WritingFile,
                 type: NotificationType.Information

@@ -2,7 +2,7 @@
 
 namespace Nameless.WPF.GitHub.ObjectModel;
 
-public sealed record ReleaseAsset(
+public record ReleaseAsset(
     [property: JsonPropertyName("url")] string Url,
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("node_id")] string NodeId,

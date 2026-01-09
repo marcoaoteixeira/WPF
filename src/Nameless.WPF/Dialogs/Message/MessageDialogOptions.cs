@@ -2,7 +2,7 @@
 
 namespace Nameless.WPF.Dialogs.Message;
 
-public sealed class MessageDialogOptions {
+public class MessageDialogOptions {
     public string? Title { get; set; }
 
     public MessageDialogButtons Buttons { get; set; }

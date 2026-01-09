@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Nameless.WPF.Windows;
 
-namespace Nameless.WPF.Internals;
+namespace Nameless.WPF.Windows;
 
-internal static class WindowFactoryLoggerExtensions {
+internal static class LoggerExtensions {
     private static readonly Action<ILogger, string, Exception?> WindowUnavailableDelegate
         = LoggerMessage.Define<string>(
             logLevel: LogLevel.Warning,

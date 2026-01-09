@@ -11,7 +11,7 @@ namespace Nameless.WPF.Client.Sqlite.Data;
 ///     Auditing save changes interceptor.
 /// </summary>
 [ServiceLifetime(Lifetime = ServiceLifetime.Singleton)]
-public sealed class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor {
+public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor {
     private readonly TimeProvider _timeProvider;
 
     /// <summary>

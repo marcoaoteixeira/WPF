@@ -24,7 +24,7 @@ namespace Nameless.WPF.GitHub.ObjectModel;
 /// <param name="Type">Author type.</param>
 /// <param name="UserViewType">User view type.</param>
 /// <param name="SiteAdmin">Whether it is the site administrator.</param>
-public sealed record Author(
+public record Author(
     [property: JsonPropertyName("login")] string Login,
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("node_id")] string NodeId,

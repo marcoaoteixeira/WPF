@@ -5,7 +5,7 @@ namespace Nameless.WPF.Components;
 /// <summary>
 ///     Represents a log entry for the <see cref="LoggerRichTextBox"/>.
 /// </summary>
-public sealed record LoggerRichTextBoxEntry {
+public record LoggerRichTextBoxEntry {
     /// <summary>
     ///     Gets or init the log message.
     /// </summary>

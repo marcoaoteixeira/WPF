@@ -2,35 +2,35 @@
 using Nameless.WPF.Resources;
 using Nameless.WPF.UseCases.SystemUpdate.Download;
 
-namespace Nameless.WPF.Internals;
+namespace Nameless.WPF.UseCases.SystemUpdate.Fetch;
 
-internal static class NotificationServiceExtensionsFetchNewVersionInformationNotifications {
+internal static class NotificationServiceExtensions {
     extension(INotificationService self) {
-        internal Task FetchNewVersionInformationSuccessAsync() {
+        internal Task NotifySuccessAsync() {
             return self.PublishAsync(new DownloadUpdateNotification(
                 message: Strings.FetchNewVersionInformationNotification_Success,
                 type: NotificationType.Success
             ));
         }
 
-        internal Task FetchNewVersionInformationFailureAsync(string version, string error) {
+        internal Task NotifyFailureAsync(string version, string error) {
             return self.PublishAsync(new DownloadUpdateNotification(
                 message: string.Format(Strings.FetchNewVersionInformationNotification_Failure, version, error),
                 type: NotificationType.Error
             ));
         }
 
-        internal Task FetchNewVersionInformationNotFoundAsync() {
-            return self.PublishAsync(new DownloadUpdateNotification(
-                message: Strings.FetchNewVersionInformationNotification_NotFound,
-                type: NotificationType.Error
-            ));
-        }
-
-        internal Task FetchNewVersionInformationStartingAsync() {
+        internal Task NotifyStartingAsync() {
             return self.PublishAsync(new DownloadUpdateNotification(
                 message: Strings.FetchNewVersionInformationNotification_Starting,
                 type: NotificationType.Information
+            ));
+        }
+
+        internal Task NotifyNotFoundAsync() {
+            return self.PublishAsync(new DownloadUpdateNotification(
+                message: Strings.FetchNewVersionInformationNotification_NotFound,
+                type: NotificationType.Error
             ));
         }
     }

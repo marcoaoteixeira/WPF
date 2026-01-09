@@ -3,7 +3,7 @@ using Nameless.Results;
 
 namespace Nameless.WPF.UseCases.SystemUpdate.Check;
 
-public sealed class CheckForUpdateResponse : Result<CheckForUpdateMetadata> {
+public class CheckForUpdateResponse : Result<CheckForUpdateMetadata> {
     private CheckForUpdateResponse(CheckForUpdateMetadata? value, Error[] errors)
         : base(value, errors) { }
 

@@ -7,7 +7,7 @@ namespace Nameless.WPF.DependencyInjection;
 ///     Defines the lifetime of a service.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-public sealed class ServiceLifetimeAttribute : Attribute {
+public class ServiceLifetimeAttribute : Attribute {
     /// <summary>
     ///     Gets or init the lifetime type.
     /// </summary>

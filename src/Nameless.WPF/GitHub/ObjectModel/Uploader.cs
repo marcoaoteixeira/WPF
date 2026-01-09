@@ -2,7 +2,7 @@
 
 namespace Nameless.WPF.GitHub.ObjectModel;
 
-public sealed record Uploader(
+public record Uploader(
     [property: JsonPropertyName("login")] string Login,
     [property: JsonPropertyName("id")] int Id,
     [property: JsonPropertyName("node_id")] string NodeId,
