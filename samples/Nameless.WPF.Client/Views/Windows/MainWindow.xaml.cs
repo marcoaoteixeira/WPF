@@ -125,7 +125,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
     }
 
     private void SetContentPresenter() {
-        _contentDialogService.SetDialogHost(ContentPresenterRoot);
+        _contentDialogService.SetDialogHost(ContentDialogHostRoot);
     }
 
     private void SetNavigationView() {

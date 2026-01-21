@@ -40,7 +40,7 @@ public class ValidateRequestPipelineBehavior<TRequest, TResponse> : IRequestPipe
         var result = await _validationService.ValidateAsync(request, cancellationToken)
                                              .SkipContextSync();
 
-        if (result.Succeeded) {
+        if (result.Success) {
             return await next(cancellationToken).SkipContextSync();
         }
 
