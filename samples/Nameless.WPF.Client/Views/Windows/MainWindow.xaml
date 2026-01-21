@@ -44,7 +44,7 @@
             </ui:TitleBar.Icon>
         </ui:TitleBar>
 
-        <ContentPresenter Grid.Row="0" x:Name="ContentPresenterRoot" />
+        <ui:ContentDialogHost Grid.Row="0" x:Name="ContentDialogHostRoot" />
 
         <StatusBar Grid.Row="1" >
             <StatusBar.ItemsPanel>

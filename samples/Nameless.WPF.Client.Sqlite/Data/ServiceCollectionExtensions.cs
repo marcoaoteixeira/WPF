@@ -36,7 +36,15 @@ public static class ServiceCollectionExtensions {
 
             self.AddDbContext<AppDbContext>((provider, builder) => {
                 var applicationContext = provider.GetRequiredService<IApplicationContext>();
-                var databaseFilePath = Path.Combine(applicationContext.DataDirectoryPath, Constants.Database.DATABASE_FILE_NAME);
+                var databaseFilePath = Path.Combine(
+                    applicationContext.DataDirectoryPath,
+                    Constants.Database.DIRECTORY_NAME,
+                    Constants.Database.NAME
+                );
+
+                // Ensure the database directory exists
+                Directory.CreateDirectory(Path.GetDirectoryName(databaseFilePath) ?? string.Empty);
+
                 var connectionString = string.Format(Constants.Database.CONN_STR_PATTERN, databaseFilePath);
                 var interceptors = provider.GetServices<IInterceptor>();
 

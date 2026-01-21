@@ -4,6 +4,7 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nameless.Compression;
 using Nameless.Infrastructure;
 using Nameless.IO.FileSystem;
 using Nameless.Mediator;
@@ -122,6 +123,7 @@ public partial class App {
         services.RegisterWindowFactory(opts => {
             opts.Assemblies = SupportAssemblies;
         });
+        services.RegisterZipArchiveService();
     }
 
     private static void OnHostStartup(IServiceProvider provider) {
