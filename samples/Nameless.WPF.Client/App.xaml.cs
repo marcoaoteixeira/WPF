@@ -4,13 +4,16 @@ using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nameless.Bootstrap;
 using Nameless.Compression;
+using Nameless.Diagnostics;
 using Nameless.Infrastructure;
 using Nameless.IO.FileSystem;
 using Nameless.Mediator;
 using Nameless.Validation.FluentValidation;
 using Nameless.WPF.Behaviors;
 using Nameless.WPF.Bootstrap;
+using Nameless.WPF.Client.Bootstrap;
 using Nameless.WPF.Client.Sqlite.Bootstrap.Steps;
 using Nameless.WPF.Client.Sqlite.Data;
 using Nameless.WPF.Client.Views.Windows;
@@ -39,7 +42,7 @@ public partial class App {
     ];
 
     private static readonly string[] Args = [
-        $"--applicationName={Constants.Application.NAME}"
+        $"--applicationName={Constants.Application.Name}"
     ];
 
     private static readonly IHost CurrentHost = HostFactory.Create(Args)
@@ -48,7 +51,7 @@ public partial class App {
                                                            .OnTearDown(OnHostTearDown)
                                                            .Build();
 
-    public App() { ExceptionWarden.Initialize(Constants.Application.NAME); }
+    public App() { ExceptionWarden.Initialize(Constants.Application.Name); }
 
     // ReSharper disable once AsyncVoidEventHandlerMethod
     protected override async void OnStartup(StartupEventArgs e) {
@@ -83,7 +86,7 @@ public partial class App {
 
         // From Third-party
         services.RegisterApplicationContext(opts => {
-            opts.ApplicationName = Constants.Application.NAME;
+            opts.ApplicationName = Constants.Application.Name;
             opts.Version = typeof(App).Assembly.GetName().Version ?? new Version(1, 0, 0);
         });
         services.RegisterMediator(opts => {
@@ -93,6 +96,7 @@ public partial class App {
         services.RegisterValidation(opts => {
             opts.Assemblies = SupportAssemblies;
         });
+        services.RegisterActivitySourceProvider();
 
         // From Client
         services.RegisterContentDialogService();
@@ -104,7 +108,9 @@ public partial class App {
         services.RegisterAppDbContext(opts => {
             opts.RegisterInterceptor<AuditableEntitySaveChangesInterceptor>();
         });
-        services.RegisterBootstrapper(opts => {
+        services.RegisterBootstrap(opts => {
+            opts.RegisterStep<FirstFakeStep>();
+            opts.RegisterStep<SecondFakeStep>();
             opts.RegisterStep<InitializeDbContextStep>();
         });
         services.RegisterFileSystem();

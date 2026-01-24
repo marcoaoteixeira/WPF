@@ -101,7 +101,7 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
     [RelayCommand]
     private Task OpenApplicationLogFileAsync() {
-        ProcessHelper.OpenTextFile(Constants.Application.LOG_FILE_NAME);
+        ProcessHelper.OpenTextFile(Constants.Application.LogFileName);
 
         return Task.CompletedTask;
     }
