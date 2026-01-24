@@ -31,10 +31,10 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
             response.EnsureSuccessStatusCode();
 
             // Ensure "updates" directory exists
-            _fileSystem.GetDirectory(Constants.SystemUpdate.DIRECTORY_NAME).Create();
+            _fileSystem.GetDirectory(Constants.SystemUpdate.DirectoryName).Create();
 
             var fileName = $"{_timeProvider.GetUtcNow():yyyyMMddHHmmss}_v{request.Version}.zip";
-            var filePath = Path.Combine(Constants.SystemUpdate.DIRECTORY_NAME, fileName);
+            var filePath = Path.Combine(Constants.SystemUpdate.DirectoryName, fileName);
             var file = _fileSystem.GetFile(filePath);
 
             await _notificationService.NotifyWritingFileAsync()

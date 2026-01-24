@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Nameless.Bootstrap;
 using Nameless.WPF.Bootstrap;
 using Nameless.WPF.Client.Sqlite.Data;
 using Nameless.WPF.Client.Sqlite.Resources;
@@ -9,15 +10,12 @@ namespace Nameless.WPF.Client.Sqlite.Bootstrap.Steps;
 /// <summary>
 ///     Step to initialize the DbContext.
 /// </summary>
-public class InitializeDbContextStep : Step {
+public class InitializeDbContextStep : StepBase {
     private readonly IServiceProvider _provider;
 
     /// <inheritdoc />
     public override string Name => Strings.InitializeDbContextBootstrapStep_Name;
-
-    /// <inheritdoc />
-    public override bool ThrowsOnFailure => true;
-
+    
     /// <summary>
     ///     Initializes a new instance of
     ///     <see cref="InitializeDbContextStep"/> class.
@@ -26,12 +24,14 @@ public class InitializeDbContextStep : Step {
     ///     The service provider.
     /// </param>
     public InitializeDbContextStep(IServiceProvider provider) {
-        _provider = Guard.Against.Null(provider);
+        _provider = provider;
     }
 
     /// <inheritdoc />
-    public override async Task ExecuteAsync(CancellationToken cancellationToken) {
-        Progress.Report(new StepProgressReport(Name, "Inicializando serviços..."));
+    public override async Task ExecuteAsync(FlowContext context, CancellationToken cancellationToken) {
+        var progress = context.GetStepProgress();
+
+        progress.Report(new StepReport(Name, "Inicializando contexto da base de dados..."));
 
         await Task.Delay(250, cancellationToken);
 
@@ -41,20 +41,20 @@ public class InitializeDbContextStep : Step {
         var logger = scope.ServiceProvider.GetLogger<InitializeDbContextStep>();
 
         if (!dbContext.Database.IsRelational()) {
-            Progress.Report(new StepProgressReport(Name, "Base de dados não relacional."));
+            progress.Report(new StepReport(Name, "Base de dados não relacional."));
 
             logger.SkipMigrationForNonRelationalDatabase();
 
             return;
         }
 
-        Progress.Report(new StepProgressReport(Name, "Aplicando migração da base de dados..."));
+        progress.Report(new StepReport(Name, "Aplicando migração da base de dados..."));
 
         await Task.Delay(250, cancellationToken);
 
         await dbContext.Database.MigrateAsync(cancellationToken);
 
-        Progress.Report(new StepProgressReport(Name, "Migração concluída com sucesso."));
+        progress.Report(new StepReport(Name, "Migração concluída com sucesso."));
 
         await Task.Delay(250, cancellationToken);
     }
