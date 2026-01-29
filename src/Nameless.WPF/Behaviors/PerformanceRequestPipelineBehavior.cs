@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Nameless.Mediator.Requests;
-using Nameless.WPF.Internals;
 
 namespace Nameless.WPF.Behaviors;
 
@@ -32,12 +31,9 @@ public class PerformanceRequestPipelineBehavior<TRequest, TResponse> : IRequestP
 
     /// <inheritdoc />
     public async Task<TResponse> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken) {
-        Guard.Against.Null(next);
-
         var sw = Stopwatch.StartNew();
 
         _logger.StartPerformanceMonitor();
-
         try { return await next(cancellationToken).SkipContextSync(); }
         finally { _logger.FinishPerformanceMonitor(sw.ElapsedMilliseconds); }
     }

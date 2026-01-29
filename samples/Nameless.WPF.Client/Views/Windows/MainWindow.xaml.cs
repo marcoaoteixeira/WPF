@@ -11,7 +11,6 @@ using Nameless.WPF.DependencyInjection;
 using Nameless.WPF.Dialogs.Message;
 using Nameless.WPF.Mvvm;
 using Nameless.WPF.Notifications;
-using Nameless.WPF.Snackbar;
 using Nameless.WPF.UseCases.SystemUpdate.Check;
 using Nameless.WPF.UseCases.SystemUpdate.Download;
 using Wpf.Ui;

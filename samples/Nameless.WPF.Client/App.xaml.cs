@@ -6,13 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Nameless.Bootstrap;
 using Nameless.Compression;
-using Nameless.Diagnostics;
 using Nameless.Infrastructure;
 using Nameless.IO.FileSystem;
 using Nameless.Mediator;
 using Nameless.Validation.FluentValidation;
 using Nameless.WPF.Behaviors;
-using Nameless.WPF.Bootstrap;
 using Nameless.WPF.Client.Bootstrap;
 using Nameless.WPF.Client.Sqlite.Bootstrap.Steps;
 using Nameless.WPF.Client.Sqlite.Data;
@@ -24,7 +22,6 @@ using Nameless.WPF.GitHub;
 using Nameless.WPF.Mvvm;
 using Nameless.WPF.Navigation;
 using Nameless.WPF.Notifications;
-using Nameless.WPF.Snackbar;
 using Nameless.WPF.TaskRunner;
 using Nameless.WPF.Windows;
 using Wpf.Ui;
@@ -96,7 +93,6 @@ public partial class App {
         services.RegisterValidation(opts => {
             opts.Assemblies = SupportAssemblies;
         });
-        services.RegisterActivitySourceProvider();
 
         // From Client
         services.RegisterContentDialogService();

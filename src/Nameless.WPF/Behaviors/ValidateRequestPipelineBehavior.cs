@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Nameless.Mediator.Requests;
 using Nameless.Validation;
-using Nameless.WPF.Internals;
 
 namespace Nameless.WPF.Behaviors;
 

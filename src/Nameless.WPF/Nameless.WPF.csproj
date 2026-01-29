@@ -13,6 +13,7 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Microsoft.Extensions.Http" />
+		<PackageReference Include="Nameless.Bootstrap" />
 		<PackageReference Include="Nameless.Core" />
 		<PackageReference Include="Nameless.Mediator.Abstractions" />
 		<PackageReference Include="Nameless.Validation.Abstractions" />

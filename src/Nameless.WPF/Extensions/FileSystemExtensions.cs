@@ -1,4 +1,5 @@
-﻿using Nameless.IO.FileSystem;
+﻿using System.IO;
+using Nameless.IO.FileSystem;
 
 namespace Nameless.WPF.Extensions;
 
@@ -21,12 +22,21 @@ public static class FileSystemExtensions {
 
             directory.Create();
 
-            return directory.Path;
+            return directory.Name;
         }
 
-        public string EnsureSqliteDirectoryExistence() {
+        public string GetApplicationBackupFilePath(DateTimeOffset backupDate) {
+            var directory = self.EnsureApplicationBackupDirectoryExistence();
+
+            return Path.Combine(
+                directory,
+                string.Format(Constants.Application.Backup.FileNamePattern, backupDate)
+            );
+        }
+
+        public string EnsureDatabaseDirectoryExistence() {
             var directory = self.GetDirectory(
-                Constants.Sqlite.DirectoryName
+                Constants.Database.DirectoryName
             );
 
             directory.Create();
@@ -34,14 +44,32 @@ public static class FileSystemExtensions {
             return directory.Path;
         }
 
-        public string EnsureLuceneDirectoryExistence() {
+        public string GetDatabaseBackupFilePath(DateTimeOffset backupDate) {
+            var directory = self.EnsureDatabaseDirectoryExistence();
+
+            return Path.Combine(
+                directory,
+                string.Format(Constants.Database.Backup.FileNamePattern, backupDate)
+            );
+        }
+
+        public string EnsureDocumentIndexDirectoryExistence() {
             var directory = self.GetDirectory(
-                Constants.Lucene.DirectoryName
+                Constants.DocumentIndex.DirectoryName
             );
 
             directory.Create();
 
             return directory.Path;
+        }
+
+        public string GetDocumentIndexBackupFilePath(DateTimeOffset backupDate) {
+            var directory = self.EnsureDocumentIndexDirectoryExistence();
+
+            return Path.Combine(
+                directory,
+                string.Format(Constants.DocumentIndex.Backup.FileNamePattern, backupDate)
+            );
         }
 
         public string EnsureSystemUpdateDirectoryExistence() {
@@ -52,6 +80,21 @@ public static class FileSystemExtensions {
             directory.Create();
 
             return directory.Path;
+        }
+
+        public string GetSystemUpdateFilePath(string version) {
+            var directory = self.EnsureSystemUpdateDirectoryExistence();
+
+            return Path.Combine(
+                directory,
+                string.Format(Constants.SystemUpdate.FileNamePattern, version)
+            );
+        }
+
+        public string GetSystemUpdateFilePath(Version version) {
+            return self.GetSystemUpdateFilePath(
+                $"v{version.Major}.{version.Minor}.{version.Build}"
+            );
         }
     }
 }
