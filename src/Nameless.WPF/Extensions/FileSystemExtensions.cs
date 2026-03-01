@@ -1,24 +1,21 @@
 ﻿using System.IO;
 using Nameless.IO.FileSystem;
 
-namespace Nameless.WPF.Extensions;
+namespace Nameless.WPF;
 
 public static class FileSystemExtensions {
     extension(IFileSystem self) {
-        public string EnsureApplicationTemporaryDirectoryExistence() {
-            var directory = self.GetDirectory(
-                Constants.Application.TemporaryDirectoryName
+        public string EnsureBackupsDirectoryExistence() {
+            return self.InnerEnsureDirectoryExistence(
+                Constants.FolderStructure.BackupsDirectoryName
             );
-
-            directory.Create();
-
-            return directory.Path;
         }
 
-        public string EnsureApplicationBackupDirectoryExistence() {
-            var directory = self.GetDirectory(
-                Constants.Application.Backup.DirectoryName
+        public string EnsureDatabaseDirectoryExistence() {
+            return self.InnerEnsureDirectoryExistence(
+                Constants.FolderStructure.DatabasesDirectoryName
             );
+<<<<<<< Updated upstream
 
             directory.Create();
 
@@ -37,13 +34,17 @@ public static class FileSystemExtensions {
         public string EnsureDatabaseDirectoryExistence() {
             var directory = self.GetDirectory(
                 Constants.Database.DirectoryName
-            );
-
-            directory.Create();
-
-            return directory.Path;
+=======
         }
 
+        public string EnsureTemporaryDirectoryExistence() {
+            return self.InnerEnsureDirectoryExistence(
+                Constants.FolderStructure.TemporaryDirectoryName
+>>>>>>> Stashed changes
+            );
+        }
+
+<<<<<<< Updated upstream
         public string GetDatabaseBackupFilePath(DateTimeOffset backupDate) {
             var directory = self.EnsureDatabaseDirectoryExistence();
 
@@ -56,12 +57,14 @@ public static class FileSystemExtensions {
         public string EnsureDocumentIndexDirectoryExistence() {
             var directory = self.GetDirectory(
                 Constants.DocumentIndex.DirectoryName
+=======
+        public string EnsureUpdatesDirectoryExistence() {
+            return self.InnerEnsureDirectoryExistence(
+                Constants.FolderStructure.UpdatesDirectoryName
+>>>>>>> Stashed changes
             );
-
-            directory.Create();
-
-            return directory.Path;
         }
+<<<<<<< Updated upstream
 
         public string GetDocumentIndexBackupFilePath(DateTimeOffset backupDate) {
             var directory = self.EnsureDocumentIndexDirectoryExistence();
@@ -76,6 +79,11 @@ public static class FileSystemExtensions {
             var directory = self.GetDirectory(
                 Constants.SystemUpdate.DirectoryName
             );
+=======
+        
+        private string InnerEnsureDirectoryExistence(string relativePath) {
+            var directory = self.GetDirectory(relativePath);
+>>>>>>> Stashed changes
 
             directory.Create();
 

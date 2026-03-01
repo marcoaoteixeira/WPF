@@ -7,8 +7,8 @@ public interface ITaskRunnerBuilder {
 
     ITaskRunnerBuilder SetDelegate(TaskRunnerDelegate @delegate);
 
-    ITaskRunnerBuilder SubscribeFor<TNotification>()
-        where TNotification : class, INotification;
+    ITaskRunnerBuilder SubscribeFor<TPushNotificationMessage>()
+        where TPushNotificationMessage : PushNotificationMessage;
 
     Task RunAsync();
 }

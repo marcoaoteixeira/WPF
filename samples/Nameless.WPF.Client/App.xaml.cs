@@ -1,9 +1,9 @@
-﻿using System.Net.Http.Headers;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+<<<<<<< Updated upstream
 using Nameless.Bootstrap;
 using Nameless.Compression;
 using Nameless.Infrastructure;
@@ -24,6 +24,10 @@ using Nameless.WPF.Navigation;
 using Nameless.WPF.Notifications;
 using Nameless.WPF.TaskRunner;
 using Nameless.WPF.Windows;
+=======
+using Nameless.WPF.Client.Views.Windows;
+using Nameless.WPF.Configuration;
+>>>>>>> Stashed changes
 using Wpf.Ui;
 
 namespace Nameless.WPF.Client;
@@ -69,6 +73,7 @@ public partial class App {
     }
 
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration) {
+<<<<<<< Updated upstream
         // The basic
         services.AddOptions();
         services.ConfigureHttpClientDefaults(builder => {
@@ -126,6 +131,9 @@ public partial class App {
             opts.Assemblies = SupportAssemblies;
         });
         services.RegisterZipArchiveService();
+=======
+        services.RegisterWPF(SupportAssemblies, configuration);
+>>>>>>> Stashed changes
     }
 
     private static void OnHostStartup(IServiceProvider provider) {

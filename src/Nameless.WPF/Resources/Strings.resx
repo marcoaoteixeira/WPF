@@ -133,10 +133,10 @@
     <value>Selecione</value>
   </data>
   <data name="ControlAppearance_Caution" xml:space="preserve">
-    <value>Cuidado</value>
+    <value>Atenção</value>
   </data>
   <data name="ControlAppearance_Danger" xml:space="preserve">
-    <value>Atenção</value>
+    <value>Erro</value>
   </data>
   <data name="ControlAppearance_Info" xml:space="preserve">
     <value>Informação</value>
@@ -221,6 +221,45 @@
   </data>
   <data name="NavigationViewPageProvider_GetPage_Must_FrameworkElement_Exception" xml:space="preserve">
     <value>The page element must be a FrameworkElement type.</value>
+  </data>
+  <data name="PerformApplicationBackup_PushNotificationMessage_CleanUp" xml:space="preserve">
+    <value>Executando limpeza pós backup...</value>
+  </data>
+  <data name="PerformApplicationBackup_PushNotificationMessage_Failure" xml:space="preserve">
+    <value>Ocorreu um erro durante o processo de backup da aplicação: {0}</value>
+  </data>
+  <data name="PerformApplicationBackup_PushNotificationMessage_Starting" xml:space="preserve">
+    <value>Iniciando backup da aplicação...</value>
+  </data>
+  <data name="PerformApplicationBackup_PushNotificationMessage_Success" xml:space="preserve">
+    <value>Backup da aplicação finalizado com sucesso.</value>
+  </data>
+  <data name="PerformApplicationBackup_PushNotificationMessage_Title" xml:space="preserve">
+    <value>Backup da Aplicação</value>
+  </data>
+  <data name="PerformLuceneBackup_PushNotificationMessage_Failure" xml:space="preserve">
+    <value>Ocorreu um erro durante o processo de backup da base de dados Lucene: {0}</value>
+  </data>
+  <data name="PerformLuceneBackup_PushNotificationMessage_Starting" xml:space="preserve">
+    <value>Iniciando backup da base de dados Lucene...</value>
+  </data>
+  <data name="PerformLuceneBackup_PushNotificationMessage_Success" xml:space="preserve">
+    <value>Backup da base de dados Lucene finalizado com sucesso.</value>
+  </data>
+  <data name="PerformLuceneBackup_PushNotificationMessage_Title" xml:space="preserve">
+    <value>Backup da Base de Dados: Lucene</value>
+  </data>
+  <data name="PerformSqliteBackup_PushNotificationMessage_Failure" xml:space="preserve">
+    <value>Ocorreu um erro durante o processo de backup da base de dados Sqlite: {0}</value>
+  </data>
+  <data name="PerformSqliteBackup_PushNotificationMessage_Starting" xml:space="preserve">
+    <value>Iniciando backup da base de dados Sqlite...</value>
+  </data>
+  <data name="PerformSqliteBackup_PushNotificationMessage_Success" xml:space="preserve">
+    <value>Backup da base de dados Sqlite finalizado com sucesso.</value>
+  </data>
+  <data name="PerformSqliteBackup_PushNotificationMessage_Title" xml:space="preserve">
+    <value>Backup da Base de Dados: Sqlite</value>
   </data>
   <data name="TaskRunnerBuilder_CreateTaskRunnerWindow_Unregistered_Window_Exception" xml:space="preserve">
     <value>Couldn't create '{0}' instance.</value>

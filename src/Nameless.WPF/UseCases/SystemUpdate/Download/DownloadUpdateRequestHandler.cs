@@ -10,20 +10,20 @@ namespace Nameless.WPF.UseCases.SystemUpdate.Download;
 public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateRequest, DownloadUpdateResponse> {
     private readonly IFileSystem _fileSystem;
     private readonly HttpClient _httpClient;
-    private readonly INotificationService _notificationService;
+    private readonly IPushNotification _pushNotification;
     private readonly TimeProvider _timeProvider;
 
-    public DownloadUpdateRequestHandler(IFileSystem fileSystem, HttpClient httpClient, INotificationService notificationService, TimeProvider timeProvider) {
+    public DownloadUpdateRequestHandler(IFileSystem fileSystem, HttpClient httpClient, IPushNotification pushNotification, TimeProvider timeProvider) {
         _fileSystem = fileSystem;
         _httpClient = httpClient;
-        _notificationService = notificationService;
+        _pushNotification = pushNotification;
         _timeProvider = timeProvider;
     }
 
     public async Task<DownloadUpdateResponse> HandleAsync(DownloadUpdateRequest request, CancellationToken cancellationToken) {
         try {
-            await _notificationService.NotifyStartingAsync()
-                                      .SkipContextSync();
+            await _pushNotification.NotifyStartingAsync()
+                                   .SkipContextSync();
 
             var response = await _httpClient.GetAsync(request.Url, cancellationToken)
                                             .SkipContextSync();
@@ -31,14 +31,14 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
             response.EnsureSuccessStatusCode();
 
             // Ensure "updates" directory exists
-            _fileSystem.GetDirectory(Constants.SystemUpdate.DirectoryName).Create();
+            _fileSystem.GetDirectory(Constants.FolderStructure.UpdatesDirectoryName).Create();
 
             var fileName = $"{_timeProvider.GetUtcNow():yyyyMMddHHmmss}_v{request.Version}.zip";
-            var filePath = Path.Combine(Constants.SystemUpdate.DirectoryName, fileName);
+            var filePath = Path.Combine(Constants.FolderStructure.UpdatesDirectoryName, fileName);
             var file = _fileSystem.GetFile(filePath);
 
-            await _notificationService.NotifyWritingFileAsync()
-                                      .SkipContextSync();
+            await _pushNotification.NotifyWritingFileAsync()
+                                   .SkipContextSync();
 
             await using var fileStream = file.Open();
             await using var httpStream = await response.Content
@@ -51,14 +51,14 @@ public class DownloadUpdateRequestHandler : IRequestHandler<DownloadUpdateReques
             httpStream.Close();
             fileStream.Close();
 
-            await _notificationService.NotifySuccessAsync(file.Path)
-                                      .SkipContextSync();
+            await _pushNotification.NotifySuccessAsync(file.Path)
+                                   .SkipContextSync();
 
             return new DownloadUpdateMetadata(file.Path);
         }
         catch (Exception ex) {
-            await _notificationService.NotifyFailureAsync(ex.Message)
-                                      .SkipContextSync();
+            await _pushNotification.NotifyFailureAsync(ex.Message)
+                                   .SkipContextSync();
 
             return Error.Failure(ex.Message);
         }

@@ -4,13 +4,17 @@ using CommunityToolkit.Mvvm.Input;
 using Nameless.Infrastructure;
 using Nameless.Mediator;
 using Nameless.WPF.Client.Resources;
-using Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
 using Nameless.WPF.Client.Views.Pages;
 using Nameless.WPF.Configuration;
 using Nameless.WPF.Dialogs.Message;
+using Nameless.WPF.Dialogs.Message.Extensions;
 using Nameless.WPF.Helpers;
 using Nameless.WPF.Mvvm;
 using Nameless.WPF.TaskRunner;
+using Nameless.WPF.UI;
+using Nameless.WPF.UseCases.Backup.Application;
+using Nameless.WPF.UseCases.Backup.Database.Lucene;
+using Nameless.WPF.UseCases.Backup.Database.Sqlite;
 using Nameless.WPF.UseCases.SystemUpdate.Check;
 using Nameless.WPF.UseCases.SystemUpdate.Download;
 using Nameless.WPF.UseCases.SystemUpdate.Fetch;
@@ -73,10 +77,10 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
         AppVersion = _applicationContext.Version;
 
-        var theme = _appConfigurationManager.GetTheme();
+        var theme = _appConfigurationManager.Theme;
 
         CurrentTheme = theme.GetComboBoxItem(AvailableThemes);
-        CurrentConfirmBeforeExit = _appConfigurationManager.GetConfirmBeforeExit();
+        CurrentConfirmBeforeExit = _appConfigurationManager.ConfirmBeforeExit;
 
         _initialized = true;
     }
@@ -85,9 +89,9 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     private Task PerformSystemUpdateAsync() {
         return _taskRunner.CreateBuilder()
                           .SetName(Strings.AppConfigurationPageViewModel_PerformSystemUpdate_TaskRunnerWindow_Title)
-                          .SubscribeFor<CheckForUpdateNotification>()
-                          .SubscribeFor<FetchNewVersionInformationNotification>()
-                          .SubscribeFor<DownloadUpdateNotification>()
+                          .SubscribeFor<CheckForUpdatePushNotificationMessage>()
+                          .SubscribeFor<FetchNewVersionInformationPushNotificationMessage>()
+                          .SubscribeFor<DownloadUpdatePushNotificationMessage>()
                           .SetDelegate(ExecuteSystemUpdateAsync)
                           .RunAsync();
     }
@@ -107,11 +111,13 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
     }
 
     [RelayCommand]
-    private Task PerformDatabaseBackupAsync() {
+    private Task PerformApplicationBackupAsync() {
         return _taskRunner.CreateBuilder()
-                          .SetName(Strings.AppConfigurationPageViewModel_PerformDatabaseBackup_TaskRunnerWindow_Title)
-                          .SubscribeFor<PerformDatabaseBackupNotification>()
-                          .SetDelegate(ExecuteDatabaseBackupAsync)
+                          .SetName(Strings.AppConfigurationPageViewModel_PerformApplicationBackup_TaskRunnerWindow_Title)
+                          .SubscribeFor<PerformApplicationBackupPushNotificationMessage>()
+                          .SubscribeFor<PerformSqliteBackupPushNotificationMessage>()
+                          .SubscribeFor<PerformLuceneBackupPushNotificationMessage>()
+                          .SetDelegate(ExecuteApplicationBackupAsync)
                           .RunAsync();
     }
 
@@ -122,17 +128,17 @@ public partial class AppConfigurationPageViewModel : ViewModel, INavigationAware
 
         ApplicationThemeManager.Apply(theme.ToApplicationTheme());
 
-        _appConfigurationManager.SetTheme(theme);
+        _appConfigurationManager.Theme = theme;
     }
 
     partial void OnCurrentConfirmBeforeExitChanged(bool oldValue, bool newValue) {
         if (!_initialized || oldValue == newValue) { return; }
 
-        _appConfigurationManager.SetConfirmBeforeExit(newValue);
+        _appConfigurationManager.ConfirmBeforeExit = newValue;
     }
 
-    private async Task ExecuteDatabaseBackupAsync(CancellationToken cancellationToken) {
-        _ = await _mediator.ExecuteAsync(new PerformDatabaseBackupRequest(), cancellationToken)
+    private async Task ExecuteApplicationBackupAsync(CancellationToken cancellationToken) {
+        _ = await _mediator.ExecuteAsync(new PerformApplicationBackupRequest(), cancellationToken)
                            .SkipContextSync();
     }
 

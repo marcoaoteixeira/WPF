@@ -8,7 +8,7 @@ namespace Nameless.WPF;
 ///     Factory class to create a <see cref="IHost" /> instance.
 /// </summary>
 public sealed class HostFactory {
-    public const string ENVIRONMENT_KEY = "--env:";
+    public const string EnvironmentKey = "--env:";
 
     private readonly string[] _args;
 
@@ -120,7 +120,7 @@ public sealed class HostFactory {
 
     private string GetEnvironment() {
         var environment = _args.SingleOrDefault(
-            arg => arg.StartsWith(ENVIRONMENT_KEY, StringComparison.OrdinalIgnoreCase)
+            arg => arg.StartsWith(EnvironmentKey, StringComparison.OrdinalIgnoreCase)
         );
 
         return environment?.Split(Separators.COLON).Last() ?? "Development";

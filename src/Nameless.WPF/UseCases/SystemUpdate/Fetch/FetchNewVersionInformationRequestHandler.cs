@@ -8,18 +8,18 @@ namespace Nameless.WPF.UseCases.SystemUpdate.Fetch;
 
 public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNewVersionInformationRequest, FetchNewVersionInformationResponse> {
     private readonly IGitHubHttpClient _httpClient;
-    private readonly INotificationService _notificationService;
+    private readonly IPushNotification _pushNotification;
     private readonly IOptions<GitHubOptions> _options;
 
-    public FetchNewVersionInformationRequestHandler(IGitHubHttpClient httpClient, INotificationService notificationService, IOptions<GitHubOptions> options) {
+    public FetchNewVersionInformationRequestHandler(IGitHubHttpClient httpClient, IPushNotification pushNotification, IOptions<GitHubOptions> options) {
         _httpClient = httpClient;
-        _notificationService = notificationService;
+        _pushNotification = pushNotification;
         _options = options;
     }
 
     public async Task<FetchNewVersionInformationResponse> HandleAsync(FetchNewVersionInformationRequest request, CancellationToken cancellationToken) {
-        await _notificationService.NotifyStartingAsync()
-                                  .SkipContextSync();
+        await _pushNotification.NotifyStartingAsync()
+                               .SkipContextSync();
 
         var options = _options.Value;
         var getReleaseAssetsRequest = new GetReleaseAssetsRequest(
@@ -31,8 +31,8 @@ public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNew
                                                         .SkipContextSync();
 
         if (!getReleaseAssetsResponse.Success) {
-            await _notificationService.NotifyFailureAsync(request.Version, getReleaseAssetsResponse.Errors[0].Message)
-                                      .SkipContextSync();
+            await _pushNotification.NotifyFailureAsync(request.Version, getReleaseAssetsResponse.Errors[0].Message)
+                                   .SkipContextSync();
 
             return getReleaseAssetsResponse.Errors[0];
         }
@@ -41,14 +41,14 @@ public class FetchNewVersionInformationRequestHandler : IRequestHandler<FetchNew
         var asset = getReleaseAssetsResponse.Value.SingleOrDefault(item => item.Name == assetName);
 
         if (asset is null) {
-            await _notificationService.NotifyNotFoundAsync()
-                                      .SkipContextSync();
+            await _pushNotification.NotifyNotFoundAsync()
+                                   .SkipContextSync();
 
             return (FetchNewVersionMetadata)default;
         }
 
-        await _notificationService.NotifySuccessAsync()
-                                  .SkipContextSync();
+        await _pushNotification.NotifySuccessAsync()
+                               .SkipContextSync();
 
         return new FetchNewVersionMetadata(asset.BrowserDownloadUrl);
     }

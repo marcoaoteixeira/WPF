@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Nameless.WPF.Dialogs.Message.Impl;
 
 namespace Nameless.WPF.Dialogs.Message;
 

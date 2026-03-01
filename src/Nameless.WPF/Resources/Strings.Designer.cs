@@ -106,7 +106,7 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cuidado.
+        ///   Looks up a localized string similar to Atenção.
         /// </summary>
         public static string ControlAppearance_Caution {
             get {
@@ -115,7 +115,7 @@ namespace Nameless.WPF.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Atenção.
+        ///   Looks up a localized string similar to Erro.
         /// </summary>
         public static string ControlAppearance_Danger {
             get {
@@ -372,6 +372,123 @@ namespace Nameless.WPF.Resources {
         public static string NavigationViewPageProvider_GetPage_Must_FrameworkElement_Exception {
             get {
                 return ResourceManager.GetString("NavigationViewPageProvider_GetPage_Must_FrameworkElement_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executando limpeza pós backup....
+        /// </summary>
+        public static string PerformApplicationBackup_PushNotificationMessage_CleanUp {
+            get {
+                return ResourceManager.GetString("PerformApplicationBackup_PushNotificationMessage_CleanUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ocorreu um erro durante o processo de backup da aplicação: {0}.
+        /// </summary>
+        public static string PerformApplicationBackup_PushNotificationMessage_Failure {
+            get {
+                return ResourceManager.GetString("PerformApplicationBackup_PushNotificationMessage_Failure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iniciando backup da aplicação....
+        /// </summary>
+        public static string PerformApplicationBackup_PushNotificationMessage_Starting {
+            get {
+                return ResourceManager.GetString("PerformApplicationBackup_PushNotificationMessage_Starting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup da aplicação finalizado com sucesso..
+        /// </summary>
+        public static string PerformApplicationBackup_PushNotificationMessage_Success {
+            get {
+                return ResourceManager.GetString("PerformApplicationBackup_PushNotificationMessage_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup da Aplicação.
+        /// </summary>
+        public static string PerformApplicationBackup_PushNotificationMessage_Title {
+            get {
+                return ResourceManager.GetString("PerformApplicationBackup_PushNotificationMessage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ocorreu um erro durante o processo de backup da base de dados Lucene: {0}.
+        /// </summary>
+        public static string PerformLuceneBackup_PushNotificationMessage_Failure {
+            get {
+                return ResourceManager.GetString("PerformLuceneBackup_PushNotificationMessage_Failure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iniciando backup da base de dados Lucene....
+        /// </summary>
+        public static string PerformLuceneBackup_PushNotificationMessage_Starting {
+            get {
+                return ResourceManager.GetString("PerformLuceneBackup_PushNotificationMessage_Starting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup da base de dados Lucene finalizado com sucesso..
+        /// </summary>
+        public static string PerformLuceneBackup_PushNotificationMessage_Success {
+            get {
+                return ResourceManager.GetString("PerformLuceneBackup_PushNotificationMessage_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup da Base de Dados: Lucene.
+        /// </summary>
+        public static string PerformLuceneBackup_PushNotificationMessage_Title {
+            get {
+                return ResourceManager.GetString("PerformLuceneBackup_PushNotificationMessage_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ocorreu um erro durante o processo de backup da base de dados Sqlite: {0}.
+        /// </summary>
+        public static string PerformSqliteBackup_PushNotificationMessage_Failure {
+            get {
+                return ResourceManager.GetString("PerformSqliteBackup_PushNotificationMessage_Failure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Iniciando backup da base de dados Sqlite....
+        /// </summary>
+        public static string PerformSqliteBackup_PushNotificationMessage_Starting {
+            get {
+                return ResourceManager.GetString("PerformSqliteBackup_PushNotificationMessage_Starting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup da base de dados Sqlite finalizado com sucesso..
+        /// </summary>
+        public static string PerformSqliteBackup_PushNotificationMessage_Success {
+            get {
+                return ResourceManager.GetString("PerformSqliteBackup_PushNotificationMessage_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Backup da Base de Dados: Sqlite.
+        /// </summary>
+        public static string PerformSqliteBackup_PushNotificationMessage_Title {
+            get {
+                return ResourceManager.GetString("PerformSqliteBackup_PushNotificationMessage_Title", resourceCulture);
             }
         }
         

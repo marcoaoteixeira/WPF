@@ -18,11 +18,11 @@ public static class ControlAppearanceExtension {
         /// <returns>
         ///     The text title associated with the <see cref="ControlAppearance"/>.
         /// </returns>
-        public string GetTitle() {
-            return self switch {
+        public string Title {
+            get => self switch {
+                ControlAppearance.Success => Strings.ControlAppearance_Success,
                 ControlAppearance.Caution => Strings.ControlAppearance_Caution,
                 ControlAppearance.Danger => Strings.ControlAppearance_Danger,
-                ControlAppearance.Success => Strings.ControlAppearance_Success,
                 _ => Strings.ControlAppearance_Info
             };
         }
@@ -34,13 +34,12 @@ public static class ControlAppearanceExtension {
         /// <returns>
         ///     The icon associated with the <see cref="ControlAppearance"/>.
         /// </returns>
-        public IconElement GetIcon() {
-            return self switch {
+        public IconElement Icon {
+            get => self switch {
+                ControlAppearance.Success => new SymbolIcon(SymbolRegular.ThumbLike28),
                 ControlAppearance.Caution => new SymbolIcon(SymbolRegular.Warning28),
                 ControlAppearance.Danger => new SymbolIcon(SymbolRegular.ShieldError24),
-                ControlAppearance.Info => new SymbolIcon(SymbolRegular.LightbulbFilament24),
-                ControlAppearance.Success => new SymbolIcon(SymbolRegular.ThumbLike28),
-                _ => new SymbolIcon(SymbolRegular.Book24)
+                _ => new SymbolIcon(SymbolRegular.LightbulbFilament24),
             };
         }
     }

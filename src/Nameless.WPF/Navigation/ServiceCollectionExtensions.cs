@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Nameless.Helpers;
 using Nameless.WPF.DependencyInjection;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
@@ -13,16 +13,13 @@ namespace Nameless.WPF.Navigation;
 /// </summary>
 public static class ServiceCollectionExtensions {
     extension(IServiceCollection self) {
-        public IServiceCollection RegisterNavigation(Action<NavigationOptions>? configure = null) {
-            var innerConfigure = configure ?? (_ => { });
-            var options = new NavigationOptions();
-
-            innerConfigure(options);
+        public IServiceCollection RegisterNavigation(Action<NavigationRegistrationSettings> registration) {
+            var settings = ActionHelper.FromDelegate(registration);
 
             self.RegisterNavigationService();
-            self.RegisterNavigationWindow(options.Assemblies);
-            self.RegisterNavigableViews(options.Assemblies);
-            self.RegisterNavigationViewItemProvider(options.Assemblies);
+            self.RegisterNavigationWindow(settings);
+            self.RegisterNavigationViewItemProvider(settings);
+            self.RegisterNavigableViews(settings);
 
             return self;
         }
@@ -33,30 +30,28 @@ public static class ServiceCollectionExtensions {
             self.TryAddSingleton<INavigationService, NavigationService>();
         }
 
-        private void RegisterNavigationWindow(Assembly[] assemblies) {
-            var service = typeof(INavigationWindow);
-
-            // There should be just one navigation window.
-            var navigationWindow = assemblies.GetImplementations(service)
-                                             .SingleOrDefault(type => !type.IsGenericTypeDefinition);
-
-            if (navigationWindow is null) {
-                throw new InvalidOperationException($"There is not implementation of '{nameof(INavigationWindow)}' available.");
-            }
-
-            self.TryAdd(navigationWindow.CreateServiceDescriptor(service));
+        private void RegisterNavigationWindow(NavigationRegistrationSettings settings) {
+            self.TryAdd(
+                settings.NavigationWindow.CreateServiceDescriptor(
+                    typeof(INavigationWindow)
+                )
+            );
         }
 
-        private void RegisterNavigableViews(Assembly[] assemblies) {
-            var service = typeof(INavigableView<>);
-            var implementations = assemblies.GetImplementations(service)
-                                            .Where(type => !type.IsGenericTypeDefinition);
+        private void RegisterNavigationViewItemProvider(NavigationRegistrationSettings settings) {
+            self.TryAddSingleton<INavigationViewItemProvider>(
+                new AutoDiscoverableNavigationViewItemProvider(settings.Assemblies)
+            );
+        }
 
-            foreach (var implementation in implementations) {
+        private void RegisterNavigableViews(NavigationRegistrationSettings settings) {
+            var service = typeof(INavigableView<>);
+
+            foreach (var implementation in settings.NavigationViews) {
                 var lifetime = ServiceLifetimeAttribute.GetLifetime(implementation);
                 var interfaces = implementation.GetInterfaces()
                                                .Where(@interface => @interface.GenericTypeArguments.Length > 0 &&
-                                                                    service.IsAssignableFromGenericType(@interface));
+                                                                    service.IsAssignableFromGeneric(@interface));
                 foreach (var @interface in interfaces) {
                     // Register the navigable view's interface.
                     self.TryAdd(new ServiceDescriptor(@interface, implementation, lifetime));
@@ -69,10 +64,6 @@ public static class ServiceCollectionExtensions {
                 // Register the navigable view concrete type.
                 self.TryAdd(new ServiceDescriptor(implementation, implementation, lifetime));
             }
-        }
-
-        private void RegisterNavigationViewItemProvider(Assembly[] assemblies) {
-            self.TryAddSingleton<INavigationViewItemProvider>(new DiscoverableNavigationViewItemProvider(assemblies));
         }
     }
 }

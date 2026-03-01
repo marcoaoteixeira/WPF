@@ -8,7 +8,11 @@ using Wpf.Ui.Controls;
 namespace Nameless.WPF.Client.Views.Pages;
 
 [ServiceLifetime(Lifetime = ServiceLifetime.Singleton)]
-[NavigationViewItem(Icon = SymbolRegular.Settings48, Title = "Configurações", Footer = true)]
+[NavigationViewItem(
+    Icon = SymbolRegular.Settings48,
+    Title = Constants.Labels.NavigationMenuItems.Configuration,
+    Footer = true
+)]
 public partial class AppConfigurationPage : INavigableView<AppConfigurationPageViewModel> {
     public AppConfigurationPageViewModel ViewModel { get; }
 

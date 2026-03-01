@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.Configuration;
 using Nameless.Bootstrap;
+using Nameless.Bootstrap.Notification;
 using Nameless.Infrastructure;
-using Nameless.WPF.Bootstrap;
 using Nameless.WPF.Windows;
 
 namespace Nameless.WPF.Client.Views.Windows;
@@ -11,7 +11,7 @@ public partial class SplashScreenWindow : ISplashScreenWindow {
     private readonly IApplicationContext _applicationContext;
     private readonly IBootstrapper _bootstrapper;
     private readonly IConfiguration _configuration;
-    private readonly IProgress<StepReport> _progress;
+    private readonly IProgress<StepProgress> _progress;
 
     public SplashScreenWindow(
         IApplicationContext applicationContext,
@@ -21,7 +21,7 @@ public partial class SplashScreenWindow : ISplashScreenWindow {
         _bootstrapper = bootstrapper;
         _configuration = configuration;
 
-        _progress = new Progress<StepReport>(UpdateControls);
+        _progress = new Progress<StepProgress>(UpdateControls);
 
         InitializeComponent();
         Initialize();
@@ -39,19 +39,17 @@ public partial class SplashScreenWindow : ISplashScreenWindow {
 
     // ReSharper disable once AsyncVoidEventHandlerMethod
     private async void SplashScreenReady(object? sender, EventArgs e) {
-        var flowContext = new FlowContext().SetStepProgress(_progress);
-
         var timeout = GetBootstrapTimeout();
         using var cts = new CancellationTokenSource(timeout);
 
-        await _bootstrapper.ExecuteAsync(flowContext, cts.Token)
+        await _bootstrapper.ExecuteAsync(context: [], _progress, cts.Token)
                            .ContinueWith(_ => Dispatcher.Invoke(Close), cts.Token)
                            .SkipContextSync();
     }
 
-    private void UpdateControls(StepReport report) {
+    private void UpdateControls(StepProgress report) {
         Dispatcher.Invoke(() => {
-            StepNameTextBlock.Text = report.Title;
+            StepNameTextBlock.Text = report.StepName;
             StepMessageTextBlock.Text = report.Message;
         });
     }

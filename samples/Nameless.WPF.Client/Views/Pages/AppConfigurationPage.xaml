@@ -48,14 +48,14 @@
                     </Grid.RowDefinitions>
                     <ui:TextBlock FontTypography="BodyStrong"
                                   Grid.Row="0"
-                                  Text="{x:Static localization:Strings.AppConfigurationPage_DatabaseBackupCard_Title}" />
-                    <ui:TextBlock Grid.Row="1" Text="{x:Static localization:Strings.AppConfigurationPage_DatabaseBackupCard_Message}" />
+                                  Text="{x:Static localization:Strings.AppConfigurationPage_ApplicationBackupCard_Title}" />
+                    <ui:TextBlock Grid.Row="1" Text="{x:Static localization:Strings.AppConfigurationPage_ApplicationBackupCard_Message}" />
                 </Grid>
             </ui:CardControl.Header>
             <ui:Button Appearance="Success"
                        Cursor="Hand"
-                       Command="{Binding ElementName=AppConfigurationPageRoot, Path=ViewModel.PerformDatabaseBackupCommand, Mode=OneTime}"
-                       Content="{x:Static localization:Strings.AppConfigurationPage_DatabaseBackupCard_Button_Caption}"
+                       Command="{Binding ElementName=AppConfigurationPageRoot, Path=ViewModel.PerformApplicationBackupCommand, Mode=OneTime}"
+                       Content="{x:Static localization:Strings.AppConfigurationPage_ApplicationBackupCard_Button_Caption}"
                        Icon="{ui:SymbolIcon DatabaseMultiple20}"
                        Padding="30 8" />
         </ui:CardControl>

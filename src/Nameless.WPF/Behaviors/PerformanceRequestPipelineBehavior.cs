@@ -31,6 +31,11 @@ public class PerformanceRequestPipelineBehavior<TRequest, TResponse> : IRequestP
 
     /// <inheritdoc />
     public async Task<TResponse> HandleAsync(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken) {
+<<<<<<< Updated upstream
+=======
+        Throws.When.Null(next);
+
+>>>>>>> Stashed changes
         var sw = Stopwatch.StartNew();
 
         _logger.StartPerformanceMonitor();

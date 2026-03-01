@@ -4,15 +4,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nameless.WPF.Client.Internals;
 using Nameless.WPF.Client.Resources;
-using Nameless.WPF.Client.Sqlite.UseCases.Database.Backup;
 using Nameless.WPF.Client.ViewModels.Windows;
 using Nameless.WPF.Configuration;
 using Nameless.WPF.DependencyInjection;
 using Nameless.WPF.Dialogs.Message;
-using Nameless.WPF.Mvvm;
+using Nameless.WPF.Dialogs.Message.Extensions;
 using Nameless.WPF.Notifications;
+<<<<<<< Updated upstream
 using Nameless.WPF.UseCases.SystemUpdate.Check;
 using Nameless.WPF.UseCases.SystemUpdate.Download;
+=======
+using Nameless.WPF.Notifications.Impl;
+using Nameless.WPF.SnackBar;
+>>>>>>> Stashed changes
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
 using Wpf.Ui.Appearance;
@@ -21,14 +25,14 @@ using Wpf.Ui.Controls;
 namespace Nameless.WPF.Client.Views.Windows;
 
 [ServiceLifetime(Lifetime = ServiceLifetime.Singleton)]
-public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowViewModel> {
+public partial class MainWindow : INavigationWindow {
     private readonly IAppConfigurationManager _appConfigurationManager;
     private readonly IContentDialogService _contentDialogService;
     private readonly IMessageDialog _messageDialog;
     private readonly INavigationService _navigationService;
     private readonly INavigationViewPageProvider _navigationViewPageProvider;
-    private readonly INotificationService _notificationService;
-    private readonly ISnackbarService _snackbarService;
+    private readonly IPushNotification _notificationService;
+    private readonly ISnackbarService _snackBarService;
     private readonly ILogger<MainWindow> _logger;
 
     private bool _initialized;
@@ -42,8 +46,8 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
         IMessageDialog messageDialog,
         INavigationService navigationService,
         INavigationViewPageProvider navigationViewPageProvider,
-        INotificationService notificationService,
-        ISnackbarService snackbarService,
+        IPushNotification notificationService,
+        ISnackbarService snackBarService,
         ILogger<MainWindow> logger) {
 
         ViewModel = viewModel;
@@ -55,7 +59,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
         _navigationService = navigationService;
         _navigationViewPageProvider = navigationViewPageProvider;
         _notificationService = notificationService;
-        _snackbarService = snackbarService;
+        _snackBarService = snackBarService;
         _logger = logger;
 
         InitializeComponent();
@@ -87,7 +91,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
     }
 
     private void ClosingHandler(object? _, CancelEventArgs args) {
-        if (!_appConfigurationManager.GetConfirmBeforeExit()) {
+        if (!_appConfigurationManager.ConfirmBeforeExit) {
             return;
         }
 
@@ -97,7 +101,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
             buttons: MessageBoxButtons.YesNoCancel);
 
         if (result == MessageBoxResult.No) {
-            _appConfigurationManager.SetConfirmBeforeExit(false);
+            _appConfigurationManager.ConfirmBeforeExit = false;
         }
 
         args.Cancel = result == MessageBoxResult.Cancel;
@@ -110,7 +114,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
         SetContentPresenter();
         SetNavigationView();
         SetPageService(_navigationViewPageProvider);
-        SetSnackbarPresenter();
+        SetSnackBarPresenter();
         SetWindowIcon();
         SubscribeForNotifications();
 
@@ -119,7 +123,7 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
 
     private void SetApplicationTheme() {
         SystemThemeWatcher.Watch(this);
-        var currentTheme = _appConfigurationManager.GetTheme();
+        var currentTheme = _appConfigurationManager.Theme;
         ApplicationThemeManager.Apply(currentTheme.ToApplicationTheme());
     }
 
@@ -131,8 +135,8 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
         _navigationService.SetNavigationControl(NavigationViewRoot);
     }
 
-    private void SetSnackbarPresenter() {
-        _snackbarService.SetSnackbarPresenter(SnackbarPresenterRoot);
+    private void SetSnackBarPresenter() {
+        _snackBarService.SetSnackbarPresenter(SnackBarPresenterRoot);
     }
 
     private void SetWindowIcon() {
@@ -141,13 +145,10 @@ public partial class MainWindow : INavigationWindow, IHasViewModel<MainWindowVie
     }
 
     private void SubscribeForNotifications() {
-        _notificationService.Subscribe<PerformDatabaseBackupNotification>(this, ShowNotificationInSnackbar);
-        _notificationService.Subscribe<CheckForUpdateNotification>(this, ShowNotificationInSnackbar);
-        _notificationService.Subscribe<DownloadUpdateNotification>(this, ShowNotificationInSnackbar);
-
+        _notificationService.Subscribe<SnackBarPushNotificationMessage>(this, ShowNotificationInSnackBar);
     }
 
-    private void ShowNotificationInSnackbar(object sender, INotification notification) {
-        Dispatcher.InvokeAsync(() => _snackbarService.Show(notification.ToSnackbarParameters()));
+    private void ShowNotificationInSnackBar(object sender, PushNotificationMessage message) {
+        Dispatcher.InvokeAsync(() => _snackBarService.Show(message.ToSnackBarParameters()));
     }
 }

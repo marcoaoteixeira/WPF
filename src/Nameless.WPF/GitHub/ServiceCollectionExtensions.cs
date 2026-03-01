@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nameless.WPF.GitHub.Impl;
 
 namespace Nameless.WPF.GitHub;
 
@@ -15,24 +16,6 @@ public static class ServiceCollectionExtensions {
         /// <summary>
         ///     Register GitHub HTTP client.
         /// </summary>
-        /// <param name="configuration">
-        ///     The configuration.
-        /// </param>
-        /// <returns>
-        ///     The current <see cref="IServiceCollection"/> so other actions
-        ///     can be chained.
-        /// </returns>
-        public IServiceCollection RegisterGitHubHttpClient(IConfiguration configuration) {
-            var section = configuration.GetSection(nameof(GitHubOptions));
-
-            self.Configure<GitHubOptions>(section);
-
-            return self.InnerRegisterGitHubHttpClient();
-        }
-
-        /// <summary>
-        ///     Register GitHub HTTP client.
-        /// </summary>
         /// <param name="configure">
         ///     The configuration action.
         /// </param>
@@ -41,24 +24,39 @@ public static class ServiceCollectionExtensions {
         ///     can be chained.
         /// </returns>
         public IServiceCollection RegisterGitHubHttpClient(Action<GitHubOptions>? configure = null) {
-            self.AddOptions<GitHubOptions>()
-                .Configure(configure ?? (_ => { }));
+            return self.Configure(configure ?? (_ => { }))
+                       .InnerRegisterGitHubHttpClient();
+        }
 
-            return self.InnerRegisterGitHubHttpClient();
+        /// <summary>
+        ///     Register GitHub HTTP client.
+        /// </summary>
+        /// <param name="configuration">
+        ///     The configuration.
+        /// </param>
+        /// <returns>
+        ///     The current <see cref="IServiceCollection"/> so other actions
+        ///     can be chained.
+        /// </returns>
+        public IServiceCollection RegisterGitHubHttpClient(IConfiguration configuration) {
+            var section = configuration.GetSection<GitHubOptions>();
+
+            return self.Configure<GitHubOptions>(section)
+                       .InnerRegisterGitHubHttpClient();
         }
 
         private IServiceCollection InnerRegisterGitHubHttpClient() {
             self.AddHttpClient<IGitHubHttpClient, GitHubHttpClient>((provider, client) => {
+                var opts = provider.GetOptions<GitHubOptions>().Value;
+
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
-                client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", ["2022-11-28"]);
+                client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", [opts.ApiVersion]);
 
-                var url = provider.GetOptions<GitHubOptions>().Value.Api;
-
-                if (string.IsNullOrWhiteSpace(url)) {
+                if (string.IsNullOrWhiteSpace(opts.ApiBaseUrl)) {
                     throw new InvalidOperationException("Missing GitHub API URL.");
                 }
 
-                client.BaseAddress = new Uri(url);
+                client.BaseAddress = new Uri(opts.ApiBaseUrl);
             });
 
             return self;

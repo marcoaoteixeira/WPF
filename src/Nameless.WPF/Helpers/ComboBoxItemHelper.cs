@@ -9,12 +9,10 @@ public static class ComboBoxItemHelper {
         Content = Strings.ComboBoxItemHelper_EmptyComboBoxItem_Content
     };
 
-    public static ComboBoxItem Create<TEnum>(TEnum value, Func<TEnum, string>? displayText = null)
+    public static ComboBoxItem Create<TEnum>(TEnum value, string? displayText = null)
         where TEnum : struct, Enum {
         return new ComboBoxItem {
-            Content = displayText is not null
-                ? displayText(value)
-                : value.GetDescription(),
+            Content = displayText ?? value.GetDescription(),
             Tag = value
         };
     }

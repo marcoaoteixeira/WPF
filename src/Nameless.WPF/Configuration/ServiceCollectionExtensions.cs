@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Nameless.WPF.Configuration.Impl;
 
 namespace Nameless.WPF.Configuration;
 

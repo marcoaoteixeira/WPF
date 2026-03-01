@@ -7,18 +7,13 @@ namespace Nameless.WPF.Windows;
 /// </summary>
 public interface IWindowFactory {
     /// <summary>
-    ///     Tries to create a window.
+    ///     Create a window.
     /// </summary>
     /// <typeparam name="TWindow">
     ///     Type of the window.
     /// </typeparam>
-    /// <param name="output">
-    ///     The window instance.
-    /// </param>
     /// <returns>
-    ///     <see langword="true"/> if it was possible to create the window;
-    ///     otherwise, <see langword="false"/>.
+    ///     An instance of type <typeparamref name="TWindow"/> class.
     /// </returns>
-    bool TryCreate<TWindow>([NotNullWhen(returnValue: true)] out TWindow? output)
-        where TWindow : IWindow;
+    TWindow Create<TWindow>() where TWindow : IWindow;
 }

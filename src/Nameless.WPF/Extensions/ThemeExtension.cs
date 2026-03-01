@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using Nameless.WPF.Configuration;
 using Nameless.WPF.Helpers;
+using Nameless.WPF.UI;
 using Wpf.Ui.Appearance;
 
 namespace Nameless.WPF;
@@ -17,7 +18,7 @@ public static class ThemeExtension {
         }
 
         public ComboBoxItem ToComboBoxItem() {
-            return ComboBoxItemHelper.Create(self, ThemeExtensions.GetDisplayText);
+            return ComboBoxItemHelper.Create(self, self.DisplayText);
         }
 
         public ComboBoxItem GetComboBoxItem(ComboBoxItem[] available) {

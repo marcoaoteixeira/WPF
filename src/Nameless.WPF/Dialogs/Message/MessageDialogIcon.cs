@@ -10,15 +10,15 @@ public enum MessageDialogIcon {
     Information,
 
     /// <summary>
-    ///     The dialog means that an error occurred.
-    /// </summary>
-    Error,
-
-    /// <summary>
     ///     The dialog means that the action should be
     ///     acknowledged by the user.
     /// </summary>
     Warning,
+
+    /// <summary>
+    ///     The dialog means that an error occurred.
+    /// </summary>
+    Error,
 
     /// <summary>
     ///     The dialog requires the user attention for the

@@ -3,7 +3,10 @@
 namespace Nameless.WPF.SnackBar;
 
 public record SnackBarParameters {
+<<<<<<< Updated upstream
+=======
+    public required string Content { get; init; }
+>>>>>>> Stashed changes
     public string? Title { get; init; }
-    public string Content { get; init; } = string.Empty;
     public ControlAppearance Appearance { get; init; }
 }

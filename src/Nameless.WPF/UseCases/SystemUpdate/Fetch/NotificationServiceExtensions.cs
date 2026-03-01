@@ -5,33 +5,29 @@ using Nameless.WPF.UseCases.SystemUpdate.Download;
 namespace Nameless.WPF.UseCases.SystemUpdate.Fetch;
 
 internal static class NotificationServiceExtensions {
-    extension(INotificationService self) {
-        internal Task NotifySuccessAsync() {
-            return self.PublishAsync(new DownloadUpdateNotification(
-                message: Strings.FetchNewVersionInformationNotification_Success,
-                type: NotificationType.Success
-            ));
+    extension(IPushNotification self) {
+        internal Task NotifyStartingAsync() {
+            return self.PublishInformationAsync<DownloadUpdatePushNotificationMessage>(
+                message: Strings.FetchNewVersionInformationNotification_Starting
+            );
         }
 
         internal Task NotifyFailureAsync(string version, string error) {
-            return self.PublishAsync(new DownloadUpdateNotification(
-                message: string.Format(Strings.FetchNewVersionInformationNotification_Failure, version, error),
-                type: NotificationType.Error
-            ));
-        }
-
-        internal Task NotifyStartingAsync() {
-            return self.PublishAsync(new DownloadUpdateNotification(
-                message: Strings.FetchNewVersionInformationNotification_Starting,
-                type: NotificationType.Information
-            ));
+            return self.PublishErrorAsync<DownloadUpdatePushNotificationMessage>(
+                message: string.Format(Strings.FetchNewVersionInformationNotification_Failure, version, error)
+            );
         }
 
         internal Task NotifyNotFoundAsync() {
-            return self.PublishAsync(new DownloadUpdateNotification(
-                message: Strings.FetchNewVersionInformationNotification_NotFound,
-                type: NotificationType.Error
-            ));
+            return self.PublishErrorAsync<DownloadUpdatePushNotificationMessage>(
+                message: Strings.FetchNewVersionInformationNotification_NotFound
+            );
+        }
+
+        internal Task NotifySuccessAsync() {
+            return self.PublishSuccessAsync<DownloadUpdatePushNotificationMessage>(
+                message: Strings.FetchNewVersionInformationNotification_Success
+            );
         }
     }
 }

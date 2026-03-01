@@ -1,6 +1,30 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Net.Http.Headers;
+using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Nameless.Bootstrap;
+using Nameless.Compression;
+using Nameless.Helpers;
+using Nameless.Infrastructure;
+using Nameless.IO.FileSystem;
+using Nameless.Lucene;
+using Nameless.Mediator;
+using Nameless.Validation.FluentValidation;
+using Nameless.WPF.Behaviors;
+using Nameless.WPF.Client.Sqlite.Data;
+using Nameless.WPF.Configuration;
+using Nameless.WPF.Dialogs.FileSystem;
+using Nameless.WPF.Dialogs.Message;
+using Nameless.WPF.EntityFrameworkCore;
+using Nameless.WPF.GitHub;
+using Nameless.WPF.Mvvm;
+using Nameless.WPF.Navigation;
+using Nameless.WPF.Notifications;
+using Nameless.WPF.SnackBar;
+using Nameless.WPF.TaskRunner;
+using Nameless.WPF.Windows;
 using NLog.Extensions.Logging;
 using Wpf.Ui;
 
@@ -11,23 +35,66 @@ namespace Nameless.WPF.Client;
 /// </summary>
 public static class ServiceCollectionExtensions {
     extension(IServiceCollection self) {
-        public IServiceCollection RegisterTimeProvider() {
-            self.TryAddSingleton(TimeProvider.System);
-
-            return self;
-        }
-
-        public IServiceCollection RegisterContentDialogService() {
-            self.TryAddSingleton<IContentDialogService, ContentDialogService>();
-
-            return self;
-        }
-
-        public IServiceCollection RegisterLogging() {
-            self.AddLogging(configure => {
-                configure.ClearProviders();
-                configure.AddNLog();
+        public IServiceCollection RegisterWPF(Assembly[] supportAssemblies, IConfiguration configuration) {
+            // The Main
+            self.AddLogging(logging => {
+                logging.ClearProviders();
+                logging.AddNLog();
             });
+            self.TryAddSingleton(TimeProvider.System);
+            self.ConfigureHttpClientDefaults(builder => {
+                builder.ConfigureHttpClient((provider, client) => {
+                    var applicationContext = provider.GetRequiredService<IApplicationContext>();
+                    var productHeaderValue = new ProductHeaderValue(applicationContext.ApplicationName, applicationContext.Version);
+                    var userAgent = new ProductInfoHeaderValue(productHeaderValue);
+
+                    client.DefaultRequestHeaders.UserAgent.Add(userAgent);
+                });
+            });
+
+            // From Third-party
+            self.RegisterApplicationContext(configuration);
+            self.RegisterMediator(registration => {
+                registration.IncludeAssemblies(supportAssemblies);
+                registration.RegisterRequestPipelineBehavior(typeof(PerformanceRequestPipelineBehavior<,>));
+                registration.RegisterRequestPipelineBehavior(typeof(ValidateRequestPipelineBehavior<,>));
+            });
+            self.RegisterValidation(
+                registration =>  registration.IncludeAssemblies(supportAssemblies)
+            );
+
+            // From Core
+            self.TryAddSingleton<IContentDialogService, ContentDialogService>();
+            self.RegisterAppConfigurationManager();
+            self.RegisterEntityFrameworkCore<AppDbContext>(
+                registration => registration.IncludeAssemblies(supportAssemblies),
+                configuration
+            );
+            self.RegisterBootstrap(
+                registration => registration.IncludeAssemblies(supportAssemblies),
+                configuration
+            );
+            self.RegisterFileSystem();
+            self.RegisterPushNotification();
+            self.RegisterGitHubHttpClient();
+            self.RegisterFileSystemDialog();
+            self.RegisterLucene(
+                registration => registration.IncludeAssemblies(supportAssemblies),
+                configuration
+            );
+            self.RegisterMessageDialog();
+            self.RegisterNavigation(
+                registration =>  registration.IncludeAssemblies(supportAssemblies)
+            );
+            self.RegisterSnackBar();
+            self.RegisterTaskRunner();
+            self.RegisterViewModels(
+                registration => registration.IncludeAssemblies(supportAssemblies)
+            );
+            self.RegisterWindowFactory(
+                registration => registration.IncludeAssemblies(supportAssemblies)
+            );
+            self.RegisterZipFile();
 
             return self;
         }

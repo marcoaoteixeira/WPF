@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Nameless.Helpers;
 using Nameless.WPF.DependencyInjection;
 
 namespace Nameless.WPF.Mvvm;
@@ -13,40 +14,23 @@ public static class ServiceCollectionExtensions {
     /// </param>
     extension(IServiceCollection self) {
         /// <summary>
-        ///     Registers all view models from types that implements
-        ///     <see cref="IHasViewModel{TViewModel}"/>.
+        ///     Registers all view models.
         /// </summary>
-        /// <param name="configure">
-        ///     The assemblies to scan for view model implementations.
+        /// <param name="registration">
+        ///     The registration settings delegate.
         /// </param>
         /// <returns>
         ///     The current <see cref="IServiceCollection"/> so other actions
         ///     can be chained.
         /// </returns>
-        public IServiceCollection RegisterViewModels(Action<ViewModelOptions>? configure = null) {
-            var innerConfigure = configure ?? (_ => { });
-            var options = new ViewModelOptions();
+        public IServiceCollection RegisterViewModels(Action<ViewModelRegistrationSettings> registration) {
+            var settings = ActionHelper.FromDelegate(registration);
 
-            innerConfigure(options);
-
-            var service = typeof(IHasViewModel<>);
-            var implementations = options.Assemblies
-                                         .GetImplementations(service)
-                                         .Where(type => !type.IsGenericTypeDefinition);
-
-            foreach (var implementation in implementations) {
+            foreach (var implementation in settings.ViewModels) {
                 var lifetime = ServiceLifetimeAttribute.GetLifetime(implementation);
-                var interfaces = implementation.GetInterfaces()
-                                               .Where(@interface => @interface.GenericTypeArguments.Length > 0 &&
-                                                                    service.IsAssignableFromGenericType(@interface));
+                var descriptor = new ServiceDescriptor(implementation, implementation, lifetime);
 
-                foreach (var @interface in interfaces) {
-                    // Register the service view model
-                    var viewModelType = @interface.GetGenericArguments().First();
-
-                    // Registers the ViewModel type associated with the view
-                    self.TryAdd(new ServiceDescriptor(viewModelType, viewModelType, lifetime));
-                }
+                self.TryAdd(descriptor);
             }
 
             return self;

@@ -31,7 +31,7 @@
                            PaneDisplayMode="Left"
                            TitleBar="{Binding ElementName=TitleBarRoot, Mode=OneWay}">
             <ui:NavigationView.ContentOverlay>
-                <ui:SnackbarPresenter x:Name="SnackbarPresenterRoot" />
+                <ui:SnackbarPresenter x:Name="SnackBarPresenterRoot" />
             </ui:NavigationView.ContentOverlay>
         </ui:NavigationView>
 
